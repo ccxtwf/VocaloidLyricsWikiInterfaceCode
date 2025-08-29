@@ -9,11 +9,11 @@
     "moduleResolution": "nodenext",
 
     "allowJs": true,
-    "checkJs": true,
+    "checkJs": false,
     "noEmit": false,
     "noEmitOnError": false,
 
-    "outDir": "dist/ts",
+    "outDir": "build",
 
     /* Linting */
     "noUnusedLocals": true,
@@ -23,5 +23,5 @@
     "strictNullChecks": true,
     "strict": false
   },
-  // "include": ["dev-utils/*", "plugins/*"]
+  "include": ["dev-utils/*", "plugins/*", "gadgets/*"]
 }

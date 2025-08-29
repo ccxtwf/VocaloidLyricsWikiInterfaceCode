@@ -3,9 +3,14 @@ import { readFile, writeFile } from 'fs/promises';
 import { resolve, join } from 'path';
 import { parse } from 'yaml';
 import * as crypto from 'crypto';
+import { normalizePath } from 'vite';
+import { Target } from 'vite-plugin-static-copy';
 
 let gadgetsDir: string;
 resolveGadgetsDirectory();
+
+let viteServerOrigin: string;
+let distEntrypoint: string;
 
 /** 
  * Resolve the path to the gadgets directory in the Vite project
@@ -31,20 +36,20 @@ function resolveGadgetPath(gadgetName: string, relativeFilepath?: string): strin
   if (relativeFilepath === undefined) {
     return join(gadgetsDir, gadgetName);
   }
-  return resolve(join(gadgetsDir, gadgetName), relativeFilepath);
+  return normalizePath(resolve(join(gadgetsDir, gadgetName), relativeFilepath));
 }
 
 /** 
- * Resolve the path to the index.js file to be loaded on the MediaWiki instance 
- * This index.js file contains the definitions of the gadgets that it tells
+ * Resolve the path to the load.js file to be loaded on the MediaWiki instance 
+ * This load.js file contains the definitions of the gadgets that it tells
  * MediaWiki to load and register as modules (using mw.loader.impl)
  * 
  * @returns string
  */
 function resolveEntrypoint(): string {
-  const distFolder = resolve(__dirname, '../dist');
+  const distFolder = resolve(__dirname, '../');
   if (!existsSync(distFolder)) { mkdirSync(distFolder); }
-  return resolve(distFolder, 'index.js');
+  return resolve(distFolder, 'load.js');
 }
 
 /** 
@@ -60,16 +65,36 @@ function fileExistsInGadgetDirectory(gadgetName: string, relativeFilepath: strin
 
 /**
  * Resolve the static URL to the file in the specified gadget directory
- * This is passed in the entrypoint file (index.js) to mw.loader.impl, 
+ * This is passed in the entrypoint file (load.js) to mw.loader.impl, 
  * and is used by the MediaWiki client to load and execute/apply the JS/CSS files
  * 
  * @param gadgetSubdir string
  * @param filepath string
  * @returns string 
  */
-function getStaticUrlToFile(gadgetSubdir: string, filepath: string): string {
-  const origin = 'http://localhost:5173';
-  return `${origin}/gadgets/${gadgetSubdir}/${encodeURI(filepath)}`;
+function getStaticUrlToFile(gadgetSubdir: string, filepath: string, devMode: boolean = true): string {
+  if (devMode) {
+    //@ts-ignore
+    return `${viteServerOrigin!}/gadgets/${gadgetSubdir}/${encodeURI(filepath)}`;
+  }
+  //@ts-ignore
+  return `${distEntrypoint!}/dist/${gadgetSubdir}/${encodeURI(filepath)}`;
+}
+
+/** 
+ * @param _origin string
+ * @returns void
+ */
+export function setViteServerOrigin(_origin: string): void {
+  viteServerOrigin = _origin;
+}
+
+/** 
+ * @param url string
+ * @returns void
+ */
+export function setDistEntrypoint(url: string): void {
+  distEntrypoint = url;
 }
 
 /**
@@ -171,11 +196,19 @@ export function getGadgetsToBuild(gadgetsDefinition: GadgetsDefinition): GadgetD
   
   // Prepare return data
   return gadgetsToBuildInOrder
-    .map(([gadgetName, gadgetDefinition]) => ({ ...gadgetDefinition, subdir: gadgetName }));
+    .map(([gadgetName, gadgetDefinition]) => {
+      return {
+        ...gadgetDefinition,
+        subdir: gadgetName,
+        scripts: gadgetDefinition.scripts?.filter(script => fileExistsInGadgetDirectory(gadgetName, script)),
+        styles: gadgetDefinition.styles?.filter(style => fileExistsInGadgetDirectory(gadgetName, style)),
+        i18n: gadgetDefinition.i18n?.filter(i18n => fileExistsInGadgetDirectory(gadgetName, i18n))
+      };
+    });
 }
 
 /**
- * Build the entrypoint file (index.js) to be served by the Vite server and to be 
+ * Build the entrypoint file (load.js) to be served by the Vite server and to be 
  * loaded on the MediaWiki client. Only applicable for running on Dev Mode.
  * Each module is loaded in the MediaWiki client using mw.loader.impl.  
  * You can check on the status of each module using mw.loader.getState(moduleName).
@@ -185,8 +218,9 @@ export function getGadgetsToBuild(gadgetsDefinition: GadgetsDefinition): GadgetD
  * @returns Promise<void>
  */
 export async function serveGadgetsForDevMode(gadgetsDefinition: GadgetsDefinition, { 
-  buildAll = true
-}: { rebuild?: string[], buildAll?: boolean } = {}): Promise<void> {
+  buildAll = true, origin
+}: { rebuild?: string[], buildAll?: boolean, origin?: string } = {}): Promise<void> {
+  if (origin) { setViteServerOrigin(origin); }
   const gadgetsToBuild = getGadgetsToBuild(gadgetsDefinition);
   const entrypointFile = resolveEntrypoint();
   // Clear entrypoint file
@@ -194,33 +228,37 @@ export async function serveGadgetsForDevMode(gadgetsDefinition: GadgetsDefinitio
   if (buildAll) {
     function* awaitTheseTasks() {
       for (const { subdir, scripts, styles, i18n } of gadgetsToBuild) {
-        yield createGadgetImplementationForDevMode((subdir as string), { scripts, styles, i18n });
+        yield createGadgetImplementation((subdir as string), { scripts, styles, i18n }, true);
       }
     }
     for await (const gadgetImplementation of awaitTheseTasks()) {
-      await writeFile(entrypointFile, gadgetImplementation + '\n\n', { flag: "a+", encoding: "utf8" });
+      await writeFile(entrypointFile, gadgetImplementation + '\n', { flag: "a+", encoding: "utf8" });
     }
     return;
   }
-  // TODO: Make use of a build cache to only recreate specific gadget implementations
-  // Likely unneeded as creating the entrypoint is not very resource-heavy
+  // TODO: Make use of a build cache 
+  // Likely unneeded as creating the entrypoint is not resource-intensive
   throw new Error('Unimplemented serveGadgetsForDevMode(gadgetsDefinition, { buildAll: false })');
 }
 
 /**
- * Defines the implementation of each gadget when serving on development mode
- * On development mode each gadget is registered on MediaWiki using mw.loader.impl 
+ * Defines the implementation of each gadget
+ * Each gadget is registered on MediaWiki using mw.loader.impl 
  * The responsibility of loading the scripts & stylesheets served statically from
- * Vite server lies on the MediaWiki instance (through mw.loader.impl)
+ * the Vite server (when on Dev Mode) or from jsDelivr (when on production) lies 
+ * on the MediaWiki instance (through mw.loader.impl)
  * 
  * @param subdir string - The gadget subdirectory
  * @param kwargs.scripts Array<string> - The static URLs to the JS files
  * @param kwargs.styles Array<string> - The static URLs to the CSS files
  * @param kwargs.i18n Array<string> - The static URLs to the i18n.json files
+ * @param devMode boolean
+ * @returns Promise<string>
  */
-async function createGadgetImplementationForDevMode(subdir: string, { 
-  scripts = [], styles = [], i18n = [] 
-}: { scripts?: string[], styles?: string[], i18n?: string[] }): Promise<string> {
+export async function createGadgetImplementation(subdir: string, { 
+  scripts = [], styles = [] 
+  }: { scripts?: string[], styles?: string[], i18n?: string[] }, 
+  devMode: boolean = true): Promise<string> {
   if ((subdir || '') === '' || !existsSync(resolveGadgetPath(subdir))) {
     console.error(`Cannot resolve gadget ${subdir}`);
   }
@@ -228,33 +266,44 @@ async function createGadgetImplementationForDevMode(subdir: string, {
   const hash = crypto.randomBytes(4).toString('hex');
   
   const scriptsToLoad = scripts
-    .filter(script => fileExistsInGadgetDirectory(subdir, script))
     .map((script) => {
-      const scriptUrl = getStaticUrlToFile(subdir, script.replaceAll('"', '\\"'));
+      const scriptUrl = getStaticUrlToFile(subdir, script.replaceAll('"', '\\"'), devMode);
       return `"${scriptUrl}"`;
     });
   
-  // TODO: Preprocess SASS before loading
   const stylesToLoad = styles
-    .filter(style => fileExistsInGadgetDirectory(subdir, style))
     .map((style) => {
-      const styleUrl = getStaticUrlToFile(subdir, style.replaceAll('"', '\\"'));
+      const styleUrl = getStaticUrlToFile(subdir, style.replaceAll('"', '\\"'), devMode);
       return `"${styleUrl}"`;
     });
 
   // Do nothing with the i18n.json file for the time being
 
   const snippet = `
-(function (mw) {
-  mw.loader.impl(function () {
-    return [
-      "ext.gadget.${subdir}@${hash}", 
-      [${scriptsToLoad.join(',')}], 
-      { "url": { "all": [${stylesToLoad.join(',')}] }}, 
-      {}, {}, null
-    ];
-  });
-})(mediaWiki);`.trim();
+(function(mw){mw.loader.impl(function(){return ["ext.gadget.${subdir}@${hash}",[${scriptsToLoad.join(',')}],{"url":{"all":[${stylesToLoad.join(',')}]}},{},{},null];});})(mediaWiki);`.trim();
 
   return snippet;
+}
+
+/**
+ * Pass this function to "build.rollupOptions.input" in Vite's config
+ 
+ * @returns [Map<string, string>, Array<string>
+ */
+export function mapGadgetSourceFiles(gadgetsDefinition: GadgetsDefinition): [{ [Key: string]: string }, Target[]] {
+  const entries: { [Key: string]: string } = {};
+  const assets: Target[] = [];
+  const gadgetsToBuild = getGadgetsToBuild(gadgetsDefinition);
+  
+  for (const { subdir, scripts, styles, i18n } of gadgetsToBuild) {
+    const loadFile = (filepath: string) => {
+      entries[`${subdir!}/${filepath.replace(/\.[a-zA-Z0-9]*$/, '')}`] = resolveGadgetPath(subdir!, filepath);
+    }
+    (scripts || []).forEach(loadFile);
+    (styles || []).forEach(loadFile);
+    (i18n || []).forEach((i18nFile) => {
+      assets.push({ src: resolveGadgetPath(subdir!, i18nFile), dest: subdir!, overwrite: true });
+    });
+  }
+  return [entries, assets];
 }
