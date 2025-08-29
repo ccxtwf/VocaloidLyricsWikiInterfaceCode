@@ -182,13 +182,11 @@ export function getGadgetsToBuild(gadgetsDefinition: GadgetsDefinition): GadgetD
  * You can call on each module using mw.loader.load() or mw.loader.using().
  * 
  * @param gadgetsDefinition GadgetsDefinition
- * @param kwargs.build boolean | null | undefined
- * @param kwargs.buildAll boolean | undefined
  * @returns Promise<void>
  */
 export async function serveGadgetsForDevMode(gadgetsDefinition: GadgetsDefinition, { 
-  build = null, buildAll = true
-}: { build?: boolean | null, buildAll?: boolean } = {}): Promise<void> {
+  buildAll = true
+}: { rebuild?: string[], buildAll?: boolean } = {}): Promise<void> {
   const gadgetsToBuild = getGadgetsToBuild(gadgetsDefinition);
   const entrypointFile = resolveEntrypoint();
   // Clear entrypoint file
@@ -204,7 +202,9 @@ export async function serveGadgetsForDevMode(gadgetsDefinition: GadgetsDefinitio
     }
     return;
   }
-  // TODO: Rebuild one gadget and get cached implementations
+  // TODO: Make use of a build cache to only recreate specific gadget implementations
+  // Likely unneeded as creating the entrypoint is not very resource-heavy
+  throw new Error('Unimplemented serveGadgetsForDevMode(gadgetsDefinition, { buildAll: false })');
 }
 
 /**

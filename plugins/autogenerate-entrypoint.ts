@@ -3,20 +3,15 @@ import {
   serveGadgetsForDevMode, 
   resolveGadgetsDirectory 
 } from '../dev-utils/build-orchestration.js';
-import { 
-  existsInBuildCache, 
-  addFileToBuildCache, 
-  removeFileFromBuildCache 
-} from '../dev-utils/gadget-build-cache.js';
 import { dirname, relative } from 'path';
-import { PluginOption } from 'vite';
+import { PluginOption, HotUpdateOptions } from 'vite';
 
 enum ViteServerChangeMode {
-  Unchanged = -1,
-  GadgetsDefinitionIsChanged = 0,
-  SrcFileIsAdded = 1,
-  SrcFileIsRemoved = 2,
-  SrcFileIsChanged = 3,
+  Unchanged,
+  GadgetsDefinitionIsUpdated,
+  SrcFileIsUpdated,
+  SrcFileIsAdded,
+  SrcFileIsDeleted
 }
 
 /**
@@ -25,7 +20,7 @@ enum ViteServerChangeMode {
  * 
  * Only applicable when running the Vite Server in Dev Mode
  */
-function checkChangedFile(filepath: string): ViteServerChangeMode {
+function checkChangedFile(type: "create" | "update" | "delete", filepath: string): ViteServerChangeMode {
   const gadgetsDir = resolveGadgetsDirectory();
   // Only subscribe to changes in the gadgets directory
   if (dirname(filepath) !== gadgetsDir) {
@@ -34,25 +29,30 @@ function checkChangedFile(filepath: string): ViteServerChangeMode {
   // File gadgets-definition.yaml is changed
   const relativeFilePath = relative(gadgetsDir, filepath);
   if (relativeFilePath === 'gadgets-definition.yaml') {
-    return ViteServerChangeMode.GadgetsDefinitionIsChanged;
+    switch (type) {
+      case "create":
+      case "update":
+        return ViteServerChangeMode.GadgetsDefinitionIsUpdated;
+      case "delete":
+      default:
+        // Do not rebuild when gadgets-definition.yaml is deleted
+        return ViteServerChangeMode.Unchanged;
+    }
   }
-  /*
-  // File is not in gadget subfolder, ignore
-  if (dirname(relativeFilePath) === '/') {
-    return ViteServerChangeMode.Unchanged;
+  switch (type) {
+    case "create":
+      return ViteServerChangeMode.SrcFileIsAdded;
+    case "delete":
+      return ViteServerChangeMode.SrcFileIsDeleted;
+    case "update":
+      return ViteServerChangeMode.SrcFileIsUpdated;
   }
-  // A new file is added
-  if (!existsInBuildCache(relativeFilePath)) {
-    return ViteServerChangeMode.SrcFileIsAdded;
-  }*/
-  return ViteServerChangeMode.SrcFileIsChanged;
+  return ViteServerChangeMode.Unchanged;
 }
 
-async function rebuildGadgetsEntrypoint(buildAll = true) {
-  if (buildAll) {
-    const gadgetsDefinition = await readGadgetsDefinition();
-    await serveGadgetsForDevMode(gadgetsDefinition, { buildAll: true });
-  }
+async function rebuildGadgetsEntrypoint() {
+  const gadgetsDefinition = await readGadgetsDefinition();
+  await serveGadgetsForDevMode(gadgetsDefinition);
 }
 
 /**
@@ -73,8 +73,8 @@ export default function autogenerateEntrypoint(mode: string): PluginOption {
     configureServer() {
       if (devMode) { rebuildGadgetsEntrypoint(); }
     },
-    handleHotUpdate({ file, read, modules }: { file: string, read: () => string | Promise<string>, modules: any[] }) {
-      const refreshMode = checkChangedFile(file);
+    hotUpdate({ type, file, modules }: HotUpdateOptions) {
+      const refreshMode = checkChangedFile(type, file);
       if (refreshMode === ViteServerChangeMode.Unchanged) { return modules; }
       rebuildGadgetsEntrypoint();
       return modules;
