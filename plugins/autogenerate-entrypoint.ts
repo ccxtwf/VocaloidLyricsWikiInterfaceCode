@@ -1,5 +1,6 @@
 import { 
   readGadgetsDefinition, 
+  getGadgetsToBuild,
   serveGadgetsForDevMode, 
   resolveGadgetsDirectory 
 } from '../dev-utils/build-orchestration.js';
@@ -16,9 +17,12 @@ enum ViteServerChangeMode {
 
 /**
  * When a hot rebuild is triggered on Vite Serve, check if the changed file
- * necessitates a full or partial rebuild of the gadgets directory
+ * necessitates a full or partial rebuild of the gadgets directory.
  * 
- * Only applicable when running the Vite Server in Dev Mode
+ * Only applicable when running the Vite Server in Dev Mode.
+ * 
+ * @param type string
+ * @param filepath string
  */
 function checkChangedFile(type: "create" | "update" | "delete", filepath: string): ViteServerChangeMode {
   const gadgetsDir = resolveGadgetsDirectory();
@@ -50,33 +54,32 @@ function checkChangedFile(type: "create" | "update" | "delete", filepath: string
   return ViteServerChangeMode.Unchanged;
 }
 
-async function rebuildGadgetsEntrypoint() {
-  const gadgetsDefinition = await readGadgetsDefinition();
-  await serveGadgetsForDevMode(gadgetsDefinition);
-}
-
 /**
- * A Vite plugin that automatically generates the entrypoint to be loaded on the
- * MediaWiki client
- * Watches changes made on the gadgets subfolder.
+ * A Vite plugin that automatically generates the entrypoint (dist/load.js) 
+ * to be loaded on the MediaWiki client.
+ * Subscribes to changes made on the gadgets project subdirectory (NOT dist/).
  * 
- * @param mode string
  * @returns PluginOption
  */
-export default function autogenerateEntrypoint(mode: string): PluginOption {
-  const devMode = mode === 'development';
+export default function autogenerateEntrypoint(gadgetsToBuildAtIntialState: GadgetDefinition[]): PluginOption {
   
   return {
     name: 'autogenerateEntrypoint',
     enforce: 'post', // Enforce after Vite build plugins
+    apply: 'serve', // Only on Dev Mode
 
     configureServer() {
-      if (devMode) { rebuildGadgetsEntrypoint(); }
+      serveGadgetsForDevMode(gadgetsToBuildAtIntialState);
     },
     hotUpdate({ type, file, modules }: HotUpdateOptions) {
       const refreshMode = checkChangedFile(type, file);
       if (refreshMode === ViteServerChangeMode.Unchanged) { return modules; }
-      rebuildGadgetsEntrypoint();
+      // Possible to do a partial rebuild based on the value of ViteServerChangeMode
+      // Rn compiling load.js isn't a bottleneck, so optimizing this is unnecessary
+      (async () => {
+        const gadgetsDefinition = await readGadgetsDefinition();
+        await serveGadgetsForDevMode(getGadgetsToBuild(gadgetsDefinition));
+      })();
       return modules;
     }
   }

@@ -1,7 +1,9 @@
 import autogenerateEntrypoint from './plugins/autogenerate-entrypoint.js';
+import createMwGadgetImplementation from './plugins/create-mw-gadget-implementation.js';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { 
   readGadgetsDefinition, 
+  getGadgetsToBuild,
   mapGadgetSourceFiles, 
   setViteServerOrigin, 
   setDistEntrypoint 
@@ -15,22 +17,25 @@ import {
 
 export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => {
   const env = loadEnv(mode, process.cwd(), '');
-  if (mode === 'development') { 
+  const isDev = mode === 'development';
+  if (isDev) { 
     setViteServerOrigin(env.VITE_SERVER_DEV_ORIGIN || 'http://localhost:5173'); 
   } else {
     setDistEntrypoint(env.DIST_PROD_ENTRYPOINT || 'https://localhost:5173');
   }
 
   const gadgetsDefinition = await readGadgetsDefinition();
-  const [bundleInputs, bundleAssets] = mapGadgetSourceFiles(gadgetsDefinition);
+  const gadgetsToBuild = getGadgetsToBuild(gadgetsDefinition);
+  const [bundleInputs, bundleAssets] = mapGadgetSourceFiles(gadgetsToBuild);
 
   return {
     plugins: [
-      autogenerateEntrypoint(mode, env),
+      autogenerateEntrypoint(gadgetsToBuild),
       viteStaticCopy({
         targets: bundleAssets,
         structured: false,
       }),
+      createMwGadgetImplementation(gadgetsToBuild),
     ],
     build: {
       rollupOptions: {
