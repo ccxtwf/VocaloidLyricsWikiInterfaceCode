@@ -225,18 +225,86 @@ export async function serveGadgetsForDevMode(gadgetsToBuild: GadgetDefinition[],
   await writeFile(entrypointFile, '', { flag: "w+", encoding: "utf8"});
   if (buildAll) {
     function* awaitTheseTasks() {
-      for (const { subdir, scripts, styles } of gadgetsToBuild) {
-        yield createGadgetImplementationForDevMode((subdir as string), { scripts, styles });
+      for (const gadget of gadgetsToBuild) {
+        yield createGadgetImplementationForDevMode(gadget);
       }
     }
     for await (const gadgetImplementation of awaitTheseTasks()) {
-      await writeFile(entrypointFile, gadgetImplementation + '\n', { flag: "a+", encoding: "utf8" });
+      await writeFile(entrypointFile, gadgetImplementation + '\n\n', { flag: "a+", encoding: "utf8" });
     }
     return;
   }
   // TODO: Make use of a build cache 
   // Likely unneeded as creating the entrypoint is not resource-intensive
   throw new Error('Unimplemented serveGadgetsForDevMode(gadgetsDefinition, { buildAll: false })');
+}
+
+/**
+ * Wraps the mw.loader.impl implementation in conditional expressions
+ * to simulate ResourceLoader's conditional loading
+ * 
+ * @param gadgetImplementation string - mw.loader.impl implementation
+ * @param resourceLoader ResourceLoader
+ * @param devMode boolean
+ * @returns Promise<string>
+ */
+function addGadgetImplementationLoadConditions(gadgetImplementation: string, 
+  { resourceLoader: { 
+    dependencies = null, rights = null, skins = null, 
+    actions = null, categories = null, namespaces = null, 
+    contentModels = null 
+  } = {} }: GadgetDefinition,
+  devMode: boolean
+) {
+  if ([dependencies, rights, skins, actions, categories, namespaces, contentModels].every((v) => v === null)) {
+    return gadgetImplementation;
+  }
+  const conditions = [];
+  const normalizeVariable = (variable: string | string[]) => {
+    if (typeof variable === 'string') {
+      return variable.split(/\s*,\s*/);
+    }
+    return variable;
+  } 
+  
+  if (!!rights) {
+    rights = normalizeVariable(rights);
+    conditions.push(`[${rights.map(el => `"${el}"`).join(',')}].some(function(a){return (mw.config.get('wgUserRights') || []).indexOf(a) > -1;})`);
+  }
+  if (!!skins) {
+    skins = normalizeVariable(skins);
+    conditions.push(`[${skins.map(el => `"${el}"`).join(',')}].some(function(a){return mw.config.get('skin') === a;})`);
+  }
+  if (!!actions) {
+    skins = normalizeVariable(actions);
+    conditions.push(`[${skins.map(el => `"${el}"`).join(',')}].some(function(a){return mw.config.get('wgAction') === a;})`);
+  }
+  if (!!categories) {
+    categories = normalizeVariable(categories);
+    conditions.push(`[${categories.map(el => `"${el}"`).join(',')}].some(function(a){return (mw.config.get('wgCategories') || []).indexOf(a) > -1;})`);
+  }
+  if (!!namespaces) {
+    namespaces = normalizeVariable(namespaces);
+    conditions.push(`[${namespaces.filter(el => !isNaN(+el)).join(',')}].some(function(a){return mw.config.get('wgNamespaceNumber') === a;})`);
+  }
+  if (!!contentModels) {
+    contentModels = normalizeVariable(contentModels);
+    conditions.push(`[${contentModels.map(el => `"${el}"`).join(',')}].some(function(a){return (mw.config.get('wgPageContentModel') || []).indexOf(a) > -1;})`);
+  }
+
+  let wrapped = gadgetImplementation;
+
+  if (!!dependencies) {
+    dependencies = normalizeVariable(dependencies);
+    wrapped = `mw.loader.using([${dependencies.map(el => `"${el}"`).join(',')}],function(require){${devMode ? '\n' : ''}${wrapped}${devMode ? '\n' : ''}});`
+  }
+  if (conditions.length === 1) {
+    wrapped = `if (${conditions[0]}){${devMode ? '\n' : ''}${wrapped}${devMode ? '\n  ' : ''}}`;
+  } else if (conditions.length > 0) {
+    wrapped = `if ([${conditions.join(',')}].every(function(el){ return el; })){${devMode ? '\n' : ''}${wrapped}${devMode ? '\n  ' : ''}}`;
+  }
+
+  return wrapped;
 }
 
 /**
@@ -251,38 +319,39 @@ export async function serveGadgetsForDevMode(gadgetsToBuild: GadgetDefinition[],
  * @param styles Array<string> - The static URLs to the CSS files
  * @returns Promise<string>
  */
-export async function createGadgetImplementationForDevMode(subdir: string, 
-  { scripts = [], styles = [] }: { scripts?: string[], styles?: string[] }
+export async function createGadgetImplementationForDevMode( 
+  { subdir, scripts = [], styles = [], resourceLoader }: GadgetDefinition
 ): Promise<string> {
-  if ((subdir || '') === '' || !existsSync(resolveGadgetPath(subdir))) {
-    console.error(`Cannot resolve gadget ${subdir}`);
+  if ((subdir || '') === '' || !existsSync(resolveGadgetPath(subdir!))) {
+    console.error(`Cannot resolve gadget ${subdir || ''}`);
   }
-  const name = subdir.replaceAll(/\s+/g, '-').replaceAll(/["']/g, '');
+  const name = subdir!.replaceAll(/\s+/g, '-').replaceAll(/["']/g, '');
   const hash = crypto.randomBytes(4).toString('hex');
 
   const scriptsToLoad = scripts
     .map((script) => {
-      const scriptUrl = getStaticUrlToFile(subdir, script.replaceAll('"', '\\"'), true);
+      const scriptUrl = getStaticUrlToFile(subdir!, script.replaceAll('"', '\\"'), true);
       return `"${scriptUrl}"`;
     });
   
   const stylesToLoad = styles
     .map((style) => {
-      const styleUrl = getStaticUrlToFile(subdir, style.replaceAll('"', '\\"'), true);
+      const styleUrl = getStaticUrlToFile(subdir!, style.replaceAll('"', '\\"'), true);
       return `"${styleUrl}"`;
     });
 
-  return `
-(function (mw) {
-  mw.loader.impl(function (){
+  let snippet = `  mw.loader.impl(function (){
     return [
       "ext.gadget.${name}@${hash}",
       [${scriptsToLoad.join(',')}],
       {"url":{"all":[${stylesToLoad.join(',')}]}},
       {}, {}, null
     ];
-  });
-})(mediaWiki);`.trim();
+  });`;
+  snippet = addGadgetImplementationLoadConditions(snippet, { resourceLoader }, true);
+  snippet = `(function (mw) {\n  ${snippet}\n})(mediaWiki);`
+
+  return snippet;
 }
 
 /**
@@ -297,30 +366,33 @@ export async function createGadgetImplementationForDevMode(subdir: string,
  * @param styles Array<string> - The static URLs to the CSS files
  * @returns Promise<string>
  */
-export async function createGadgetImplementationForDist(subdir: string, 
-  { scripts = [], styles = [] }: { scripts?: string[], styles?: string[] }
+export async function createGadgetImplementationForDist(
+  { subdir, scripts = [], styles = [], resourceLoader }: GadgetDefinition
 ): Promise<string> {
-  if ((subdir || '') === '' || !existsSync(resolveGadgetPath(subdir))) {
-    console.error(`Cannot resolve gadget ${subdir}`);
+  if ((subdir || '') === '' || !existsSync(resolveGadgetPath(subdir!))) {
+    console.error(`Cannot resolve gadget ${subdir || ''}`);
   }
-  const name = subdir.replaceAll(/\s+/g, '-').replaceAll(/["']/g, '');
+  const name = subdir!.replaceAll(/\s+/g, '-').replaceAll(/["']/g, '');
   const hash = crypto.randomBytes(4).toString('hex');
 
   const scriptsToLoad: string[] = [];
   const stylesToLoad: string[] = [];
   for (const script of scripts) {
-    const filepath = resolve(__dirname, '../dist', subdir, script.replace(/\.[a-zA-Z0-9]*$/, '')+'.js');
+    const filepath = resolve(__dirname, '../dist', subdir!, script.replace(/\.[a-zA-Z0-9]*$/, '')+'.js');
     const codeContents = await readFile(filepath, { encoding: 'utf8' });
-    scriptsToLoad.push(codeContents);
+    scriptsToLoad.push(codeContents.trim());
   }
   for (const style of styles) {
-    const filepath = resolve(__dirname, '../dist', subdir, style.replace(/\.[a-zA-Z0-9]*$/, '')+'.css');
+    const filepath = resolve(__dirname, '../dist', subdir!, style.replace(/\.[a-zA-Z0-9]*$/, '')+'.css');
     const codeContents = await readFile(filepath, { encoding: 'utf8' });
     stylesToLoad.push(`"${codeContents.trim()}"`);
   }
 
-    return `
-  (function(mw){mw.loader.impl(function(){return ["ext.gadget.${name}@${hash}",function($,jQuery,require,module){${scriptsToLoad.join('\n')}},{"css":[${stylesToLoad.join(',')}]},{},{},null];});})(mediaWiki);`.trim();
+  let snippet = `
+  mw.loader.impl(function(){return ["ext.gadget.${name}@${hash}",function($,jQuery,require,module){${scriptsToLoad.join('\n')}},{"css":[${stylesToLoad.join(',')}]},{},{},null];});`.trim();
+  snippet = addGadgetImplementationLoadConditions(snippet, { resourceLoader }, false);
+  snippet = `(function(mw){${snippet}})(mediaWiki);`;
+  return snippet;
 }
 
 /**

@@ -18,9 +18,9 @@ export default function createMwGadgetImplementation(gadgetsToBuild: GadgetDefin
     apply: 'build', // Only on Dev Mode
 
     async writeBundle() {
-      for (const { subdir, scripts, styles } of gadgetsToBuild) {
-        const gadgetImplementation = await createGadgetImplementationForDist(subdir!, { scripts, styles });
-        const relFilepath = join(subdir!, 'gadget-impl.js');
+      for (const gadget of gadgetsToBuild) {
+        const gadgetImplementation = await createGadgetImplementationForDist(gadget);
+        const relFilepath = join(gadget.subdir!, 'gadget-impl.js');
         const filepath = resolve(join(__dirname, '../dist', relFilepath));
         await writeFile(filepath, gadgetImplementation, { encoding: 'utf8', flag: 'w'});
         console.log(`✓ Created the MediaWiki gadget implementation ${relFilepath}`)
