@@ -5,8 +5,7 @@ import {
   readGadgetsDefinition, 
   getGadgetsToBuild,
   mapGadgetSourceFiles, 
-  setViteServerOrigin, 
-  setDistEntrypoint 
+  setViteServerOrigin
 } from './dev-utils/build-orchestration.js';
 import { 
   ConfigEnv, 
@@ -20,10 +19,7 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
   const isDev = mode === 'development';
   if (isDev) { 
     setViteServerOrigin(env.VITE_SERVER_DEV_ORIGIN || 'http://localhost:5173'); 
-  } else {
-    setDistEntrypoint(env.DIST_PROD_ENTRYPOINT || 'https://localhost:5173');
   }
-
   const gadgetsDefinition = await readGadgetsDefinition();
   const gadgetsToBuild = getGadgetsToBuild(gadgetsDefinition);
   const [bundleInputs, bundleAssets] = mapGadgetSourceFiles(gadgetsToBuild);

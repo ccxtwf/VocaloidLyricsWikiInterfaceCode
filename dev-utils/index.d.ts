@@ -15,8 +15,14 @@ interface GadgetsDefinition {
 }
 
 interface GadgetDefinition {
-  // Specify this parameter if the module depends on other modules that are also listed
-  // on the gadgets definition
+  // Purely informational metadata
+  description?: string
+  authors?: string[]
+  links?: string[]
+  version?: string
+
+  // Specify this parameter if the module needs other modules to be registered first
+  // The required module just needs to have state=registered on mw.loader, not state=ready
   requires?: string[]
 
   // List of files
@@ -33,7 +39,6 @@ interface GadgetDefinition {
   
   // 
   resourceLoader?: ResourceLoaderConditions
-
 }
 
 /* 

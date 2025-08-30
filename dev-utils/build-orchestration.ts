@@ -10,7 +10,11 @@ let gadgetsDir: string;
 resolveGadgetsDirectory();
 
 let viteServerOrigin: string;
-let distEntrypoint: string;
+
+// Defines the prefix of the name of the gadget/script when registered onto MW via mw.loader.impl 
+// e.g. When this variable is set as "ext.gadget", a gadget named "hello-world" will
+//      be registered under the name "ext.gadget.hello-world" 
+const namespace = 'ext.gadget.store';
 
 /** 
  * Resolve the path to the gadgets directory in the Vite project.
@@ -19,7 +23,8 @@ let distEntrypoint: string;
  */
 export function resolveGadgetsDirectory(): string {
   if (!gadgetsDir) {
-    gadgetsDir = resolve(__dirname, '../gadgets');
+    gadgetsDir = normalizePath(resolve(__dirname, '../gadgets'));
+    if (!existsSync(gadgetsDir)) { mkdirSync(gadgetsDir); }
   }
   return gadgetsDir;
 }
@@ -36,6 +41,9 @@ export function resolveGadgetPath(gadgetName: string, relativeFilepath?: string)
   if (relativeFilepath === undefined) {
     return join(gadgetsDir, gadgetName);
   }
+  if (!!relativeFilepath) { 
+    relativeFilepath = relativeFilepath.replace(/\.ts$/, '.js'); 
+  }
   return normalizePath(resolve(join(gadgetsDir, gadgetName), relativeFilepath));
 }
 
@@ -48,8 +56,7 @@ export function resolveGadgetPath(gadgetName: string, relativeFilepath?: string)
  */
 function resolveEntrypoint(): string {
   const distFolder = resolve(__dirname, '../');
-  if (!existsSync(distFolder)) { mkdirSync(distFolder); }
-  return resolve(distFolder, 'load.js');
+  return normalizePath(resolve(distFolder, 'load.js'));
 }
 
 /** 
@@ -72,13 +79,8 @@ function fileExistsInGadgetDirectory(gadgetName: string, relativeFilepath: strin
  * @param filepath string
  * @returns string 
  */
-function getStaticUrlToFile(gadgetSubdir: string, filepath: string, devMode: boolean = true): string {
-  if (devMode) {
-    //@ts-ignore
-    return `${viteServerOrigin!}/gadgets/${gadgetSubdir}/${encodeURI(filepath)}`;
-  }
-  //@ts-ignore
-  return `${distEntrypoint!}/dist/${gadgetSubdir}/${encodeURI(filepath)}`;
+function getStaticUrlToFile(gadgetSubdir: string, filepath: string): string {
+  return `${viteServerOrigin!}/build/gadgets/${gadgetSubdir}/${encodeURI(filepath)}`;
 }
 
 /** 
@@ -87,14 +89,6 @@ function getStaticUrlToFile(gadgetSubdir: string, filepath: string, devMode: boo
  */
 export function setViteServerOrigin(_origin: string): void {
   viteServerOrigin = _origin;
-}
-
-/** 
- * @param url string
- * @returns void
- */
-export function setDistEntrypoint(url: string): void {
-  distEntrypoint = url;
 }
 
 /**
@@ -265,31 +259,37 @@ function addGadgetImplementationLoadConditions(gadgetImplementation: string,
       return variable.split(/\s*,\s*/);
     }
     return variable;
-  } 
+  }
+  const generateCodeConditionForComparingValues = (rsValues: string[], configKey: string, valueIsNumeric: boolean = false) => (
+    `[${rsValues.map(el => valueIsNumeric ? el : `"${el}"`).join(',')}].some(function(a){return mw.config.get('${configKey}') === a;})`
+  );
+  const generateCodeConditionForComparingLists = (rsValues: string[], configKey: string, valueIsNumeric: boolean = false) => (
+    `[${rsValues.map(el => valueIsNumeric ? el : `"${el}"`).join(',')}].some(function(a){return (mw.config.get('${configKey}') || []).indexOf(a) > -1;})`
+  );
   
   if (!!rights) {
     rights = normalizeVariable(rights);
-    conditions.push(`[${rights.map(el => `"${el}"`).join(',')}].some(function(a){return (mw.config.get('wgUserRights') || []).indexOf(a) > -1;})`);
+    conditions.push(generateCodeConditionForComparingLists(rights, 'wgUserRights'));
   }
   if (!!skins) {
     skins = normalizeVariable(skins);
-    conditions.push(`[${skins.map(el => `"${el}"`).join(',')}].some(function(a){return mw.config.get('skin') === a;})`);
+    conditions.push(generateCodeConditionForComparingValues(skins, 'skin'));
   }
   if (!!actions) {
-    skins = normalizeVariable(actions);
-    conditions.push(`[${skins.map(el => `"${el}"`).join(',')}].some(function(a){return mw.config.get('wgAction') === a;})`);
+    actions = normalizeVariable(actions);
+    conditions.push(generateCodeConditionForComparingValues(actions, 'wgAction'));
   }
   if (!!categories) {
     categories = normalizeVariable(categories);
-    conditions.push(`[${categories.map(el => `"${el}"`).join(',')}].some(function(a){return (mw.config.get('wgCategories') || []).indexOf(a) > -1;})`);
+    conditions.push(generateCodeConditionForComparingLists(categories, 'wgCategories'));
   }
   if (!!namespaces) {
     namespaces = normalizeVariable(namespaces);
-    conditions.push(`[${namespaces.filter(el => !isNaN(+el)).join(',')}].some(function(a){return mw.config.get('wgNamespaceNumber') === a;})`);
+    conditions.push(generateCodeConditionForComparingValues(namespaces, 'wgNamespaceNumber', true));
   }
   if (!!contentModels) {
     contentModels = normalizeVariable(contentModels);
-    conditions.push(`[${contentModels.map(el => `"${el}"`).join(',')}].some(function(a){return (mw.config.get('wgPageContentModel') || []).indexOf(a) > -1;})`);
+    conditions.push(generateCodeConditionForComparingValues(contentModels, 'wgPageContentModel'));
   }
 
   let wrapped = gadgetImplementation;
@@ -330,19 +330,19 @@ export async function createGadgetImplementationForDevMode(
 
   const scriptsToLoad = scripts
     .map((script) => {
-      const scriptUrl = getStaticUrlToFile(subdir!, script.replaceAll('"', '\\"'), true);
+      const scriptUrl = getStaticUrlToFile(subdir!, script.replaceAll('"', '\\"'));
       return `"${scriptUrl}"`;
     });
   
   const stylesToLoad = styles
     .map((style) => {
-      const styleUrl = getStaticUrlToFile(subdir!, style.replaceAll('"', '\\"'), true);
+      const styleUrl = getStaticUrlToFile(subdir!, style.replaceAll('"', '\\"'));
       return `"${styleUrl}"`;
     });
 
   let snippet = `  mw.loader.impl(function (){
     return [
-      "ext.gadget.${name}@${hash}",
+      "${namespace}.${name}@${hash}",
       [${scriptsToLoad.join(',')}],
       {"url":{"all":[${stylesToLoad.join(',')}]}},
       {}, {}, null
@@ -389,7 +389,7 @@ export async function createGadgetImplementationForDist(
   }
 
   let snippet = `
-  mw.loader.impl(function(){return ["ext.gadget.${name}@${hash}",function($,jQuery,require,module){${scriptsToLoad.join('\n')}},{"css":[${stylesToLoad.join(',')}]},{},{},null];});`.trim();
+  mw.loader.impl(function(){return ["${namespace}.${name}@${hash}",function($,jQuery,require,module){${scriptsToLoad.join('\n')}},{"css":[${stylesToLoad.join(',')}]},{},{},null];});`.trim();
   snippet = addGadgetImplementationLoadConditions(snippet, { resourceLoader }, false);
   snippet = `(function(mw){${snippet}})(mediaWiki);`;
   return snippet;
