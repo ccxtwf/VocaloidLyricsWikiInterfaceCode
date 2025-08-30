@@ -41,9 +41,6 @@ export function resolveGadgetPath(gadgetName: string, relativeFilepath?: string)
   if (relativeFilepath === undefined) {
     return join(gadgetsDir, gadgetName);
   }
-  if (!!relativeFilepath) { 
-    relativeFilepath = relativeFilepath.replace(/\.ts$/, '.js'); 
-  }
   return normalizePath(resolve(join(gadgetsDir, gadgetName), relativeFilepath));
 }
 
@@ -80,7 +77,9 @@ function fileExistsInGadgetDirectory(gadgetName: string, relativeFilepath: strin
  * @returns string 
  */
 function getStaticUrlToFile(gadgetSubdir: string, filepath: string): string {
-  return `${viteServerOrigin!}/build/gadgets/${gadgetSubdir}/${encodeURI(filepath)}`;
+  // Resolve TS files
+  filepath = filepath.replace(/\.ts$/, '.js');
+  return encodeURI(`${viteServerOrigin!}/gadgets/${gadgetSubdir}/${filepath}`);
 }
 
 /** 

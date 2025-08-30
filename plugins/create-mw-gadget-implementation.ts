@@ -1,4 +1,5 @@
 import { resolve, join } from 'path';
+import { mkdirSync, existsSync } from 'fs';
 import { writeFile } from 'fs/promises';
 import { createGadgetImplementationForDist } from '../dev-utils/build-orchestration.js';
 import { PluginOption } from 'vite';
@@ -20,10 +21,11 @@ export default function createMwGadgetImplementation(gadgetsToBuild: GadgetDefin
     async writeBundle() {
       for (const gadget of gadgetsToBuild) {
         const gadgetImplementation = await createGadgetImplementationForDist(gadget);
-        const relFilepath = join(gadget.subdir!, 'gadget-impl.js');
-        const filepath = resolve(join(__dirname, '../dist', relFilepath));
+        const folderPath = resolve(join(__dirname, '../dist', gadget.subdir!));
+        if (!existsSync(folderPath)) { mkdirSync(folderPath); }
+        const filepath = resolve(join(folderPath, 'gadget-impl.js'));
         await writeFile(filepath, gadgetImplementation, { encoding: 'utf8', flag: 'w'});
-        console.log(`✓ Created the MediaWiki gadget implementation ${relFilepath}`)
+        console.log(`✓ Created the MediaWiki gadget implementation ${join(gadget.subdir!, 'gadget-impl.js')}`)
       }
     },
   }
