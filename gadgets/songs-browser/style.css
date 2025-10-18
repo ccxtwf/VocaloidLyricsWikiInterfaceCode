@@ -1,0 +1,154 @@
+/*
+* Gadget-songs-browser
+* 
+* CSS Variables:
+*   --songs-browser-toggle-container-bg-color
+*   --songs-browser-toggle-container-text-color
+*   --songs-browser-toggle-container-border-color
+*   --songs-browser-toggle-container-boxshadow-color
+*   --songs-browser-toggle-dropdown-bg-color
+*   --songs-browser-toggle-dropdown-text-color
+*   --songs-browser-toggle-dropdown-border-color
+*   --songs-browser-toggle-dropdown-boxshadow-color
+*   --songs-browser-toggle-dropdown-options-separator-color
+*   --songs-browser-toggle-dropdown-option-hover-bg-color
+
+*   --songs-browser-chip-has-eng-tl-bg-color
+*   --songs-browser-chip-has-eng-tl-fg-color
+*   --songs-browser-chip-needs-eng-tl-bg-color
+*   --songs-browser-chip-needs-eng-tl-fg-color
+*   --songs-browser-chip-ai-usage-bg-color
+*   --songs-browser-chip-ai-usage-fg-color
+*   --songs-browser-chip-consolidation-wip-bg-color
+*   --songs-browser-chip-consolidation-wip-fg-color
+*/
+/* [[Category:Stylesheets]] */
+
+/* Highlight Pages Chips */
+.chip {
+    cursor: default;
+    padding: 2px 3px;
+    margin-left: 6px;
+    border-radius: 5px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+.chip.has-eng-tl {
+    background-color: var(--songs-browser-chip-has-eng-tl-bg-color, #21ff00);
+    color: var(--songs-browser-chip-has-eng-tl-fg-color, #17415d);
+}
+.chip.needs-eng-tl {
+    background-color: var(--songs-browser-chip-needs-eng-tl-bg-color, #720000);
+    color: var(--songs-browser-chip-needs-eng-tl-fg-color, #fff);
+}
+.chip.ai-usage, .chip.ai-usage-suspected {
+    background: var(--songs-browser-chip-ai-usage-bg-color, #00a800);
+    color: var(--songs-browser-chip-ai-usage-fg-color, antiquewhite);
+}
+.chip.consolidation-wip {
+    background-color: var(--songs-browser-chip-consolidation-wip-bg-color, purple);
+    color: var(--songs-browser-chip-consolidation-wip-fg-color, #ffffff);
+}
+
+/* Category Browser Toggle */
+#songs-browser-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+#songs-browser {
+    width: 250px;
+    background-color: var(--songs-browser-toggle-container-bg-color, aliceblue);
+    color: var(--songs-browser-toggle-container-text-color, #4e4e4e);
+    font-size: 1rem;
+    font-weight: normal;
+    text-align: center;
+    cursor: pointer;
+    border: solid 1px var(--songs-browser-toggle-container-border-color, #838383);
+    box-shadow: 0 2px var(--songs-browser-toggle-container-boxshadow-color, #47474766);
+    border-radius: 4px;
+}
+#songs-browser .dropdown-toggle {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: break-spaces;
+    text-wrap: auto;
+    padding: 2px 5px;
+}
+#songs-browser .dropdown .dropdown-menu {
+    display: none !important;
+    z-index: 100;
+    position: absolute;
+    background-color: var(--songs-browser-toggle-dropdown-bg-color, #fff);
+    color: var(--songs-browser-toggle-dropdown-text-color, #121212);
+    border: solid 1px var(--songs-browser-toggle-dropdown-border-color, #e2e2e2);
+    border-top: solid 1px var(--songs-browser-toggle-dropdown-text-color, #121212);
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 3px 5px var(--songs-browser-toggle-dropdown-boxshadow-color, #1212123b);
+}
+#songs-browser .dropdown:hover .dropdown-menu {
+    display: block !important;
+}
+#songs-browser ul {
+    list-style: none;
+    background: var(--songs-browser-toggle-dropdown-bg-color, #fff);
+    margin: 0;
+    padding: 0;
+    font-size: 0.9rem;
+}
+#songs-browser .dropdown-menu ul > li {
+    padding: 5px 10px;
+    display: block;
+    background: var(--songs-browser-toggle-dropdown-bg-color, #fff);
+    position: relative;
+    min-height: 40px;
+    text-align: left;
+    box-sizing: border-box;
+    max-width: 248px;
+}
+#songs-browser .dropdown-menu ul > li:not(:first-child) {
+    border-top: solid 1px var(--songs-browser-toggle-dropdown-options-separator-color, #d0d0d0);
+}
+#songs-browser .dropdown-menu ul > li:hover {
+    background-color: var(--songs-browser-toggle-dropdown-option-hover-bg-color, #e6e6e6c2);
+}
+#songs-browser .dropdown-toggle.show + .dropdown-menu {
+    display: block;
+}
+#songs-browser .faux-checkbox {
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
+    display: inline-block;
+    margin-right: 5px;
+    position: absolute;
+    top: 50%;
+    margin-top: -10px;
+}
+#songs-browser .faux-checkbox.checked {
+    background: url('https://upload.wikimedia.org/wikipedia/commons/3/39/OOjs_UI_icon_check-green.svg');
+}
+#songs-browser .item {
+    display: inline-block;
+    text-wrap: balance;
+    width: calc(100% - 35px);
+    min-height: 20px;
+    line-height: 1.2rem;
+    margin-left: 30px;
+}
+@media (max-width: 500px) {
+    #songs-browser {
+        float: none;
+        text-align: right;
+        width: 100%;
+    }
+    #songs-browser .dropdown-menu {
+        display: block;
+        width: 100%;
+    }
+    #songs-browser .dropdown-menu ul > li {
+        max-width: 100%;
+    }
+}

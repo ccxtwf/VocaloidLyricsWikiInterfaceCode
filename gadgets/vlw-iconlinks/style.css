@@ -1,0 +1,164 @@
+/** Icons config **/
+/* [[Category:Stylesheets]] */
+
+.iconlink::before {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	margin: 0 .3em 0 .1em;
+	vertical-align: -0.15em
+}
+
+/* YouTube */
+span.iconlink.yt::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/1/16/Favicon-yt.png');
+}
+/* YouTube Music Topics */
+span.iconlink.yt-mus::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/f/f6/Favicon-yt-mus.png');
+}
+/* Niconico */
+span.iconlink.nn::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/1/16/Favicon-nn.png');
+}
+/* bilibili */
+span.iconlink.bb::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/1/16/Favicon-bb.png');
+}
+/* Piapro */
+span.iconlink.pp::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/4/4f/Favicon-pp.png');
+}
+/* SoundCloud */
+span.iconlink.sc::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/c/c7/Favicon-sc.png');
+}
+/* Vimeo */
+span.iconlink.vm::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/6/65/Favicon-vm.png');
+}
+/* Dailymotion */
+span.iconlink.dm::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/d/d4/Favicon-dm.png');
+}
+/* Bandcamp */
+span.iconlink.bc::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/2/2a/Favicon-bc.png');
+}
+/* Netease Music */
+span.iconlink.ne::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/6/6c/Favicon-ne.png');
+}
+/* 5Sing */
+span.iconlink.fs::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/d/d6/Favicon-5s.png');
+}
+/* Spotify */
+span.iconlink.sp::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/2/23/Favicon-sp.png');
+}
+/* Apple Music */
+span.iconlink.ap::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/4/44/Favicon-ap.png');
+}
+/* Tiktok */
+span.iconlink.tk::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/8/89/Favicon-tk.png');
+}
+/* Audiomack */
+span.iconlink.am::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/6/65/Favicon-am.png');
+}
+/* Newgrounds */
+span.iconlink.ng::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/2/27/Favicon-ng.png');
+}
+/* BandLab */
+span.iconlink.bl::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/f/f7/Favicon-bl.png');
+}
+/* Distrokid */
+span.iconlink.dk::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/9/99/Favicon-dk.png');
+}
+/* StreetVoice */
+span.iconlink.sv::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/4/4d/Favicon-sv.png');
+}
+/* Tumblr */
+span.iconlink.tr::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/commonswiki/f/fa/Favicon-tr.png');
+}
+/* Twitter */
+span.iconlink.twt::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/0/0b/Favicon-x.png');
+}
+/* QQ */
+span.iconlink.qq::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/0/02/Favicon-qq.png');
+}
+/* POPPRO */
+span.iconlink.ppcn::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/0/06/Favicon-ppcn.png');
+}
+/* AcFun */
+span.iconlink.ac::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/4/48/Favicon-ac.png');
+}
+/* VocaDB */
+span.iconlink.db::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/6/65/Favicon-db.png');
+}
+/* TuneCore */
+span.iconlink.tunecore::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/b/b7/Favicon-tunecore.png');
+}
+/* VOCALOID Wiki */
+span.iconlink.vocawiki::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/e/e5/Favicon-vocawiki.png');
+}
+/* Hatsune Miku Wiki */
+span.iconlink.hmwiki::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/6/62/Favicon-hmwiki.png');
+}
+/* Discogs */
+span.iconlink.discogs::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/5/58/Favicon-discogs.png');
+}
+/* Misc */
+span.iconlink.etc::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/a/a2/Favicon-etc.png');
+}

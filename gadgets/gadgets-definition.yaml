@@ -1,0 +1,144 @@
+workspace:
+  enable_all: true
+
+gadgets:
+  dark-mode-medik:
+    styles:
+      - style.less
+    resourceLoader:
+      skins:
+       - medik
+  dark-mode-timeless:
+    styles:
+      - style.less
+    resourceLoader:
+      skins:
+       - timeless
+  dark-mode-other-skins:
+    styles:
+      - style.less
+    resourceLoader:
+      skins:
+       - timeless
+       - medik
+       - monobook
+  dark-mode-vector-citizen:
+    styles:
+      - style.less
+    resourceLoader:
+      skins:
+       - vector-2022
+       - citizen
+  mobile-collapsible-lyrics:
+    styles:
+      - style.css
+  nsfw-modal:
+    scripts:
+      - code.js
+    styles:
+      - style.css
+    resourceLoader:
+      namespaces: "0"
+      actions:
+        - view
+  rc-discussion:
+    scripts:
+      - code.js
+    styles:
+      - style.css
+    resourceLoader:
+      dependencies:
+        - oojs-ui-core
+        - oojs-ui-widgets
+        - jquery.spinner
+      actions:
+        - view
+  recent-changes-on-mobile:
+    styles:
+      - style.less
+    resourceLoader:
+      namespaces: "-1"
+      skins:
+        - timeless
+        - medik
+        - vector-2022
+  reference-tooltips:
+    scripts:
+      - code.js
+    styles:
+      - style.css
+    resourceLoader:
+      dependencies:
+        - mediawiki.cookie
+        - jquery.client
+  songs-browser:
+    scripts:
+      - code.js
+    styles:
+      - style.css
+    requires:
+      - songs-browser-utils-album
+      - songs-browser-utils-category
+    resourceLoader:
+      namespaces: "0,14"
+      actions:
+        - view
+  songs-browser-utils-album:
+    scripts:
+      - code.js
+  songs-browser-utils-category:
+    scripts:
+      - code.js
+  vlw-guideline-notification:
+    scripts:
+      - code.js
+    resourceLoader:
+      actions:
+        - view
+        - edit
+      namespaces: "0"
+  vlw-iconlinks:
+    styles:
+      - style.css
+  vlw-lyrics-editor:
+    scripts:
+      - code.js
+    styles:
+      - style.css
+    resourceLoader:
+      dependencies:
+        - oojs-ui-core
+        - oojs-ui-widgets
+      namespaces: "0,2,500"
+      actions:
+        - edit
+  vlw-lyrics-options:
+    scripts:
+      - code.js
+    styles:
+      - style.css
+    resourceLoader:
+      dependencies:
+        - oojs-ui-core
+        - oojs-ui-widgets
+  vlw-notification-templates:
+    styles:
+      - style.css
+  vlw-tl-checking-utils:
+    scripts:
+      - code.js
+    styles:
+      - style.css
+    resourceLoader:
+      namespaces: "13"
+  vlw-tl-queue-display:
+    scripts:
+      - code.js
+    styles:
+      - style.css
+    resourceLoader:
+      actions:
+        - view
+  vue-hello-world:
+    scripts:
+      - hello-world.ts

@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsc && vite",
-    "build": "tsc && vite build"
+    "dev": "vite",
+    "build": "vite build"
   },
   "devDependencies": {
     "@types/node": "^24.3.0",
+    "less": "^4.4.1",
     "types-mediawiki": "^2.0.0",
     "typescript": "^5.9.2",
     "vite": "^7.1.2",

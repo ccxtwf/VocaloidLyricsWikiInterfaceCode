@@ -14,7 +14,7 @@ let viteServerOrigin: string;
 // Defines the prefix of the name of the gadget/script when registered onto MW via mw.loader.impl 
 // e.g. When this variable is set as "ext.gadget", a gadget named "hello-world" will
 //      be registered under the name "ext.gadget.hello-world" 
-const namespace = 'ext.gadget.store';
+const namespace = 'ext.gadget';
 
 /** 
  * Resolve the path to the gadgets directory in the Vite project.
