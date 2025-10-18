@@ -1,0 +1,219 @@
+/* CSS placed here will be applied to all skins */
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+.bold {
+  font-weight: bold;
+}
+.italic {
+  font-style: italic;
+}
+
+/* Theming */
+:root {
+  /* Lyrics table */
+  --lyrics-table-header: #e4e4e4;
+  --lyrics-row-odd-color: #f6f6f6;
+  
+  /* Album infoboxes */
+  --album-embed-container-bg-color: #cfcfcf;
+  --album-embed-container-text-color: #000000;
+  --album-embed-container-shadow-color: #8e8e8e;
+  --album-embed-container-active-tab-color: white;
+  
+  /* Producer infoboxes */
+  --producer-links-container-bg-color: #dbebeac9;
+  --producer-table-header-bg-color: #9fc5c2;
+  --producer-table-alternating-row-color: #b5d7d430;
+}
+
+/* Alternate Version Infobox: Make Container Fluid */
+.vlw-altver-infobox table {
+  width: 100%;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: fill-available;
+}
+
+/* Lyrics Tables */
+table.lyrics-table {
+  width: 100%;
+}
+table.lyrics-table > tbody > tr:nth-child(odd) {
+  background-color: var(--lyrics-row-odd-color);
+}
+table.lyrics-table > tbody > tr.lyrics-table-header {
+  background-color: var(--lyrics-table-header);
+  position: sticky;
+  top: 0px;
+}
+table.lyrics-table > tbody > tr.lyrics-table-header > th {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+td.lyrics-comb {
+  text-align: center;
+}
+td.lyrics-comb.only-selected {
+  text-align: left;
+}
+td.lyrics-comb.only-selected.bold {
+  font-weight: normal;
+}
+td.lyrics-comb.only-selected.italic {
+  font-style: normal;
+}
+
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: scroll;
+  }
+}
+
+/* Extension:SocialProfile */
+.visualClear {
+  clear: both;
+}
+@media (max-width: 500px) {
+  #profile-top, 
+  #profile-title-container, 
+  #profile-title, 
+  .profile-actions, 
+  #user-page-left,
+  #user-page-right {
+    display:block;
+    float: none;
+  }
+  #profile-top {
+    display:block;
+    float: none;
+    height: 240px;
+    margin-top: 30px;
+  }
+  #profile-image, #profile-right {
+    display: block;
+    margin-top: 0px;
+    float: none;
+  }
+  #profile-right {
+    width: 100%;
+  }
+  #profile-toggle-button {
+    margin-top: -35px;
+  }
+  #user-page-left, #user-page-right {
+    width: 100%;
+  }
+}
+
+/* Add custom Add New Topic Button for Discussion Tools */
+#custom-btn-add-new-topic {
+  text-align: right;
+  margin-bottom: 20px;
+}
+#custom-btn-add-new-topic > a {
+  padding: 5px 40px;
+  background-color: #0275da;
+  color: #ffffff;
+  font-size: larger;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px #12121247;
+}
+#custom-btn-add-new-topic > a:hover, 
+#custom-btn-add-new-topic > a:focus, 
+#custom-btn-add-new-topic > a:active {
+  background-color: #1181e4;
+  text-decoration: none;
+  color: #f1ede7;
+}
+
+/* Sitenotice on mobile */
+@media (max-width: 500px) {
+  .sitedir-ltr .mw-dismissable-notice-body {
+    margin-left:0;
+    margin-right:0;
+  } 
+  .sitedir-ltr .mw-dismissable-notice-close {
+    float: none;
+    display: block;
+    text-align: right;
+  }
+}
+
+/* Recent Changes log on Mobile */
+@media (max-width:767px) {
+  details.mw-changeslist-legend {
+    float: none;
+    display: block;
+  }
+}
+
+/* Images */
+figure[typeof~='mw:File/Thumb'] > figcaption, 
+figure[typeof~='mw:File/Frame'] > figcaption {
+  background-color: var(--background-color-neutral, #f8f9fa);
+  border-color: var(--border-color-base, #eaecf0);
+}
+figure[typeof~='mw:File/Thumb'], 
+figure[typeof~='mw:File/Frame'] {
+  background-color: var(--background-color-neutral, #f8f9fa);
+  border-color: var(--border-color-base, #eaecf0);
+}
+figure[typeof~='mw:File/Thumb'] > :not(figcaption) .mw-file-element, 
+figure[typeof~='mw:File/Frame'] > :not(figcaption) .mw-file-element {
+  border-color: var(--border-color-subtle, #eaecf0);
+}
+
+/* Carousel Gallery */
+@media screen and (max-width: 500px) {
+  .gallery.mobile-scrollx {
+    overflow-x: scroll;
+    display: flex !important;
+    flex-direction: row;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 50px;
+  }
+  .gallery.mobile-scrollx li.gallerybox {
+    display: block;
+    scroll-snap-align: start;
+  }
+  .gallery.mobile-scrollx li.gallerybox:first-child {
+    padding-left: 50px;
+    box-sizing: content-box;
+  }
+  .gallery.mobile-scrollx li.gallerybox:last-child {
+    padding-right: 50px;
+    box-sizing: content-box;
+  }
+}
+
+/* DiscussionTools */
+dl > dd:has(> span[data-mw-comment-start]) {
+  padding-top: 1em;
+  margin-top: 2em;
+  border-top: solid 1px var(--border-color-base, #a2a9b1);
+}
+
+#discord-widget {
+  color-scheme: initial;
+}
+.embedvideo-player {
+  color-scheme: initial;
+}
+
+/* Resize Spotify embeds */
+.album-infobox-embed .embedvideo-wrapper:has(.embedvideo-player[src^="https://open.spotify.com"]) {
+  height: 370px !important;
+}
+
+/* MW1.44 Upgrade Workaround: Force exticon link to use MW1.44 resource instead of MW1.43 */
+body:not(.skin-citizen) .mw-parser-output a.external, 
+body:not(.skin-citizen) .link-mailto, 
+body:not(.skin-citizen) .link-ftp, 
+body:not(.skin-citizen) .link-irc, 
+body:not(.skin-citizen) .link-audio, 
+body:not(.skin-citizen) .link-video, 
+body:not(.skin-citizen) .link-document {
+  background-image: url(/1.44/resources/src/mediawiki.skinning/images/external-ltr.svg);
+}

@@ -1,0 +1,89 @@
+/* All CSS here will be loaded for users of the Citizen skin */
+:root {
+  --lyrics-table-header: #e0e0e0;
+  --lyrics-row-odd-color: #ededed;
+  
+  --border-color-base: rgba(0, 0, 0, 0.3);
+}
+
+/* Lyrics table header */
+table.lyrics-table > tbody > tr.lyrics-table-header {
+  top: 53px;
+}
+#wikiPreview table.lyrics-table > tbody > tr.lyrics-table-header {
+  top: 0px;
+}
+
+/* Mobile view */
+@media screen and (max-width: 767px) {
+  table.lyrics-table > tbody > tr.lyrics-table-header {
+    position: initial;
+  }
+}
+
+/* Gadget-vlw-tl-queue-display: Translation Queue List */
+.citizen-footer__container #vlw-tl-queue-container {
+  column-count: 3;
+  column-fill: balance;
+  column-gap: 30px;
+}
+@media (max-width: 767px) {
+  .citizen-footer__container #vlw-tl-queue-container {
+    column-count: 2;
+  }
+}
+@media (max-width: 500px) {
+  .citizen-footer__container #vlw-tl-queue-container {
+    column-count: 1;
+  }
+}
+
+/* Collapsible navigation menus */
+#citizen-drawer__card .mw-portlet > .citizen-menu__heading > .menu-btn {
+  width: 12px;
+  height: 16px;
+  float: right;
+  content: '';
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Font_Awesome_5_solid_chevron-down.svg/120px-Font_Awesome_5_solid_chevron-down.svg.png);
+  opacity: 0.6;
+}
+#citizen-drawer__card .mw-portlet > .citizen-menu__heading {
+  cursor: pointer !important;
+}
+#citizen-drawer__card .mw-portlet:has(.citizen-menu__content.show) .menu-btn {
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Font_Awesome_5_solid_chevron-up.svg/120px-Font_Awesome_5_solid_chevron-up.svg.png);
+}
+.citizen-menu__content.collapse {
+  display: none;
+  transition-property: height;
+  transition-duration: 300ms;
+}
+.citizen-menu__content.collapse.show {
+  display: block;
+}
+:root.skin-theme-clientpref-night {
+  --border-color-base: rgba(255, 255, 255, 0.3);
+  
+  #citizen-drawer__card .mw-portlet > .citizen-menu__heading > .menu-btn {
+    filter: brightness(1) invert(1);
+    backdrop-filter: brightness(1) invert(1);
+  }
+}
+@media screen and (prefers-color-scheme: dark) {
+  :root.skin-theme-clientpref-os {
+    --border-color-base: rgba(255, 255, 255, 0.3);
+    
+    #citizen-drawer__card .mw-portlet > .citizen-menu__heading > .menu-btn {
+      filter: brightness(1) invert(1);
+      backdrop-filter: brightness(1) invert(1);
+    }
+  }
+}
+
+#mw-allmessagestable {
+  display: block;
+  overflow-x: scroll;
+}

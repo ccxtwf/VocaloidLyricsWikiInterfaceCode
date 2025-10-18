@@ -1,0 +1,269 @@
+/* All CSS here will be loaded for users of the Medik skin */
+:root {
+  --medik: #29AB87 !important;
+}
+
+* {
+  word-break: break-word;
+}
+table * {
+  word-break: normal;
+}
+.tocnumber {
+  word-break: normal;
+}
+.codeEditor-status-worker-cell {
+  word-break: normal;
+}
+.mw-echo-notifications-badge {
+  word-break: normal;
+}
+
+table {
+  border-collapse: initial;
+}
+
+/* Global links theming */
+/*a:not(.new), a.external {
+  color: #b88d00 !important;
+}
+a:not(.new):hover, a.external:hover, a:not(.new):active, a.external:active {
+  color: #eac54a !important;
+}
+a:not(.new):visited, a.external:visited {
+  color: #8d6e09 !important;
+}*/
+
+/* Navbar */
+#mw-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+#p-banner {
+  color: #fff !important;
+}
+#mw-navbar #p-search {
+  min-width: 350px;
+}
+@media (max-width: 900px) {
+  #mw-navbar #p-search {
+    min-width: initial;
+  }
+}
+@media (max-width: 767px) {
+  #mw-navbar #p-search {
+    padding: 10px 1vw;
+    background: white;
+    width: 97vw;
+    top: calc(100% + 0.5em);
+  }
+}
+@media (max-width: 500px) {
+  #mw-navbar #p-search {
+    min-width: initial;
+    width: 100vw;
+    position: absolute;
+    left: 100%;
+    top: calc(100% + 0.5em);
+    margin-left: -100vw;
+    padding: 0.5em 1.5vw;
+    background: #fff;
+  }
+}
+
+/* Action toolbar */
+#p-namespaces .mw-list-item.selected {
+  font-weight: 600;
+}
+#p-namespaces .mw-list-item > a:not(.new), 
+.dropdown > a:not(.new), 
+.dropdown-menu .mw-list-item > a:not(.new) {
+  color: #323232 !important;
+}
+.dropdown .dropdown-menu > [role="navigation"] > a:not(.new) {
+  color: #a9a9a9 !important;
+  font-size: 0.85rem;
+  padding: 3px 5px !important;
+}
+.dropdown .mw-list-item .dropdown-item.active, 
+.dropdown .mw-list-item .dropdown-item:active, 
+.dropdown .mw-list-item .dropdown-item:hover {
+  background-color: var(--medik) !important;
+  color: #fff !important;
+}
+
+/* Sidebar */
+#mw-navigation {
+  background-color: #000;
+}
+#mw-navigation li.mw-list-item .nav-link {
+  color: #c0c0c0 !important;
+}
+#mw-navigation li.mw-list-item .nav-link:hover, 
+#mw-navigation li.mw-list-item .nav-link:active {
+  color: #e6e6e6 !important;
+}
+#mw-navigation a.nav-link.disabled {
+  color: #6a6a6a !important;
+}
+
+/* Footer */
+.mw-footer {
+  background-color: #000;
+  color: #c0c0c0;
+}
+.mw-footer a:not(.new) {
+  color: #caa324 !important;
+}
+.mw-footer a:not(.new):hover, .mw-footer a:not(.new):active {
+  color: #eac54a !important;
+}
+.mw-footer .footer-icons a > img {
+  background-color: white;
+}
+
+/* Show/hide elements */
+#p-actions-label {
+  display: none;
+}
+
+/* Main page */
+.header {
+  margin-bottom: 10px;
+  border: none !important;
+  border-bottom: solid 7px #146e00 !important;
+}
+
+/* Buttons */
+/*a[role="button"], a[role="button"]:hover, a[role="button"]:active, a[role="button"]:visited {
+  color: initial;
+}
+a.oo-ui-buttonElement-button, a.oo-ui-buttonElement-button:visited, .oo-ui-buttonElement-button .oo-ui-labelElement-label {
+  color: #ffffff;
+}
+a.oo-ui-buttonElement-button:hover, a.oo-ui-buttonElement-button:active {
+  text-decoration: none;
+  color: #fff;
+}
+[aria-selected="false"] a.oo-ui-buttonElement-button, [aria-selected="false"] a.oo-ui-buttonElement-button:visited, [aria-selected="false"] .oo-ui-buttonElement-button .oo-ui-labelElement-label {
+  color: #323232;
+}*/
+
+/* Bullet & numbered list margin */
+ol, ul {
+  padding-left: 1.5rem;
+}
+.createredirect-cloner ul {
+  padding-left: 0;
+}
+@media (max-width: 500px) {
+  ol, ul {
+    padding-left: 0.5rem;
+  }
+  .createredirect-cloner ul {
+    padding-left: 0;
+  }
+  .references {
+    padding-left: 0;
+  }
+}
+
+/* Wikitable */
+.wikitable {
+  background-color: var(--background-color-neutral-subtle,#f8f9fa);
+  color: var(--color-base,#202122);
+  border: 1px solid var(--border-color-base,#a2a9b1);
+}
+.wikitable > tr > th, 
+.wikitable > * > tr > th {
+  background-color: var(--background-color-neutral,#eaecf0);
+  color: var(--color-base,#202122);
+  text-align: center;
+}
+.wikitable > tr > th, 
+.wikitable > tr > td, 
+.wikitable > * > tr > th, 
+.wikitable > * > tr > td {
+  border: 1px solid var(--border-color-base,#a2a9b1);
+  padding: 0.2em 0.4em;
+}
+
+/* Notifications */
+.mw-echo-ui-overlay {
+  z-index: 101;
+}
+
+/* Album pages */
+.album-infobox-embed nav {
+  padding-bottom: 0px;
+}
+
+/* Comment indentation */
+dd {
+  margin-top: .5rem;
+  margin-bottom: 0.1em;
+  margin-left: 1.6em;
+}
+
+/* Collapsible sidebar menu */
+.menu-btn {
+  width: 20px;
+  height: 25px;
+  float: right;
+  content: '';
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Font_Awesome_5_solid_chevron-down.svg/120px-Font_Awesome_5_solid_chevron-down.svg.png);
+  filter: brightness(0) saturate(100%) invert(43%) sepia(11%) saturate(0%) hue-rotate(188deg) brightness(92%) contrast(87%);
+  opacity: 1.0;
+  cursor: pointer !important;
+}
+#site-navigation > .mw-portlet:has(.mw-portlet-body.show) .menu-btn {
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Font_Awesome_5_solid_chevron-up.svg/120px-Font_Awesome_5_solid_chevron-up.svg.png);
+}
+#site-navigation > .mw-portlet > a.nav-link {
+  pointer-events: auto;
+  cursor: pointer;
+}
+#site-navigation a.nav-link.disabled, #site-navigation a.nav-link.disabled:hover, #site-navigation a.nav-link.disabled:focus {
+  text-decoration: none;
+}
+
+/* ThemeToggle */
+#pt-themes .ext-themetoggle-simple-icon {
+  font-size: 0.8rem;
+  color: #000;
+  transition: auto;
+  padding: 4px 16px;
+}
+#pt-themes .ext-themetoggle-simple-icon::before {
+  padding-left: 0;
+  padding-right: 0.5rem;
+}
+
+/* DataTables + Special:AllMessages */
+table#mw-allmessagestable {
+  display: block;
+  overflow-x: scroll;
+}
+.mw-datatable td {
+  background-color: var(--background-color-base, #fff);
+}
+.mw-datatable tr:hover td {
+  background-color: var(--background-color-progressive-subtle, #f1f4fd);
+}
+.mw-datatable td, .mw-datatable th {
+  border: var(--border-width-base, 1px) solid var(--border-color-base, #a2a9b1);
+}
+#mw-allmessagestable .am_default, #mw-allmessagestable body:hover .am_default {
+  background-color: var(--background-color-content-removed, #ffe49c);
+}
+#mw-allmessagestable .am_actual, #mw-allmessagestable tbody:hover .am_actual {
+  background-color: var(--background-color-content-added, #a3d3ff);
+}
+
+.in-page-edit .ssi-topIcons .ssi-closeIcon {
+  box-sizing: content-box;
+}

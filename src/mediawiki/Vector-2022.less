@@ -1,0 +1,76 @@
+/* All CSS here will be loaded for users of the Vector 2022 skin */
+.mw-page-title-namespace, .mw-page-title-separator, .mw-page-title-main, .mw-headline {
+  font-family: "Lora", "Open Sans", "Noto Sans", "Times", sans-serif;
+}
+
+/* Gadget-vlw-tl-queue-display: Translation Queue List */
+#mw-panel #vlw-tl-queue-container, .mw-footer-container #vlw-tl-queue-container {
+  padding-top: 5px;
+  border-width: 1px;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+#mw-panel #vlw-tl-queue-container ul li > a {
+  display: block;
+}
+.mw-footer-container #vlw-tl-queue-container {
+  column-count: 3;
+  column-fill: balance;
+  column-gap: 30px;
+}
+@media (max-width: 767px) {
+  .mw-footer-container #vlw-tl-queue-container {
+    column-count: 2;
+  }
+}
+@media (max-width: 500px) {
+  .mw-footer-container #vlw-tl-queue-container {
+    column-count: 1;
+  }
+}
+
+/* Collapsible navigation menus */
+#vector-main-menu .mw-portlet > .vector-menu-heading > .menu-btn {
+  width: 12px;
+  height: 16px;
+  float: right;
+  content: '';
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Font_Awesome_5_solid_chevron-down.svg/120px-Font_Awesome_5_solid_chevron-down.svg.png);
+  opacity: 0.6;
+}
+#vector-main-menu .mw-portlet > .vector-menu-heading {
+  cursor: pointer !important;
+}
+#vector-main-menu .mw-portlet:has(.vector-menu-content.show) .menu-btn {
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Font_Awesome_5_solid_chevron-up.svg/120px-Font_Awesome_5_solid_chevron-up.svg.png);
+}
+.vector-menu-content.collapse {
+  display: none;
+  transition-property: height;
+  transition-duration: 300ms;
+}
+.vector-menu-content.collapse.show {
+  display: block;
+}
+html.skin-theme-clientpref-night {
+  #vector-main-menu .mw-portlet > .vector-menu-heading > .menu-btn {
+    filter: brightness(1) invert(1);
+    backdrop-filter: brightness(1) invert(1);
+  }
+}
+@media screen and (prefers-color-scheme: dark) {
+  html.skin-theme-clientpref-os {
+    #vector-main-menu .mw-portlet > .vector-menu-heading > .menu-btn {
+      filter: brightness(1) invert(1);
+      backdrop-filter: brightness(1) invert(1);
+    }
+  }
+}
+
+#mw-allmessagestable {
+  display: block;
+  overflow-x: scroll;
+}

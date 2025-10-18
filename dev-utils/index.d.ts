@@ -10,7 +10,9 @@ interface GadgetsDefinition {
     disable?: string[]
   }
   gadgets: {
-    [Key: string]: GadgetDefinition
+    [GadgetSectionName: string]: {
+      [GadgetName: string]: GadgetDefinition
+    }
   }
 }
 
@@ -26,9 +28,7 @@ interface GadgetDefinition {
   requires?: string[]
 
   // List of files
-  scripts?: string[]
-  styles?: string[]
-  i18n?: string[]
+  code?: string[]
 
   // The gadget subdirectory is automatically set as the key in the gadgets definition  
   subdir?: string
@@ -46,6 +46,9 @@ interface GadgetDefinition {
  * for more information on what these parameters mean 
  */
 interface ResourceLoaderConditions {
+  default?: boolean
+  hidden?: boolean
+  
   dependencies?: string | string[] | null
   rights?: string | string[] | null
   skins?: string | string[] | null
@@ -53,4 +56,7 @@ interface ResourceLoaderConditions {
   categories?: string | string[] | null
   namespaces?: string | string[] | null
   contentModels?: string | string[] | null
+  
+  type?: "styles" | "general" | null 
+  supportsUrlLoad?: string
 }

@@ -16,7 +16,7 @@ export default function createMwGadgetImplementation(gadgetsToBuild: GadgetDefin
   return {
     name: 'createMwGadgetImplementation',
     enforce: 'post', // Enforce after Vite build plugins
-    apply: 'build', // Only on Dev Mode
+    apply: 'build', // Only on Build Mode
 
     async writeBundle() {
       for (const gadget of gadgetsToBuild) {

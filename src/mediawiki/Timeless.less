@@ -1,0 +1,257 @@
+/* All CSS here will be loaded for users of the Timeless skin */
+/* Hide logo wordmark */
+#p-logo {
+  display: none;
+}
+/* Hide banner on mobile */
+@media (max-width: 500px) {
+  #p-banner {
+    display: none !important;
+  }
+}
+/* Table wrapper */
+.vlw-altver-infobox > .content-table-wrapper {
+  display: inline-block;
+  width: 100%;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: fill-available;
+}
+/* Wikitable */
+.wikitable {
+  background-color: var(--background-color-neutral-subtle,#f8f9fa);
+  color: var(--color-base,#202122);
+  border: 1px solid var(--border-color-base,#a2a9b1);
+}
+.wikitable > tr > th, .wikitable > * > tr > th {
+  background-color: var(--background-color-neutral,#eaecf0);
+  color: var(--color-base,#202122);
+  text-align: center;
+}
+.wikitable > tr > th, .wikitable > tr > td, .wikitable > * > tr > th, .wikitable > * > tr > td {
+  border: 1px solid var(--border-color-base,#a2a9b1);
+  padding: 0.2em 0.4em;
+}
+
+body.skin-timeless {
+  background: #353535;
+}
+/* Navbar */
+#mw-header-container {
+  background: #000;
+  color: #eaeaea;
+}
+#p-personal-label {
+  color: #000;
+}
+#mw-header {
+  background-color: #212121;
+}
+#pt-notifications-alert .mw-echo-notifications-badge::after, 
+#pt-notifications-notice .mw-echo-notifications-badge::after {
+  background-color: #fff;
+  color: #000;
+  opacity: 1.0 !important;
+}
+#pt-notifications-notice .mw-echo-notifications-badge.oo-ui-flaggedElement-unseen::after, 
+#pt-notifications-notice .mw-echo-notifications-badge.mw-echo-unseen-notifications::after {
+  background-color: #2678ff;
+  color: #fff;
+}
+#pt-notifications-alert .mw-echo-notifications-badge.oo-ui-flaggedElement-unseen::after, 
+#pt-notifications-alert .mw-echo-notifications-badge.mw-echo-unseen-notifications::after {
+  background-color: #ff003b;
+  color: #032c47;
+}
+.color-bar .color-middle-container, 
+.color-bar .color-middle, 
+.color-bar .color-left, 
+.color-bar .color-right {
+  background-color: #09c328;
+}
+.p-body .oo-ui-buttonElement {
+  filter: brightness(1) invert(1);
+  backdrop-filter: brightness(1) invert(1);
+}
+#personal h2::after {
+  filter: brightness(1) invert(1);
+  backdrop-filter: brightness(1) invert(1);
+}
+#user-tools h2::after, .sidebar-chunk h2::after {
+  filter: brightness(1) invert(1);
+  backdrop-filter: brightness(1) invert(1);
+}
+@media screen and (max-width: 850px) {
+  #site-tools h2 {
+    background-image: url(https://upload.wikimedia.org/wikipedia/commons/1/1b/OOjs_UI_icon_advanced-invert.svg);
+    opacity: 0.8;
+  }
+  #site-navigation h2 {
+    background-image: url(https://upload.wikimedia.org/wikipedia/commons/5/59/Hamburger_icon_white.svg);
+    opacity: 0.8;
+  }
+}
+@media screen and (min-width: 851px) and (max-width: 1099px) {
+  #mw-header-nav-hack {
+    border-top: solid 2px #000;
+    background: #000;
+  }
+  #site-navigation, #site-tools, #page-tools {
+    color: #ddd;
+  }
+}
+#user-tools h2 {
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/9/9c/OOjs_UI_icon_userAvatar-invert.svg);
+  opacity: 0.8;
+}
+a.mw-echo-notifications-badge.mw-echo-notification-badge-nojs.oo-ui-icon-bell {
+  background: url(https://upload.wikimedia.org/wikipedia/commons/c/cb/OOjs_UI_icon_bell-invert.svg);
+  opacity: 0.8 !important;
+}
+a.mw-echo-notifications-badge.mw-echo-notification-badge-nojs.oo-ui-icon-tray {
+  background: url(https://upload.wikimedia.org/wikipedia/commons/d/d9/OOjs_UI_icon_tray-invert.svg);
+  opacity: 0.8 !important;
+}
+
+/* Sidebar */
+.sidebar-chunk h3 {
+  background: var(--header-bg-color, #29AB87); 
+  color: var(--header-fg-color, #fff);
+  padding: 5px 5px 0px 2px;
+}
+
+/* Footer */
+.mw-footer .footer-icons a > img {
+  background-color: white;
+}
+
+/* Header */
+.mw-parser-output .header {
+  border-bottom: solid 4px #000;
+}
+
+/* Load random pages */
+.load-random .gallerybox .gallerytext a {
+  color: #001fd4 !important;
+}
+
+/* Gadget-vlw-tl-queue-display: Translation Queue List */
+#mw-related-navigation #vlw-tl-queue-container {
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-top: 5px;
+  border-width: 1px;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+#mw-content-container > #vlw-tl-queue-container {
+  margin-left: 10px;
+  margin-right: 10px;
+} 
+@media screen and (min-width: 851px) {
+  #mw-related-navigation #vlw-tl-queue-container ul li > a {
+    display: block;
+  }
+  #mw-related-navigation #vlw-tl-queue-container {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* Gadget-songs-browser: Song browser menu */
+#songs-browser {
+  min-height: 28px;
+}
+#songs-browser .dropdown .dropdown-menu {
+  margin-top: 8px;
+}
+@media screen and (max-width: 850px) {
+  #songs-browser .dropdown {
+    display: block;
+    min-height: 28px;
+    background: none; 
+    border: none; 
+    border-width: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    line-height: initial;
+    word-wrap: break-word;
+    font-size: inherit;
+    position: static;
+    min-width: 0;
+    max-width: 100%;
+    overflow: visible;
+  }
+}
+
+/* Collapsible navigation menus */
+#site-navigation > .sidebar-inner > .mw-portlet > h3 > .menu-btn {
+  width: 12px;
+  height: 16px;
+  float: right;
+  content: '';
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/5/5a/Microsoft_Fluent_UI_%E2%80%93_ic_fluent_triangle_down_20_filled.svg);
+  opacity: 0.8;
+}
+#site-navigation > .sidebar-inner > .mw-portlet > h3 {
+  cursor: pointer !important;
+}
+#site-navigation > .sidebar-inner > .mw-portlet:has(.mw-portlet-body.show) .menu-btn {
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/9/9f/Microsoft_Fluent_UI_%E2%80%93_ic_fluent_triangle_up_20_filled.svg);
+}
+.mw-portlet-body.collapse {
+  display: none;
+  transition-property: height;
+  transition-duration: 300ms;
+}
+.mw-portlet-body.collapse.show {
+  display: block;
+}
+
+/* ThemeToggle */
+#pt-themes .ext-themetoggle-simple-icon {
+  padding: 0;
+  font-size: 0.8rem;
+  color: #000;
+  transition: auto;
+}
+#pt-themes .ext-themetoggle-simple-icon::before {
+  padding-left: 0;
+  padding-right: 0.5rem;
+}
+html.theme-dark #pt-themes .ext-themetoggle-simple-icon {
+  color: #ddd;
+}
+html.theme-dark #pt-themes .ext-themetoggle-simple-icon::before {
+  filter: brightness(1) invert(1);
+  backdrop-filter: brightness(1) invert(1);
+}
+
+/* DataTables + Special:AllMessages */
+table#mw-allmessagestable {
+  display: block;
+  overflow-x: scroll;
+}
+.mw-datatable td {
+  background-color: var(--background-color-base, #fff);
+}
+.mw-datatable tr:hover td {
+  background-color: var(--background-color-progressive-subtle, #f1f4fd);
+}
+.mw-datatable td, .mw-datatable th {
+  border: var(--border-width-base, 1px) solid var(--border-color-base, #a2a9b1);
+}
+#mw-allmessagestable .am_default, #mw-allmessagestable body:hover .am_default {
+  background-color: var(--background-color-content-removed, #ffe49c);
+}
+#mw-allmessagestable .am_actual, #mw-allmessagestable tbody:hover .am_actual {
+  background-color: var(--background-color-content-added, #a3d3ff);
+}
+.mw-datatable {
+  background-color: var(--background-color-base, #fff);
+  color: var(--color-subtle, #54595d);
+}

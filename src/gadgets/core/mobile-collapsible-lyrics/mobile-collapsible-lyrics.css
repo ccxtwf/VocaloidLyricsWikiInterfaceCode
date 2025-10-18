@@ -1,0 +1,28 @@
+@media screen and (max-width: 500px) {
+  .lyrics-table, .lyrics-table tbody, .lyrics-table tr, .lyrics-table th, .lyrics-table td {
+    display: block;
+    width: 100%;
+  }
+  
+  .lyrics-table {
+    overflow-x: initial;
+  }
+  
+  .lyrics-table td {
+    max-width: 100%;
+    min-height: 1rem;
+  }
+  
+  .lyrics-table tr {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  
+  .lyrics-table-header {
+    position: relative;
+  }
+  
+  .lyrics-table .lyrics-comb {
+    text-align: left;
+  }
+}

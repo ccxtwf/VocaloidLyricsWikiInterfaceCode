@@ -1,0 +1,241 @@
+workspace:
+  enable_all: true
+
+gadgets:
+  core:
+    nsfw-modal:
+      code:
+        - nsfw-modal.js
+        - nsfw-modal.less
+      resourceLoader:
+        default: true
+        hidden: true
+        namespaces: "0"
+        actions:
+          - view
+    lyrics-options:
+      code:
+        - lyrics-options.js
+        - lyrics-options.less
+      resourceLoader:
+        default: true
+        dependencies:
+          - oojs-ui-core
+          - oojs-ui-widgets
+    mobile-collapsible-lyrics:
+      code:
+        - mobile-collapsible-lyrics.css
+      resourceLoader:
+        default: true
+        type: "styles"
+    vlw-tl-queue-display:
+      code:
+        - vlw-tl-queue-display.js
+        - vlw-tl-queue-display.less
+      resourceLoader:
+        default: true
+        actions:
+          - view
+    guideline-notification:
+      code:
+        - guideline-notification.js
+      resourceLoader:
+        default: true
+        actions:
+          - view
+          - edit
+        namespaces: "0"
+  
+  browser:
+    songs-browser-utils-category:
+      code:
+        - songs-browser-utils-category.js
+      resourceLoader:
+        hidden: true
+    songs-browser-utils-album:
+      code:
+        - songs-browser-utils-album.js
+      resourceLoader:
+        hidden: true
+    songs-browser:
+      code:
+        - songs-browser.js
+        - songs-browser.less
+      requires:
+        - songs-browser-utils-album
+        - songs-browser-utils-category
+      resourceLoader:
+        namespaces: "0,14"
+        actions:
+          - view
+  
+  moderation:
+    real-time-recent-changes:
+      code: 
+        - real-time-recent-changes.js
+      resourceLoader:
+        namespaces: "-1"
+        actions: 
+          - view
+    rc-discussion:
+      code:
+        - rc-discussion.js
+        - rc-discussion.css
+      resourceLoader:
+        default: true
+        dependencies:
+          - oojs-ui-core
+          - oojs-ui-widgets
+          - jquery.spinner
+        actions:
+          - view
+    tl-checking-utils:
+      code:
+        - tl-checking-utils.js
+        - tl-checking-utils.css
+      resourceLoader:
+        default: true
+        namespaces: "13"
+        supportsUrlLoad: "true"
+  
+  editing:
+    in-page-edit:
+      code:
+        - in-page-edit.js
+      resourceLoader:
+        rights:
+          - edit
+    preload-templates:
+      code:
+        - preload-templates.js
+        - preload-templates.css
+      resourceLoader:
+        default: true
+        actions: 
+          - edit
+        namespaces: "0,1,2,3,6,12,13,14,500,501"
+    lyrics-editor:
+      code:
+        - lyrics-editor.js
+        - lyrics-editor.less
+      resourceLoader:
+        default: true
+        dependencies:
+          - oojs-ui-core
+          - oojs-ui-widgets
+        namespaces: "0,2,500"
+        actions:
+          - edit
+    view-source:
+      code:
+        - view-source-definitions.js
+        - view-source.js
+        - view-source.css
+      resourceLoader:
+        actions:
+          - view
+    hotcat:
+      code:
+        - hotcat.js
+        - hotcat-check.js
+      resourceLoader:
+        rights: 
+          - edit
+  
+  module:
+    countdown:
+      code:
+        - countdown.js
+      resourceLoader:
+        default: true
+    ReferenceTooltips:
+      code:
+        - ReferenceTooltips.js
+        - ReferenceTooltips.css
+      resourceLoader:
+        dependencies:
+          - mediawiki.cookie
+          - jquery.client
+    user-group-badges:
+      code:
+        - user-group-badges.js
+        - user-group-badges.less
+      resourceLoader:
+        default: true
+        namespaces: "2"
+        actions: 
+          - view
+
+  styles:
+    vlw-notification-templates:
+      code:
+        - vlw-notification-templates.less
+      resourceLoader:
+        default: true
+        hidden: true
+        type: "styles"
+    vlw-iconlinks:
+      code:
+        - vlw-iconlinks.css
+      resourceLoader:
+        default: true
+        hidden: true
+        type: "styles"
+    dark-mode-shared:
+      code:
+        - dark-mode-shared.less
+      resourceLoader:
+        default: true
+        hidden: true
+        type: "styles"
+    dark-mode-vector-citizen:
+      code:
+        - dark-mode-vector-citizen.less
+      resourceLoader:
+        default: true
+        hidden: true
+        type: "styles"
+        skins:
+          - vector-2022
+          - citizen
+    dark-mode-other-skins:
+      code:
+        - dark-mode-other-skins.less
+      resourceLoader:
+        default: true
+        hidden: true
+        type: "styles"
+        skins:
+          - timeless
+          - medik
+          - monobook
+    dark-mode-medik:
+      code:
+        - dark-mode-medik.less
+      resourceLoader:
+        default: true
+        hidden: true
+        type: "styles"
+        skins:
+          - medik
+    dark-mode-timeless:
+      code:
+        - dark-mode-timeless.less
+      resourceLoader:
+        default: true
+        hidden: true
+        type: "styles"
+        skins:
+          - timeless
+    recent-changes-on-mobile:
+      code:
+        - recent-changes-on-mobile.less
+      resourceLoader:
+        default: true
+        hidden: true
+        type: "styles"
+        namespaces: "-1"
+        skins:
+          - timeless
+          - medik
+          - vector-2022
