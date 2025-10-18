@@ -9,34 +9,43 @@
   border-style: solid;
   padding-top: 10px;
   padding-bottom: 10px;
-}
-.vlw-notify > tbody > tr > td.vlw-notify-exclamation {
-  font: 20pt Book Antiqua;
-  vertical-align: center;
-}
-.vlw-notify > tbody > tr > td.vlw-notify-body {
-  width: 100%;
-  vertical-align: center;
-}
-.vlw-notify .vlw-notify-heading {
-  font-size: 1.1rem;
-}
-.vlw-notify .vlw-notify-alert-text {
-  color: red;
-}
-.vlw-notify-exclamation > div.icon {
-  margin-left: 10px;
-  margin-right: 10px;
-  width: 30px;
-  height: 30px;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-@media (max-width: 480px) {
-    .vlw-notify {
-    	margin-left: 0px;
-    	margin-right: 0px;
+
+  & > tbody > tr > td {
+
+    &.vlw-notify-exclamation {
+      font: 20pt Book Antiqua;
+      vertical-align: center;
+
+      & > div.icon {
+        margin-left: 10px;
+        margin-right: 10px;
+        width: 30px;
+        height: 30px;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
     }
+
+    &.vlw-notify-body {
+      width: 100%;
+      vertical-align: center;
+    }
+  }
+
+  .vlw-notify-heading {
+    font-size: 1.1rem;
+  }
+
+  .vlw-notify-alert-text {
+    color: red;
+  }
+}
+
+@media (max-width: 480px) {
+  .vlw-notify {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
 }
 
 /* Preset CSS styling for notification templates */
@@ -123,24 +132,23 @@
 
 /* Styling read-more links for long paragraphs */
 .vlw-notify-body .mw-collapsible span.mw-collapsible-toggle {
-    float: right;
+  float: right;
 }
 .hide-overflow {
-    line-height: 1rem;
-    max-height: 1.3rem;
-    overflow-y: hidden;
-    text-overflow: ellipsis;
-    word-wrap: break-word;
-    width: 100%;
-    display: -webkit-box;
-    line-clamp: 1;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
+  line-height: 1rem;
+  max-height: 1.3rem;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  width: 100%;
+  display: -webkit-box;
+  line-clamp: 1;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 }
-
 .mw-collapsible:not(.mw-collapsed) .hide-overflow {
-    display: block;
-    line-clamp: none;
-    overflow-y: visible;
-    max-height: fit-content;
+  display: block;
+  line-clamp: none;
+  overflow-y: visible;
+  max-height: fit-content;
 }

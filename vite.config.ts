@@ -26,11 +26,17 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
 
   return {
     plugins: [
+      // In Vite Serve, watches changes made to files in gadgets/ subdirectory
+      // and generate the load.js entrypoint file 
       autogenerateEntrypoint(gadgetsToBuild),
+      
+      // In Vite Build, copy the i18n.json files to dist/
       viteStaticCopy({
         targets: bundleAssets,
         structured: false,
       }),
+
+      // In Vite Build, create the mw.loader.impl wrapped JS+CSS file
       createMwGadgetImplementation(gadgetsToBuild),
     ],
     build: {

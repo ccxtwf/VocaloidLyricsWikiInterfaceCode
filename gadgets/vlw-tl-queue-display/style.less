@@ -1,0 +1,121 @@
+/* 
+* Gadget-vlw-tl-queue-display
+*
+* CSS Variables:
+*   --tl-queue-container-bg-color
+*   --tl-queue-action-label-color
+*   --tl-queue-label-color
+*   --tl-queue-item-link-color
+*   --tl-queue-item-link-hover-color
+*   --tl-queue-item-subtitle-color
+*/
+/* [[Category:Stylesheets]] */
+
+#vlw-tl-queue-container {
+  background-color: var(--tl-queue-container-bg-color, #fff);
+  border: solid 2px #5d5d5d;
+  border-radius: 20px;
+  padding: 10px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  word-break: break-word;
+
+  #icon-refresh {
+    padding: 0;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    text-align: left;
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .label {
+      color: var(--tl-queue-action-label-color, #737373);
+      font-weight: 400;
+      font-size: 0.8rem;
+      margin-left: 5px;
+    }
+  }
+
+  .label {
+    color: var(--tl-queue-label-color, #7e4f4f);
+    font-size: 0.95rem;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  ul {
+    padding-left: 0px;
+    margin-left: 0px;
+
+    li {
+      font-size: 0.9rem;
+      line-height: 1.25rem;
+      list-style: none;
+      display: block;
+
+      &.hidden {
+        display: none;
+      }
+
+      a {
+        padding: 0;
+        color: var(--tl-queue-item-link-color, #604e4e) !important;
+        font-weight: 400;
+
+        &:hover {
+          color: var(--tl-queue-item-link-hover-color, #878181) !important;
+        }
+      }
+    }
+  }
+
+  .toggle {
+    cursor: pointer;
+    color: var(--tl-queue-action-label-color, #7e4f4f);
+  }
+
+  .tl-check-req-subtitle {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 0.8rem;
+    color: var(--tl-queue-item-subtitle-color, #9d9d9d);
+  }
+
+  .tl-check-req-producer, .tl-check-req-author {
+    display: inline;
+  }
+
+  .tl-check-req-producer {
+    font-style: italic;
+    margin-right: 10px;
+  }
+
+  .tl-check-req-author::before {
+    content: '';
+    background-image: url(https://upload.wikimedia.org/wikipedia/commons/9/97/Ic_create_48px.svg);
+    filter: brightness(0) saturate(100%) invert(69%) sepia(3%) saturate(4%) hue-rotate(322deg) brightness(91%) contrast(89%);
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background-size: 12px 12px;
+  }
+
+  .tl-check-req-approved {
+    width: 15px;
+    height: 15px;
+    margin-right: 4px;
+    content: url('https://upload.wikimedia.org/wikipedia/commons/1/16/Allowed.svg');
+    display: inline;
+  }
+
+  .tl-check-req-rejected {
+    width: 15px;
+    height: 15px;
+    margin-right: 4px;
+    content: url('https://upload.wikimedia.org/wikipedia/commons/b/bc/Not_allowed.svg');
+    display: inline;
+  }
+}

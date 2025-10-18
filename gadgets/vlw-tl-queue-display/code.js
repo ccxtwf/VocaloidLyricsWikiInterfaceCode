@@ -149,70 +149,70 @@
     switch(config.skin) {
       case "vector-2022":
       case "vector":
-      mq = window.matchMedia("(max-width: calc(1119px))");
-      function _onMqChangeVector(mq) {
-        if (mq.matches) {
-          if ($('.mw-footer-container').find('#vlw-tl-queue-container').length > 0) return;
-          $('#mw-panel').find('#vlw-tl-queue-container').remove();
-          $('.mw-footer-container').prepend($container);
-        } else {
-          if ($('#mw-panel').find('#vlw-tl-queue-container').length > 0) return;
-          $('.mw-footer-container').find('#vlw-tl-queue-container').remove();
-          $('#mw-panel').append($container);
+        mq = window.matchMedia("(max-width: calc(1119px))");
+        function _onMqChangeVector(mq) {
+          if (mq.matches) {
+            if ($('.mw-footer-container').find('#vlw-tl-queue-container').length > 0) return;
+            $('#mw-panel').find('#vlw-tl-queue-container').remove();
+            $('.mw-footer-container').prepend($container);
+          } else {
+            if ($('#mw-panel').find('#vlw-tl-queue-container').length > 0) return;
+            $('.mw-footer-container').find('#vlw-tl-queue-container').remove();
+            $('#mw-panel').append($container);
+          }
+          reattachEventHandlersOnMqSwitch();
         }
-        reattachEventHandlersOnMqSwitch();
-      }
-      _onMqChangeVector(mq);
-      mq.addEventListener("change", function() { _onMqChangeVector(mq); });
-      break;
+        _onMqChangeVector(mq);
+        mq.addEventListener("change", function() { _onMqChangeVector(mq); });
+        break;
       case "medik":
-      mq = window.matchMedia("(max-width: 768px)");
-      function _onMqChangeMedik(mq) {
-        if (mq.matches) {
-          if ($('#footer').find('#vlw-tl-queue-container').length > 0) return;
-          $('#mw-navigation').find('#vlw-tl-queue-container').remove();
-          $('#footer').prepend($container);
-        } else {
-          if ($('#mw-navigation').find('#vlw-tl-queue-container').length > 0) return;
-          $('#footer').find('#vlw-tl-queue-container').remove();
-          $('#mw-navigation').append($container);
+        mq = window.matchMedia("(max-width: 768px)");
+        function _onMqChangeMedik(mq) {
+          if (mq.matches) {
+            if ($('#footer').find('#vlw-tl-queue-container').length > 0) return;
+            $('#mw-navigation').find('#vlw-tl-queue-container').remove();
+            $('#footer').prepend($container);
+          } else {
+            if ($('#mw-navigation').find('#vlw-tl-queue-container').length > 0) return;
+            $('#footer').find('#vlw-tl-queue-container').remove();
+            $('#mw-navigation').append($container);
+          }
+          reattachEventHandlersOnMqSwitch();
         }
-        reattachEventHandlersOnMqSwitch();
-      }
-      _onMqChangeMedik(mq);
-      mq.addEventListener("change", function() { _onMqChangeMedik(mq); });
-      break;
+        _onMqChangeMedik(mq);
+        mq.addEventListener("change", function() { _onMqChangeMedik(mq); });
+        break;
       case "monobook":
-      $('#sidebar').append($container);
-      break;
+        $('#sidebar').append($container);
+        break;
       case "timeless":
-      mq = window.matchMedia("(max-width: 1099px)");
-      function _onMqChangeTimeless(mq) {
-        if (mq.matches) {
-          if ($('#mw-content-container').find('> #vlw-tl-queue-container').length > 0) return;
-          $('#mw-related-navigation').find('#vlw-tl-queue-container').remove();
-          $('#mw-content-container').append($container);
-        } else {
-          if ($('#mw-related-navigation').find('#vlw-tl-queue-container').length > 0) return;
-          $('#mw-content-container').find('#vlw-tl-queue-container').remove();
-          $('#mw-related-navigation').append($container);
+        mq = window.matchMedia("(max-width: 1099px)");
+        function _onMqChangeTimeless(mq) {
+          if (mq.matches) {
+            if ($('#mw-content-container').find('> #vlw-tl-queue-container').length > 0) return;
+            $('#mw-related-navigation').find('#vlw-tl-queue-container').remove();
+            $('#mw-content-container').append($container);
+          } else {
+            if ($('#mw-related-navigation').find('#vlw-tl-queue-container').length > 0) return;
+            $('#mw-content-container').find('#vlw-tl-queue-container').remove();
+            $('#mw-related-navigation').append($container);
+          }
+          reattachEventHandlersOnMqSwitch();
         }
-        reattachEventHandlersOnMqSwitch();
-      }
-      _onMqChangeTimeless(mq);
-      mq.addEventListener("change", function() { _onMqChangeTimeless(mq); });
-      break;
+        _onMqChangeTimeless(mq);
+        mq.addEventListener("change", function() { _onMqChangeTimeless(mq); });
+        break;
       case "mirage":
-      $('#p-tb').after($container);
-      break;
+        $('#p-tb').after($container);
+        break;
       case "minerva":
-      $('.post-content.footer-content').append($container);
-      break;
+        $('.post-content.footer-content').append($container);
+        break;
       case "citizen":
-      $('.citizen-footer__container').prepend($container);
-      break;
+        $('.citizen-footer__container').prepend($container);
+        break;
       default:
-      break;
+        break;
     }
   }
   
@@ -222,16 +222,32 @@
       $container = $('<div id="vlw-tl-queue-container"></div>');
       installContainer();
     }
-    $container.html(
-      '<div class="label">Translations on queue</div>' +
-      '<div id="on-queue-tl-container"><ul></ul></div>' +
-      '<div class="label">Recently checked</div>' +
-      '<div id="resolved-tl-container"><ul></ul></div>' +
-      '<a id="icon-refresh" title="Reload the translation queue">' + 
-      '<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Refresh_icon.svg/1024px-Refresh_icon.svg.png">' + 
-      '<span class="label">Reload</span>' + 
-      '</a>'
-    );
+    $container.html('');
+    $container
+      .append(
+        $('<div>', { "class": 'label' })
+          .text('Translations in queue')
+        )
+      .append(
+        $('<div>', { id: 'on-queue-tl-container' })
+          .append($('<ul>'))
+      )
+      .append(
+        $('<div>', { "class": 'label' })
+          .text('Recently checked')
+      )
+      .append(
+        $('<div>', { id: 'resolved-tl-container' })
+          .append($('<ul>'))
+      )
+      .append(
+        $('<a>', { id: 'icon-refresh', title: 'Reload the translation queue' })
+          .append($('<img>', { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Refresh_icon.svg/1024px-Refresh_icon.svg.png' }))
+          .append(
+            $('<span>', { "class": 'label'})
+              .text('Reload')
+          )
+      );
     $onQueueList = $container.find('#on-queue-tl-container > ul');
     $resolvedList = $container.find('#resolved-tl-container > ul');
     attachRefreshEventHandler();
@@ -240,22 +256,34 @@
   }
   
   function createListItem(tlReqItem, isHidden) {
-    var li = $(
-      '<li>' +
-      '<a class="tl-check-req-title" href="' + tlReqItem.link + '" target="_blank" rel="nofollow noindex">' +
-      tlReqItem.title +
-      '</a>' +
-      '<div class="tl-check-req-subtitle">' +
-      (tlReqItem.isApproved === undefined ? '' : ('<div class="tl-check-req-' + (tlReqItem.isApproved ? 'approved' : 'rejected') + '"></div>')) +
-      '<div class="tl-check-req-producer">' + 
-      (tlReqItem.producer || '') +
-      '</div>' +
-      '<div class="tl-check-req-author">' + 
-      (tlReqItem.tlAuthor || '') +
-      '</div>' +
-      '</div>' +
-      '</li>'
-    );
+    var li = $('<li>')
+      .append(
+        $('<a>', { 
+          "class": 'tl-check-req-title', 
+          href: tlReqItem.link, 
+          target: '_blank', 
+          rel: 'nofollow noindex'
+        }).text(tlReqItem.title)
+      )
+      .append(
+        $('<div>', { "class": 'tl-check-req-subtitle' })
+          .append(
+            $('<div>', { 
+              "class": (
+                tlReqItem.isApproved === undefined ? undefined :
+                'tl-check-req-' + (tlReqItem.isApproved ? 'approved' : 'rejected')
+              ) 
+            })
+          )
+          .append(
+            $('<div>', { "class": 'tl-check-req-producer' })
+              .text(tlReqItem.producer || '')
+          )
+          .append(
+            $('<div>', { "class": 'tl-check-req-author' })
+              .text(tlReqItem.tlAuthor || '')
+          )
+      );
     if (isHidden) { li.addClass('hidden'); }
     return li;
   }
@@ -265,61 +293,67 @@
     $resolvedList.html('');
     $('#vlw-tl-queue-container .mw-spinner').show();
     getListOfTranslations(noCacheMode)
-    .then(function (res) {
-      var onQueueTlRequests = res[0], 
-      resolvedTlRequests = res[1];
-      var i = 0, n = 0;
-      if (onQueueTlRequests.length) {
-        n = Math.min(onQueueTlRequests.length, maxNumberOfItems);
-        for (i = 0; i < n; i++) {
-          $onQueueList.append(createListItem(onQueueTlRequests[i], i >= initialNumberOfItems));
+      .then(function (res) {
+        var onQueueTlRequests = res[0], 
+        resolvedTlRequests = res[1];
+        var i = 0, n = 0;
+        if (onQueueTlRequests.length) {
+          n = Math.min(onQueueTlRequests.length, maxNumberOfItems);
+          for (i = 0; i < n; i++) {
+            $onQueueList.append(createListItem(onQueueTlRequests[i], i >= initialNumberOfItems));
+          }
+          if (onQueueTlRequests.length > maxNumberOfItems) {
+            $onQueueList.append(
+              $('<li>', { id: 'on-queue-tl-link', "class": 'tl-check-page-link' })
+                .hide()
+                .append(
+                  $('<a>', { href: linkToPage, target: '_blank', rel: 'nofollow noindex' })
+                    .text('View More on the Translation Checking Page')
+                )
+            );
+          }
+          if (n > initialNumberOfItems) {
+            $onQueueList.append(
+              $('<li>', { id: 'on-queue-tl-toggle', "class": 'toggle' }).text('Load more...')
+            );
+            attachLoadMoreDataEventHandler($onQueueList, $('#on-queue-tl-toggle'));
+          }
+        } else {
+          $onQueueList.append($('<li><i>Currently none</i></li>'));
         }
-        if (onQueueTlRequests.length > maxNumberOfItems) {
-          $onQueueList.append($(
-            '<li id="on-queue-tl-link" class="tl-check-page-link" style="display:none;">' + 
-            '<a href="' + linkToPage + '" target="_blank" rel="nofollow noindex">' + 
-            'View More on the Translation Checking Page' + 
-            '</a>' + 
-            '</li>'
-          ));
+        if (resolvedTlRequests.length) {
+          n = Math.min(resolvedTlRequests.length, maxNumberOfItems);
+          for (i = 0; i < n; i++) {
+            $resolvedList.append(createListItem(resolvedTlRequests[i], i >= initialNumberOfItems));
+          }
+          if (onQueueTlRequests.length > maxNumberOfItems) {
+            $resolvedList.append($(
+              $('<li>', { id: 'resolved-tl-link', "class": 'tl-check-page-link' })
+                .hide()
+                .append(
+                  $('<a>', { href: linkToPage, target: '_blank', rel: 'nofollow noindex' })
+                    .text('View More on the Translation Checking Page')
+                )
+            ));
+          }
+          if (n > initialNumberOfItems) {
+            $resolvedList.append(
+              $('<li>', { id: 'resolved-tl-toggle', "class": 'toggle' }).text('Load more...')
+            );
+            attachLoadMoreDataEventHandler($resolvedList, $('#resolved-tl-toggle'));
+          }
+        } else {
+          $resolvedList.append($('<li><i>Currently none</i></li>'));
         }
-        if (n > initialNumberOfItems) {
-          $onQueueList.append($('<li id="on-queue-tl-toggle" class="toggle">Load more...</li>'));
-          attachLoadMoreDataEventHandler($onQueueList, $('#on-queue-tl-toggle'));
-        }
-      } else {
-        $onQueueList.append($('<li><i>Currently none</i></li>'));
-      }
-      if (resolvedTlRequests.length) {
-        n = Math.min(resolvedTlRequests.length, maxNumberOfItems);
-        for (i = 0; i < n; i++) {
-          $resolvedList.append(createListItem(resolvedTlRequests[i], i >= initialNumberOfItems));
-        }
-        if (onQueueTlRequests.length > maxNumberOfItems) {
-          $resolvedList.append($(
-            '<li id="resolved-tl-link" class="tl-check-page-link" style="display:none;">' + 
-            '<a href="' + linkToPage + '" target="_blank" rel="nofollow noindex">' + 
-            'View More on the Translation Checking Page' + 
-            '</a>' + 
-            '</li>'
-          ));
-        }
-        if (n > initialNumberOfItems) {
-          $resolvedList.append($('<li id="resolved-tl-toggle" class="toggle">Load more...</li>'));
-          attachLoadMoreDataEventHandler($resolvedList, $('#resolved-tl-toggle'));
-        }
-      } else {
-        $resolvedList.append($('<li><i>Currently none</i></li>'));
-      }
-    })
-    .catch(function (error) {
-      $onQueueList.html('<li>Failed to fetch data</li>');
-      $resolvedList.html('<li>Failed to fetch data</li>');
-      console.error(error);
-    })
-    .finally(function() {
-      $('#vlw-tl-queue-container .mw-spinner').hide();
-    });
+      })
+      .catch(function (error) {
+        $onQueueList.html($('<li>').text('Failed to fetch data'));
+        $resolvedList.html($('<li>').text('Failed to fetch data'));
+        console.error(error);
+      })
+      .finally(function() {
+        $('#vlw-tl-queue-container .mw-spinner').hide();
+      });
   }
   
   // =================

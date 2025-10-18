@@ -1,154 +1,154 @@
 /*
- * Gadget-nsfw-modal
- * 
- * CSS Variables:
- *   --nsfw-modal-msg-container-bg-color
- *   --nsfw-modal-msg-container-border-color
- *   --nsfw-modal-msg-heading-text-color
- *   --nsfw-modal-msg-subheading-text-color
- *   --nsfw-modal-msg-more-actions-text-color
- *   --nsfw-modal-msg-confirm-button-color
- *   --nsfw-modal-msg-confirm-button-border-color
- *   --nsfw-modal-msg-confirm-button-text-color
- *   --nsfw-modal-msg-back-button-color
- *   --nsfw-modal-msg-back-button-text-color
- */
+* Gadget-nsfw-modal
+* 
+* CSS Variables:
+*   --nsfw-modal-msg-container-bg-color
+*   --nsfw-modal-msg-container-border-color
+*   --nsfw-modal-msg-heading-text-color
+*   --nsfw-modal-msg-subheading-text-color
+*   --nsfw-modal-msg-more-actions-text-color
+*   --nsfw-modal-msg-confirm-button-color
+*   --nsfw-modal-msg-confirm-button-border-color
+*   --nsfw-modal-msg-confirm-button-text-color
+*   --nsfw-modal-msg-back-button-color
+*   --nsfw-modal-msg-back-button-text-color
+*/
 /* [[Category:Stylesheets]] */
 
 #cw-modal {
-    position: fixed;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(5px);
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
 }
 
 #cw-modal-box {
-    background-color: var(--nsfw-modal-msg-container-bg-color, #fefefe);
-    padding: 50px;
-    border: 1px solid var(--nsfw-modal-msg-container-border-color, #888);
-    width: 900px;
-    height: 60vh;
-    box-sizing: border-box;
-    max-height: 70%;
-    overflow-x: auto;
-    overflow-y: auto;
-    position: relative;
-    top: 50%;
-    left: 50%;
-    margin-top: -30vh;
-    margin-left: -450px;
-    vertical-align: middle;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  background-color: var(--nsfw-modal-msg-container-bg-color, #fefefe);
+  padding: 50px;
+  border: 1px solid var(--nsfw-modal-msg-container-border-color, #888);
+  width: 900px;
+  height: 60vh;
+  box-sizing: border-box;
+  max-height: 70%;
+  overflow-x: auto;
+  overflow-y: auto;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  margin-top: -30vh;
+  margin-left: -450px;
+  vertical-align: middle;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 #cw-modal-content > div {
-	vertical-align: middle;
-	text-align: center;
-	width: 100%;
+  vertical-align: middle;
+  text-align: center;
+  width: 100%;
 }
 
 #cw-modal #cw-heading {
-	font-size: 1.5rem;
-	font-weight: bold;
-	color: var(--nsfw-modal-msg-heading-text-color, #000);
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--nsfw-modal-msg-heading-text-color, #000);
 }
 #cw-modal #cw-subheading {
-	font-size: 1rem;
-	margin-top: 50px;
-	color: var(--nsfw-modal-msg-subheading-text-color, inherit);
+  font-size: 1rem;
+  margin-top: 50px;
+  color: var(--nsfw-modal-msg-subheading-text-color, inherit);
 }
 #cw-modal #cw-action-buttons {
-	margin-top: 30px;
+  margin-top: 30px;
 }
 #cw-modal .cw-action-button {
-    padding: 5px 10px;
-    border-radius: 20px;
-    width: 250px;
-    height: 40px;
-    box-sizing: border-box;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-left: 20px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  width: 250px;
+  height: 40px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-left: 20px;
 }
 #cw-modal #cw-action-buttons #cw-confirm {
-    background-color: var(--nsfw-modal-msg-confirm-button-color, #ffad17);
-    color: var(--nsfw-modal-msg-confirm-button-text-color, inherit);
-    font-weight: bold;
-    border: solid 2px var(--nsfw-modal-msg-confirm-button-border-color, #b20000);
+  background-color: var(--nsfw-modal-msg-confirm-button-color, #ffad17);
+  color: var(--nsfw-modal-msg-confirm-button-text-color, inherit);
+  font-weight: bold;
+  border: solid 2px var(--nsfw-modal-msg-confirm-button-border-color, #b20000);
 }
 #cw-modal #cw-action-buttons #cw-back {
-	background-color: var(--nsfw-modal-msg-back-button-color, #000);
-	color: var(--nsfw-modal-msg-back-button-text-color, #fff);
+  background-color: var(--nsfw-modal-msg-back-button-color, #000);
+  color: var(--nsfw-modal-msg-back-button-text-color, #fff);
 }
 
 #cw-more-actions {
-    margin-top: 20px;
-    font-size: 0.85rem;
-    color: var(--nsfw-modal-msg-more-actions-text-color, #7a7a7a);
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: var(--nsfw-modal-msg-more-actions-text-color, #7a7a7a);
 }
 
 #cw-more-actions label {
-    cursor: pointer;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 #cw-more-actions label > input + span {
-    text-align: left;
-    width: fit-content;
+  text-align: left;
+  width: fit-content;
 }
 
 #cw-suppress-nsfw-notifs {
-    margin-right: 6px;
-    height: 1.1rem;
+  margin-right: 6px;
+  height: 1.1rem;
 }
 
 @media (max-width: 1000px) {
-    #cw-modal-box {
-        width: 700px;
-        margin-left: -350px;
-    }
+  #cw-modal-box {
+    width: 700px;
+    margin-left: -350px;
+  }
 }
 
 @media (max-width: 800px) {
-    #cw-modal-box {
-        width: 500px;
-        margin-left: -250px;
-    }
-    #cw-modal .cw-action-button {
-        margin-bottom: 10px;
-    }
+  #cw-modal-box {
+    width: 500px;
+    margin-left: -250px;
+  }
+  #cw-modal .cw-action-button {
+    margin-bottom: 10px;
+  }
 }
 
 @media (max-width: 500px) {
-    #cw-modal-box {
-        top: 20%;
-        left: 10%;
-        width: 80%;
-        margin-top: 0;
-        margin-left: 0;
-        padding: 20px 15px;
-        box-sizing: border-box;
-        overflow-x: hidden;
-        overflow-y: scroll;
-    }
-    #cw-more-actions label > input + span {
-	    max-width: 200px;
-	}
-	#cw-modal .cw-action-button {
-	    margin-left: 0;
-	    width: 220px;
-	    font-size: 0.85rem;
-	}
+  #cw-modal-box {
+    top: 20%;
+    left: 10%;
+    width: 80%;
+    margin-top: 0;
+    margin-left: 0;
+    padding: 20px 15px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+  #cw-more-actions label > input + span {
+    max-width: 200px;
+  }
+  #cw-modal .cw-action-button {
+    margin-left: 0;
+    width: 220px;
+    font-size: 0.85rem;
+  }
 }

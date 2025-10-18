@@ -25,80 +25,81 @@
   background-color: rgb(0,0,0);
   background-color: rgba(0,0,0,0.4);
   color: #373737 !important;
-}
 
-.lyrics-editor-modal-box {
-  background-color: var(--lyrics-editor-modal-box-bg-color, #fefefe);
-  color: var(--lyrics-editor-modal-box-fg-color, inherit);
-  margin: 5% auto;
-  padding: 16px;
-  border: 1px solid #888;
-  width: 80%;
-  box-sizing: border-box;
-  max-height: 80%;
-  overflow-x: auto;
-  overflow-y: auto;
-}
+	.lyrics-editor-modal-box {
+		background-color: var(--lyrics-editor-modal-box-bg-color, #fefefe);
+		color: var(--lyrics-editor-modal-box-fg-color, inherit);
+		margin: 5% auto;
+		padding: 16px;
+		border: 1px solid #888;
+		width: 80%;
+		box-sizing: border-box;
+		max-height: 80%;
+		overflow-x: auto;
+		overflow-y: auto;
+	}
 
-.lyrics-editor-modal .close {
-  color: var(--lyrics-editor-modal-box-close-button-color, #aaa);
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  margin-top: -10px;
-}
+	.close {
+		color: var(--lyrics-editor-modal-box-close-button-color, #aaa);
+		float: right;
+		font-size: 28px;
+		font-weight: bold;
+		margin-top: -10px;
 
-.lyrics-editor-modal .close:hover, .lyrics-editor-modal .close:focus {
-  color: var(--lyrics-editor-modal-box-close-button-focus-color, #000);
-  text-decoration: none;
-  cursor: pointer;
-}
+		&:hover, &:focus {
+			color: var(--lyrics-editor-modal-box-close-button-focus-color, #000);
+			text-decoration: none;
+			cursor: pointer;
+		}
+	}
 
-.lyrics-editor-modal .oo-ui-buttonElement-button {
-  background-color: var(--lyrics-editor-modal-box-confirm-button-color, #3b75dd) !important;
-  color: var(--lyrics-editor-modal-box-confirm-button-text-color, #fff) !important;
-}
+	.oo-ui-buttonElement-button {
+		background-color: var(--lyrics-editor-modal-box-confirm-button-color, #3b75dd) !important;
+		color: var(--lyrics-editor-modal-box-confirm-button-text-color, #fff) !important;
+	}
 
-.lyrics-editor-modal .oo-ui-dropdownWidget-handle {
-  color: var(--lyrics-editor-modal-box-dropdown-text-color, #373737) !important;
-  text-shadow: 0 1px 1px var(--lyrics-editor-modal-box-dropdown-text-shadow-color, #fff) !important;
-  border-color: #c8ccd1 !important;
-  background-color: var(--lyrics-editor-modal-box-dropdown-bg-color, #eaecf0) !important;
-}
+	.oo-ui-dropdownWidget-handle {
+		color: var(--lyrics-editor-modal-box-dropdown-text-color, #373737) !important;
+		text-shadow: 0 1px 1px var(--lyrics-editor-modal-box-dropdown-text-shadow-color, #fff) !important;
+		border-color: #c8ccd1 !important;
+		background-color: var(--lyrics-editor-modal-box-dropdown-bg-color, #eaecf0) !important;
+	}
 
-.lyrics-editor-modal .oo-ui-dropdownInputWidget.oo-ui-widget-disabled {
-  background-color: var(--lyrics-editor-modal-box-dropdown-bg-color, #eaecf0) !important;
-}
+	.oo-ui-dropdownInputWidget.oo-ui-widget-disabled {
+		background-color: var(--lyrics-editor-modal-box-dropdown-bg-color, #eaecf0) !important;
+	}
 
-#lyrics-editor-table-selector {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: 20px;
-}
+	#lyrics-editor-table-selector {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: center;
+		margin-bottom: 20px;
 
-#lyrics-editor-table-selector .oo-ui-selectWidget {
-  z-index: 1200;
-}
+		.oo-ui-selectWidget {
+			z-index: 1200;
+		}
+	}
 
-#lyrics-editor-jstable-container {
-  height: 50vh;
-}
+	#lyrics-editor-jstable-container {
+		height: 50vh;
+	}
 
-#lyrics-editor-actions {
-  margin-top: 20px;
-  text-align: center;
-}
+	#lyrics-editor-actions {
+		margin-top: 20px;
+		text-align: center;
+	}
 
-#lyrics-editor-bug-report {
-  margin-top: 10px;
-  font-size: smaller;
-  text-align: center;
+	#lyrics-editor-bug-report {
+		margin-top: 10px;
+		font-size: smaller;
+		text-align: center;
+	}
 }
 
 /* Handsontable dark mode */
-html.theme-dark #lyrics-editor-jstable-container, :root.skin-theme-clientpref-night #lyrics-editor-jstable-container {
+html.theme-dark #lyrics-editor-jstable-container, 
+:root.skin-theme-clientpref-night #lyrics-editor-jstable-container {
 	--ht-border-color: #313132;
 	--ht-accent-color: #476af7;
 	--ht-foreground-color: #c7c7c7;
@@ -149,7 +150,8 @@ html.theme-dark #lyrics-editor-jstable-container, :root.skin-theme-clientpref-ni
 	--ht-header-row-active-background-color: #476af7;
 }
 @media screen and (prefers-color-scheme: dark) {
-	html.skin-theme-clientpref-os #lyrics-editor-jstable-container, :root.skin-theme-clientpref-os #lyrics-editor-jstable-container {
+	html.skin-theme-clientpref-os #lyrics-editor-jstable-container, 
+	:root.skin-theme-clientpref-os #lyrics-editor-jstable-container {
 		--ht-border-color: #313132;
 		--ht-accent-color: #476af7;
 		--ht-foreground-color: #c7c7c7;

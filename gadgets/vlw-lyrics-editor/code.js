@@ -446,7 +446,7 @@
       mw.notify( 'Successfully replaced lyrics!' );
     });
     $('#lyrics-editor-jstable-container-wrapper').append(
-      $('<div id="lyrics-editor-actions"></div>').append(confirmButton.$element)
+      $('<div>', { id: "lyrics-editor-actions" }).append(confirmButton.$element)
     );
   }
     
@@ -455,7 +455,10 @@
     $modalContent = $('.lyrics-editor-modal-content');
     $modalContent.find('#lyrics-editor-loader').hide();
     if (tables.length) {
-      $modalContent.find('#lyrics-editor-table-selector').html('<p>Found ' + tables.length + ' table(s)</p>');
+      $modalContent.find('#lyrics-editor-table-selector')
+        .html(
+          $('<p>').text('Found ' + tables.length + ' table(s)')
+        );
       var dropdown = new OO.ui.DropdownInputWidget( {
         options: tables.map(function (table, index) {
           return {
@@ -473,7 +476,9 @@
       });
       $modalContent.find('#lyrics-editor-table-selector').append(dropdown.$element);
     } else {
-      $modalContent.find('#lyrics-editor-table-selector').html('<p>No table found</p>');
+      $modalContent.find('#lyrics-editor-table-selector').html(
+        $('<p>').text('No table found')
+      );
     }
   }
     
@@ -481,25 +486,43 @@
   //   Initialization  
   // =================
   function installModal () {
-    $modal = $(
-      '<div class="lyrics-editor-modal" style="display:none;">' + 
-        '<div class="lyrics-editor-modal-box">' + 
-          '<span class="close">&times;</span>' +
-          '<div class="lyrics-editor-modal-content">' + 
-            '<div id="lyrics-editor-table-selector"></div>' +
-            '<div id="lyrics-editor-jstable-container-wrapper">' +
-              '<div id="lyrics-editor-jstable-container"></div>' +
-            '</div>' +
-            '<div id="lyrics-editor-loader">Now loading...</div>' +
-            '<div id="lyrics-editor-bug-report">' + 
-              'You can report any bugs to ' + 
-              '<a href="/wiki/MediaWiki_talk:Gadget-lyrics-editor" target="_blank">MediaWiki talk:Gadget-lyrics-editor</a> ' + 
-              'or to <a href="/wiki/User_talk:CoolMikeHatsune22" target="_blank">the script developer\'s user talk page</a>.' + 
-            '</div>' +
-          '</div>' +
-        '</div>' + 
-      '</div>'
-    );
+    $modal = $('<div>', { "class": "lyrics-editor-modal" })
+      .hide()
+      .append(
+        $('<div>', { "class": "lyrics-editor-modal-box" })
+          .append(
+            $('<span>', { "class": "close" }).text("&times;")
+          )
+          .append(
+            $('<div>', { "class": "lyrics-editor-modal-content" })
+              .append(
+                $('<div>', { id: 'lyrics-editor-table-selector' })
+              )
+              .append(
+                $('<div>', { id: 'lyrics-editor-jstable-container-wrapper' })
+                  .append(
+                    $('<div>', { id: 'lyrics-editor-jstable-container' })
+                  )
+              )
+              .append(
+                $('<div>', { id: 'lyrics-editor-loader' })
+                  .text('Now loading...')
+              )
+              .append(
+                $('<div>', { id: 'lyrics-editor-bug-report' })
+                  .append("You can report any bugs to ")
+                  .append(
+                    $('<a>', { href: '/wiki/MediaWiki_talk:Gadget-lyrics-editor', target: '_blank' })
+                      .text('MediaWiki talk:Gadget-lyrics-editor')
+                  )
+                  .append(" or to ")
+                  .append(
+                    $('<a>', { href: '/wiki/User_talk:CoolMikeHatsune22', target: '_blank' })
+                      .text('the script developer\'s user talk page.')
+                  )
+              )
+          )
+      );
     $('body').append($modal);
     $modalContent = $modal.find('.lyrics-editor-modal-content');
     $('.lyrics-editor-modal .close').on('click', function() {
@@ -556,25 +579,25 @@
       case "mirage":
       case "medik":
         $('<li>')
-        .attr('id', commonId)
-        .append($a)
-        .addClass('mw-list-item')
-        .appendTo($list);
+          .attr('id', commonId)
+          .append($a)
+          .addClass('mw-list-item')
+          .appendTo($list);
         break;
       case "minerva":
         $a = $a.addClass('toggle-list-item__label');
         $('<li>')
-        .attr('id', commonId)
-        .append(
-          $('<a>')
+          .attr('id', commonId)
           .append(
-            $('<span>', { class: 'mw-ui-icon mw-ui-icon-minerva-infoFilled' })
+            $('<a>')
+            .append(
+              $('<span>', { class: 'mw-ui-icon mw-ui-icon-minerva-infoFilled' })
+            )
+            .addClass('toggle-list-item__anchor menu__item--page-actions-overflow-protect')
+            .append($a)
           )
-          .addClass('toggle-list-item__anchor menu__item--page-actions-overflow-protect')
-          .append($a)
-        )
-        .addClass('toggle-list-item')
-        .appendTo($list);
+          .addClass('toggle-list-item')
+          .appendTo($list);
         break;
       case "citizen":
         $('<li>')
@@ -604,14 +627,14 @@
   //   Entrypoint
   // =================
   mw.loader.getScript( 'https://cdn.jsdelivr.net/npm/handsontable@15.3.0/dist/handsontable.full.min.js?ctype=text/javascript' )
-	.then(function() {
-	  mw.loader.load( 'https://cdn.jsdelivr.net/npm/handsontable@15.3.0/styles/handsontable.min.css?ctype=text/css', 'text/css' );
-	  mw.loader.load( 'https://cdn.jsdelivr.net/npm/handsontable@15.3.0/styles/ht-theme-main.min.css?ctype=text/css', 'text/css' );
-	  mw.hook('wikipage.content').add(function () {
-	    init(config.skin);
-	  });
-	}, function () {
-	  console.error("Failed to load Handsontable JS dependency for Gadget-lyrics-editor.js");
-	});
+    .then(function() {
+      mw.loader.load( 'https://cdn.jsdelivr.net/npm/handsontable@15.3.0/styles/handsontable.min.css?ctype=text/css', 'text/css' );
+      mw.loader.load( 'https://cdn.jsdelivr.net/npm/handsontable@15.3.0/styles/ht-theme-main.min.css?ctype=text/css', 'text/css' );
+      mw.hook('wikipage.content').add(function () {
+        init(config.skin);
+      });
+    }, function () {
+      console.error("Failed to load Handsontable JS dependency for Gadget-lyrics-editor.js");
+    });
     
 }(mediaWiki, jQuery));

@@ -1,13 +1,13 @@
 /* [[Category:Stylesheets]] */
 
 .chip-multi-tl {
-    cursor: default;
-    padding: 2px 3px;
-    margin-left: 6px;
-    border-radius: 5px;
-    font-size: 0.7rem;
-    font-weight: bold;
-    white-space: nowrap;
-    background-color: #b51666;
-    color: white;
+  cursor: default;
+  padding: 2px 3px;
+  margin-left: 6px;
+  border-radius: 5px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  white-space: nowrap;
+  background-color: #b51666;
+  color: white;
 }

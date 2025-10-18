@@ -384,7 +384,7 @@ export async function createGadgetImplementationForDist(
   for (const style of styles) {
     const filepath = resolve(__dirname, '../dist', subdir!, style.replace(/\.[a-zA-Z0-9]*$/, '')+'.css');
     const codeContents = await readFile(filepath, { encoding: 'utf8' });
-    stylesToLoad.push(`"${codeContents.trim()}"`);
+    stylesToLoad.push(`"${codeContents.replaceAll(/"/g, '\\"').trim()}"`);
   }
 
   let snippet = `

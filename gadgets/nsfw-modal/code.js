@@ -3,7 +3,9 @@
  * Authored by [[User:CoolMikeHatsune22]]
  */
 /* [[Category:Scripts]] */
+
 (function (mw, $) {
+	"use strict";
 
 	var config = mw.config.get([
 		'wgArticleId',
@@ -14,6 +16,7 @@
 	var user_pref = 'userjs-suppress-nsfw-modal';
 	var ptLc = 10000;
 	var skipIds = [];
+	var $modal;
 	
 	// Skip if namespace is not main or the category is not detected
 	if (config.wgNamespaceNumber !== 0 || config.wgCategories.indexOf("Songs with NSFW content") < 0) {
@@ -36,7 +39,7 @@
 	}
 	
 	function onClickConfirm() {
-		$('#cw-modal').css('display', 'none');
+		$('#cw-modal').hide();
 		
 		// Save user consent to local storage 
 		skipIds.push(config.wgArticleId);
@@ -73,24 +76,42 @@
 	}
 	
 	function init() {
-		$modal = $(
-			'<div id="cw-modal" style="display:none;">' + 
-				'<div id="cw-modal-box">' + 
-					'<div id="cw-modal-content">' + 
-						'<div id="cw-heading">The following content is not safe for work.</div>' +
-						'<div id="cw-subheading">To continue, you must confirm that you are over the age of 18.</div>' +
-						'<div id="cw-action-buttons">' + 
-							'<button type="button" class="cw-action-button" id="cw-confirm">Yes, I am over the age of 18</button>' +
-							'<button type="button" class="cw-action-button" id="cw-back">No, let me go back</button>' +
-						'</div>' +
-						'<div id="cw-more-actions">' +
-							'<label><input type="checkbox" id="cw-suppress-nsfw-notifs">' +
-							'<span>Don\'t show me any more of these warnings.</span></label>' +
-						'</div>' +
-					'</div>' + 
-				'</div>' +
-			'</div>'
-		);
+		$modal = $('<div>', { id: 'cw-modal' })
+			.append(
+				$('<div>', { id: 'cw-modal-box' })
+					.append(
+						$('<div>', { id: 'cw-modal-content' })
+							.append(
+								$('<div>', { id: 'cw-heading' })
+									.text('The following content is not safe for work.')
+							)
+							.append(
+								$('<div>', { id: 'cw-subheading' })
+									.text('To continue, you must confirm that you are over the age of 18.')
+							)
+							.append(
+								$('<div>', { id: 'cw-action-buttons' })
+									.append(
+										$('<button>', { id: 'cw-confirm', type: 'button', 'class': 'cw-action-button' })
+											.text('Yes, I am over the age of 18')
+									)
+									.append(
+										$('<button>', { id: 'cw-back', type: 'button', 'class': 'cw-action-button' })
+											.text('No, let me go back')
+									)
+							)
+							.append(
+								$('<div>', { id: 'cw-more-actions' })
+									.append(
+										$('<label>')
+											.append($('<input>', { id: 'cw-suppress-nsfw-notifs', type: 'checkbox' }))
+											.append(
+												$('<span>').text('Don\'t show me any more of these warnings.')
+											)
+									)
+							)
+					)
+			);
 		$('body').append($modal);
 		$('#cw-modal #cw-confirm').on('click', onClickConfirm);
 		$('#cw-modal #cw-back').on('click', onClickBack);
@@ -98,7 +119,7 @@
 	
 	init();
 	mw.hook('wikipage.content').add(function () {
-		$('#cw-modal').css('display', '');
+		$('#cw-modal').show();
 		// Lock background scrolling while the modal is open
 		document.body.style.position = 'fixed';
 		document.body.style.top = '-' + window.scrollY + 'px';
