@@ -185,10 +185,10 @@
 		return opts;
 	}
 
-	function init($content) {
-		var countdown = $content.find('.countdown:not(.handled)');
+	function init() {
+		var countdown = $('body').find('.countdown:not(.handled)');
 		if (!countdown.length) return;
-		$content.find('.nocountdown').css('display', 'none');
+		$('body').find('.nocountdown').css('display', 'none');
 		countdown
 		.css('display', 'inline')
 		.find('.countdowndate')

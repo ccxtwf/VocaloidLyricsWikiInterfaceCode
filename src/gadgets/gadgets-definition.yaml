@@ -62,8 +62,8 @@ gadgets:
         - songs-browser.js
         - songs-browser.less
       requires:
-        - songs-browser-utils-album
-        - songs-browser-utils-category
+        - browser/songs-browser-utils-album
+        - browser/songs-browser-utils-category
       resourceLoader:
         namespaces: "0,14"
         actions:
