@@ -29,6 +29,7 @@ interface GadgetDefinition {
 
   // List of files
   code?: string[]
+  i18n?: string[]
 
   // The gadget subdirectory is automatically set as the key in the gadgets definition  
   subdir?: string

@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync } from 'fs';
-import { readFile, writeFile } from 'fs/promises';
+import { readFile, writeFile, readdir } from 'fs/promises';
 import { resolve, join } from 'path';
 import { parse } from 'yaml';
 import * as crypto from 'crypto';
@@ -7,7 +7,8 @@ import { normalizePath } from 'vite';
 import { Target } from 'vite-plugin-static-copy';
 
 let gadgetsDir: string;
-resolveGadgetsDirectory();
+let mediawikiInterfaceDir: string;
+resolveCodeDirectory();
 
 let viteServerOrigin: string;
 
@@ -17,16 +18,23 @@ let viteServerOrigin: string;
 const namespace = 'ext.gadget';
 
 /** 
- * Resolve the path to the gadgets directory in the Vite project.
+ * Resolve the path to the directory of gadgets and MediaWiki interface code (Common.css/Common.js) 
+ * in the Vite project.
  * 
- * @returns string
+ * @returns { gadgetsDir: string, mediawikiInterfaceDir: string }
  */
-export function resolveGadgetsDirectory(): string {
+export function resolveCodeDirectory(): { gadgetsDir: string, mediawikiInterfaceDir: string } {
+  const srcDirPath = normalizePath(resolve(__dirname, '../src'));
+  if (!existsSync(srcDirPath)) { mkdirSync(srcDirPath); }
   if (!gadgetsDir) {
-    gadgetsDir = normalizePath(resolve(__dirname, '../gadgets'));
+    gadgetsDir = normalizePath(join(srcDirPath, 'gadgets'));
     if (!existsSync(gadgetsDir)) { mkdirSync(gadgetsDir); }
   }
-  return gadgetsDir;
+  if (!mediawikiInterfaceDir) {
+    mediawikiInterfaceDir = normalizePath(join(srcDirPath, 'mediawiki'));
+    if (!existsSync(mediawikiInterfaceDir)) { mkdirSync(mediawikiInterfaceDir); }
+  }
+  return { gadgetsDir, mediawikiInterfaceDir };
 }
 
 /**
@@ -38,10 +46,20 @@ export function resolveGadgetsDirectory(): string {
  * @returns string
  */
 export function resolveGadgetPath(gadgetName: string, relativeFilepath?: string): string {
-  if (relativeFilepath === undefined) {
-    return join(gadgetsDir, gadgetName);
-  }
-  return normalizePath(resolve(join(gadgetsDir, gadgetName), relativeFilepath));
+  const gadgetSubdir = join(gadgetsDir, gadgetName);
+  if (relativeFilepath === undefined) { return normalizePath(gadgetSubdir); }
+  return normalizePath(resolve(gadgetSubdir, relativeFilepath));
+}
+
+/**
+ * Resolve the path to the specific MediaWiki global wiki interface code (i.e. Common.css/Commoh.js) 
+ * in the Vite project.
+ * 
+ * @param filename string
+ * @returns string
+ */
+export function resolveMediaWikiInterfaceCodePath(filename: string): string {
+  return normalizePath(join(mediawikiInterfaceDir, filename));
 }
 
 /** 
@@ -49,17 +67,18 @@ export function resolveGadgetPath(gadgetName: string, relativeFilepath?: string)
  * This load.js file contains the definitions of the gadgets that it tells
  * MediaWiki to load and register as modules (using mw.loader.impl).
  * 
+ * @param devMode boolean
  * @returns string
  */
-function resolveEntrypoint(): string {
-  const distFolder = resolve(__dirname, '../');
+function resolveEntrypoint(devMode: boolean): string {
+  const distFolder = resolve(__dirname, devMode ? '../' : '../dist');
+  if (!existsSync(distFolder)) { mkdirSync(distFolder); }
   return normalizePath(resolve(distFolder, 'load.js'));
 }
 
 /** 
  * Checks if the file exists in the specified gadget sub-directory in the Vite Project.
  * 
- * @param gadgetName string
  * @param relativeFilepath string
  * @returns boolean
  */
@@ -68,18 +87,45 @@ function fileExistsInGadgetDirectory(gadgetName: string, relativeFilepath: strin
 }
 
 /**
+ * Get the JS scripts to load for each gadget
+ * 
+ * @param gadgetDefinition GadgetDefinition
+ * @returns Array<string> 
+ */
+function getScriptsToLoadFromGadgetDefinition(gadgetDefinition: GadgetDefinition): string[] {
+  return gadgetDefinition.code?.filter(code => code.match(/\.(?:js|ts)$/)) || [];
+}
+
+/**
+ * Get the CSS stylesheets to load for each gadget
+ * 
+ * @param gadgetDefinition GadgetDefinition
+ * @returns Array<string> 
+ */
+function getStylesheetsToLoadFromGadgetDefinition(gadgetDefinition: GadgetDefinition): string[] {
+  return gadgetDefinition.code?.filter(code => code.match(/\.(?:css|less)$/)) || [];
+}
+
+/**
  * Resolve the static URL to the file in the specified gadget directory.
  * This is passed in the entrypoint file (load.js) to mw.loader.impl, 
  * and is used by the MediaWiki client to load and execute/apply the JS/CSS files.
  * 
- * @param gadgetSubdir string
  * @param filepath string
+ * @param gadgetSubdir string
+ * @param isMediawikiInterfaceCode boolean
  * @returns string 
  */
-function getStaticUrlToFile(gadgetSubdir: string, filepath: string): string {
+function getStaticUrlToFile(filepath: string, { gadgetSubdir = '', isMediawikiInterfaceCode = false }: { gadgetSubdir: string, isMediawikiInterfaceCode: boolean }): string {
   // Resolve TS files
   filepath = filepath.replace(/\.ts$/, '.js');
-  return encodeURI(`${viteServerOrigin!}/gadgets/${gadgetSubdir}/${filepath}`);
+  // Resolve LESS files
+  filepath = filepath.replace(/\.less$/, '.css');
+  if (isMediawikiInterfaceCode) {
+    return `${viteServerOrigin!}/mediawiki/${filepath}`;
+  } else {
+    return encodeURI(`${viteServerOrigin!}/gadgets/${gadgetSubdir}/${filepath}`);
+  }
 }
 
 /** 
@@ -91,7 +137,7 @@ export function setViteServerOrigin(_origin: string): void {
 }
 
 /**
- * Reads and parses the contents of "/gadgets/gadgets-definition.yaml".
+ * Reads and parses the contents of /src/gadgets/gadgets-definition.yaml
  * 
  * @returns Promise<GadgetsDefinition>
  */
@@ -119,51 +165,79 @@ export function getGadgetsToBuild(gadgetsDefinition: GadgetsDefinition): GadgetD
   const disabledGadgets = new Set(arDisabledGs);
   
   // Determine which gadgets to include/exclude
-  let gadgetsToBuild = Object.entries(gadgetsDefinition?.gadgets || {})
-    .filter(([gadgetName, gadgetDefinition]) => {
-      // Always return false (i.e. do not build the gadget) if 
-      // "gadgets.<GADGET-NAME>.disabled" is set on the gadget definition 
-      if (gadgetDefinition?.disabled === true) { return false; } 
-      // Otherwise defer to "workspace.enable_all", "workspace.enable", "workspace.disable" 
-      return enableAll ? !disabledGadgets.has(gadgetName) : enabledGadgets.has(gadgetName);
+  let gadgetsToBuild: GadgetDefinition[] = [];
+  Object.entries(gadgetsDefinition?.gadgets || {})
+    .forEach(([gadgetSectionName, gadgetSectionDefinition]) => {
+      Object.entries(gadgetSectionDefinition || {})
+        .forEach(([gadgetName, gadgetDefinition]) => {
+          // Always return early (i.e. do not build the gadget) if 
+          // "gadgets.<GADGET-NAME>.disabled" is set on the gadget definition 
+          if (gadgetDefinition?.disabled === true) { return; } 
+          // Otherwise defer to "workspace.enable_all", "workspace.enable", "workspace.disable" 
+          if (enableAll ? !disabledGadgets.has(gadgetName) : enabledGadgets.has(gadgetName)) {
+            gadgetsToBuild.push({
+              ...gadgetDefinition,
+              subdir: `${gadgetSectionName}/${gadgetName}`
+            });
+          }
+        })
     });
 
   // Check if the gadget exists
   const nonexistentGadgets: string[] = [];
-  gadgetsToBuild = gadgetsToBuild.filter(([gadgetName, _]) => {
-    const subdirExists = existsSync(resolveGadgetPath(gadgetName));
-    if (!subdirExists) { nonexistentGadgets.push(gadgetName); }
+  gadgetsToBuild = gadgetsToBuild.filter(({ subdir }) => {
+    const subdirExists = existsSync(resolveGadgetPath(subdir!));
+    if (!subdirExists) { nonexistentGadgets.push(subdir!); }
     return subdirExists;
   });
   if (nonexistentGadgets.length > 0) {
     console.log("Skipping loading the following gadgets:");
     console.error(
       nonexistentGadgets
-        .map((gadgetName) => {
-          return ` - ${gadgetName}\tDirectory not found: ${resolveGadgetPath(gadgetName)}`
+        .map((subdir) => {
+          return ` - ${subdir}\tDirectory not found: ${resolveGadgetPath(subdir)}`
         })
+        .join('\n')
+    );
+  }
+
+  // Check for any missing files
+  const gadgetsWithMissingFiles: { subdir: string, missingFiles: string[] }[] = [];
+  gadgetsToBuild = gadgetsToBuild.filter(({ code, subdir }) => {
+    const missingCodeFiles = code?.filter((file) => !fileExistsInGadgetDirectory(subdir!, file)) || [];
+    if (missingCodeFiles.length > 0) {
+      gadgetsWithMissingFiles.push({ subdir: subdir!, missingFiles: missingCodeFiles });
+      return false;
+    }
+    return true;
+  });
+  if (gadgetsWithMissingFiles.length > 0) {
+    console.error('Found gadgets with missing files. The following gadgets will not be loaded:');
+    console.error(
+      gadgetsWithMissingFiles
+        .map(({ subdir, missingFiles }) => `${subdir}: MISSING ${missingFiles.join(', ')}`)
         .join('\n')
     );
   }
   
   // Determine gadget load order
-  let gadgetsToBuildInOrder: [string, GadgetDefinition][] = [];
+  let gadgetsToBuildInOrder: GadgetDefinition[] = [];
   const loadedDeps: Set<string> = new Set();
-  const getGadgetsWithNoMoreRequiredDependencies = (gadgetsToBuild: [string, GadgetDefinition][], loadedDeps: Set<string>): [[string, GadgetDefinition][], string[]] => {
-    const res: [string, GadgetDefinition][] = [];
+  const getGadgetsWithNoMoreRequiredDependencies = (gadgetsToBuild: GadgetDefinition[], loadedDeps: Set<string>): [GadgetDefinition[], string[]] => {
+    const res: GadgetDefinition[] = [];
     const depsToLoad: string[] = [];
-    for (const [gadgetName, gadgetDefinition] of gadgetsToBuild) {
+    for (const gadgetDefinition of gadgetsToBuild) {
       if (loadedDeps.size === 0) {
         if ((gadgetDefinition?.requires || []).length === 0) {
-          res.push([(gadgetName as string), (gadgetDefinition as GadgetDefinition)]);
-          depsToLoad.push(gadgetName);
+          res.push(gadgetDefinition);
+          depsToLoad.push(gadgetDefinition.subdir!);
         }
         continue;
       }
       const allDepsLoaded = (gadgetDefinition?.requires || []).every((required) => loadedDeps.has(required));
       if (allDepsLoaded) {
-        res.push([gadgetName, gadgetDefinition]);
-        depsToLoad.push(gadgetName);
+        res.push(gadgetDefinition);
+        depsToLoad.push(gadgetDefinition.subdir!);
       }
     }
     return [res, depsToLoad];
@@ -174,62 +248,93 @@ export function getGadgetsToBuild(gadgetsDefinition: GadgetsDefinition): GadgetD
       console.error('Found gadgets with unrecognized dependencies in gadgets-definition.yaml. The following gadgets will not be loaded:');
       console.error(
         gadgetsToBuild
-          .map(([gadgetName, gadgetDefinition]) => {
+          .map((gadgetDefinition) => {
             const deps = (gadgetDefinition?.requires || []).filter(dep => !loadedDeps.has(dep));
-            return ` - ${gadgetName}\tRequires: ${deps.join(', ')}`
+            return ` - ${gadgetDefinition.subdir!}\tRequires: ${deps.join(', ')}`
           })
           .join('\n')
       );
       break;
     }
     depsToLoad.forEach(dep => loadedDeps.add(dep));
-    gadgetsToBuild = gadgetsToBuild.filter(([gadgetName, _]) => !loadedDeps.has(gadgetName));
+    gadgetsToBuild = gadgetsToBuild.filter(({ subdir }) => !loadedDeps.has(subdir!));
     gadgetsToBuildInOrder.push(...gadgetsToLoad);
   }
-  
-  // Prepare return data
-  return gadgetsToBuildInOrder
-    .map(([gadgetName, gadgetDefinition]) => {
-      return {
-        ...gadgetDefinition,
-        subdir: gadgetName,
-        scripts: gadgetDefinition.scripts?.filter(script => fileExistsInGadgetDirectory(gadgetName, script)),
-        styles: gadgetDefinition.styles?.filter(style => fileExistsInGadgetDirectory(gadgetName, style)),
-        i18n: gadgetDefinition.i18n?.filter(i18n => fileExistsInGadgetDirectory(gadgetName, i18n))
-      };
+
+  return gadgetsToBuildInOrder;
+}
+
+/**
+ * Trawls through /src/mediawiki to determine the code files to build & compile as the wiki's global 
+ * interface code
+ * 
+ *  @returns Array<GadgetDefinition>
+ */
+export async function getMediaWikiInterfaceCodeToBuild(): Promise<GadgetDefinition[]> {
+  try {
+    const definitions: GadgetDefinition[] = [];
+    const files = await readdir(mediawikiInterfaceDir);
+    const kvPairs: { [k: string]: string[] } = {};
+    files.forEach((filename) => {
+      const k = filename.replace(/\.[a-zA-Z0-9]+$/, '').toLowerCase();
+      if (!(k in kvPairs)) kvPairs[k] = [];
+      kvPairs[k]!.push(filename);
     });
+    if ('common' in kvPairs) {
+      definitions.push({
+        subdir: 'mediawiki',
+        code: kvPairs.common
+      });
+      delete kvPairs.common;
+    }
+    Object.entries(kvPairs).forEach(([k, files]) => {
+      definitions.push({
+        subdir: `mediawiki-${k}`,
+        code: files,
+        resourceLoader: { skins: k }
+      })
+    });
+    return definitions;
+  } catch (err) {
+    console.error('Unable to fetch the wiki\'s global interface code to build & compile.');
+    console.error(err);
+    return [];
+  }
 }
 
 /**
  * Build the entrypoint file (load.js) to be served by the Vite server and to be 
- * loaded on the MediaWiki client. Only applicable for running on Dev Mode.
+ * loaded on the MediaWiki client.
  * Each module is loaded in the MediaWiki client using mw.loader.impl.  
  * You can check on the status of each module using mw.loader.getState(moduleName).
  * You can call on each module using mw.loader.load() or mw.loader.using().
  * 
  * @param gadgetsToBuild Array<GadgetDefinition>
+ * @param mediawikiInterfaceCodeToBuild Array<GadgetDefinition>
+ * @param devMode boolean
  * @returns Promise<void>
  */
-export async function serveGadgetsForDevMode(gadgetsToBuild: GadgetDefinition[], { 
-  buildAll = true
-}: { rebuild?: string[], buildAll?: boolean } = {}): Promise<void> {
-  const entrypointFile = resolveEntrypoint();
+export async function serveGadgets(
+  gadgetsToBuild: GadgetDefinition[], 
+  mediawikiInterfaceCodeToBuild: GadgetDefinition[], 
+  devMode: boolean
+): Promise<void> {
+  const entrypointFile = resolveEntrypoint(devMode);
   // Clear entrypoint file
   await writeFile(entrypointFile, '', { flag: "w+", encoding: "utf8"});
-  if (buildAll) {
-    function* awaitTheseTasks() {
-      for (const gadget of gadgetsToBuild) {
-        yield createGadgetImplementationForDevMode(gadget);
-      }
+
+  // Async generator implementation
+  function* awaitTheseTasks() {
+    for (const gadget of mediawikiInterfaceCodeToBuild) {
+      yield createGadgetImplementation(gadget);
     }
-    for await (const gadgetImplementation of awaitTheseTasks()) {
-      await writeFile(entrypointFile, gadgetImplementation + '\n\n', { flag: "a+", encoding: "utf8" });
+    for (const gadget of gadgetsToBuild) {
+      yield createGadgetImplementation(gadget);
     }
-    return;
   }
-  // TODO: Make use of a build cache 
-  // Likely unneeded as creating the entrypoint is not resource-intensive
-  throw new Error('Unimplemented serveGadgetsForDevMode(gadgetsDefinition, { buildAll: false })');
+  for await (const gadgetImplementation of awaitTheseTasks()) {
+    await writeFile(entrypointFile, gadgetImplementation + '\n\n', { flag: "a+", encoding: "utf8" });
+  }
 }
 
 /**
@@ -313,106 +418,94 @@ function addGadgetImplementationLoadConditions(gadgetImplementation: string,
  * the Vite server (when on Dev Mode) lies on the MediaWiki instance 
  * (through mw.loader.impl).
  * 
- * @param subdir string - The gadget subdirectory
- * @param scripts Array<string> - The static URLs to the JS files
- * @param styles Array<string> - The static URLs to the CSS files
+ * @param gadget GadgetDefinition - The gadget definition
  * @returns Promise<string>
  */
-export async function createGadgetImplementationForDevMode( 
-  { subdir, scripts = [], styles = [], resourceLoader }: GadgetDefinition
-): Promise<string> {
-  if ((subdir || '') === '' || !existsSync(resolveGadgetPath(subdir!))) {
-    console.error(`Cannot resolve gadget ${subdir || ''}`);
+export async function createGadgetImplementation(gadget: GadgetDefinition): Promise<string> {
+  try {
+    const subdir = gadget.subdir || '';
+    if (subdir === '') throw new Error(`Cannot resolve gadget ${subdir}`);
+    const isMediawikiInterfaceCode = subdir.startsWith('mediawiki');
+    if (!isMediawikiInterfaceCode && !existsSync(resolveGadgetPath(subdir))) {
+      throw new Error(`Cannot resolve gadget ${subdir}`);
+    }
+
+    const name = subdir!.replaceAll(/\s+/g, '-').replaceAll(/["']/g, '');
+    const hash = crypto.randomBytes(4).toString('hex');
+
+    const scriptsToLoad = getScriptsToLoadFromGadgetDefinition(gadget)
+      .map((script) => {
+        const scriptUrl = getStaticUrlToFile(script.replaceAll('"', '\\"'), { 
+          gadgetSubdir: subdir!, isMediawikiInterfaceCode
+        });
+        return `"${scriptUrl}"`;
+      });
+    
+    const stylesToLoad = getStylesheetsToLoadFromGadgetDefinition(gadget)
+      .map((style) => {
+        const styleUrl = getStaticUrlToFile(style.replaceAll('"', '\\"'), { 
+          gadgetSubdir: subdir!, isMediawikiInterfaceCode
+        });
+        return `"${styleUrl}"`;
+      });
+
+    let snippet = `  mw.loader.impl(function (){
+      return [
+        "${namespace}.${name}@${hash}",
+        [${scriptsToLoad.join(',')}],
+        {"url":{"all":[${stylesToLoad.join(',')}]}},
+        {}, {}, null
+      ];
+    });`;
+    snippet = addGadgetImplementationLoadConditions(snippet, { resourceLoader: gadget.resourceLoader }, true);
+    snippet = `(function (mw) {\n  ${snippet}\n})(mediaWiki);`
+
+    return snippet;
+
+  } catch (err) {
+    console.error(err);
+    return '';
   }
-  const name = subdir!.replaceAll(/\s+/g, '-').replaceAll(/["']/g, '');
-  const hash = crypto.randomBytes(4).toString('hex');
-
-  const scriptsToLoad = scripts
-    .map((script) => {
-      const scriptUrl = getStaticUrlToFile(subdir!, script.replaceAll('"', '\\"'));
-      return `"${scriptUrl}"`;
-    });
-  
-  const stylesToLoad = styles
-    .map((style) => {
-      const styleUrl = getStaticUrlToFile(subdir!, style.replaceAll('"', '\\"'));
-      return `"${styleUrl}"`;
-    });
-
-  let snippet = `  mw.loader.impl(function (){
-    return [
-      "${namespace}.${name}@${hash}",
-      [${scriptsToLoad.join(',')}],
-      {"url":{"all":[${stylesToLoad.join(',')}]}},
-      {}, {}, null
-    ];
-  });`;
-  snippet = addGadgetImplementationLoadConditions(snippet, { resourceLoader }, true);
-  snippet = `(function (mw) {\n  ${snippet}\n})(mediaWiki);`
-
-  return snippet;
-}
-
-/**
- * Defines the implementation of each gadget.
- * Each gadget is registered on MediaWiki using mw.loader.impl.
- * The responsibility of loading the scripts & stylesheets served statically from
- * jsDelivr (when on production mode) lies on the MediaWiki instance 
- * (through mw.loader.impl).
- * 
- * @param subdir string - The gadget subdirectory
- * @param scripts Array<string> - The static URLs to the JS files
- * @param styles Array<string> - The static URLs to the CSS files
- * @returns Promise<string>
- */
-export async function createGadgetImplementationForDist(
-  { subdir, scripts = [], styles = [], resourceLoader }: GadgetDefinition
-): Promise<string> {
-  if ((subdir || '') === '' || !existsSync(resolveGadgetPath(subdir!))) {
-    console.error(`Cannot resolve gadget ${subdir || ''}`);
-  }
-  const name = subdir!.replaceAll(/\s+/g, '-').replaceAll(/["']/g, '');
-  const hash = crypto.randomBytes(4).toString('hex');
-
-  const scriptsToLoad: string[] = [];
-  const stylesToLoad: string[] = [];
-  for (const script of scripts) {
-    const filepath = resolve(__dirname, '../dist', subdir!, script.replace(/\.[a-zA-Z0-9]*$/, '')+'.js');
-    const codeContents = await readFile(filepath, { encoding: 'utf8' });
-    scriptsToLoad.push(codeContents.trim());
-  }
-  for (const style of styles) {
-    const filepath = resolve(__dirname, '../dist', subdir!, style.replace(/\.[a-zA-Z0-9]*$/, '')+'.css');
-    const codeContents = await readFile(filepath, { encoding: 'utf8' });
-    stylesToLoad.push(`"${codeContents.replaceAll(/"/g, '\\"').trim()}"`);
-  }
-
-  let snippet = `
-  mw.loader.impl(function(){return ["${namespace}.${name}@${hash}",function($,jQuery,require,module){${scriptsToLoad.join('\n')}},{"css":[${stylesToLoad.join(',')}]},{},{},null];});`.trim();
-  snippet = addGadgetImplementationLoadConditions(snippet, { resourceLoader }, false);
-  snippet = `(function(mw){${snippet}})(mediaWiki);`;
-  return snippet;
 }
 
 /**
  * Pass this function to "build.rollupOptions.input" in Vite's config.
  *
  * @param gadgetsToBuild Array<GadgetDefinition>
- * @returns [Map<string, string>, Array<string>
+ * @param mediawikiInterfaceCodeToBuild Array<GadgetDefinition>
+ * @returns [Map<string, string>, Array<string>]
  */
-export function mapGadgetSourceFiles(gadgetsToBuild: GadgetDefinition[]): [{ [Key: string]: string }, Target[]] {
+export function mapWikicodeSourceFiles(gadgetsToBuild: GadgetDefinition[], mediawikiInterfaceCodeToBuild: GadgetDefinition[]): [{ [Key: string]: string }, Target[]] {
   const entries: { [Key: string]: string } = {};
   const assets: Target[] = [];
-  
-  for (const { subdir, scripts, styles, i18n } of gadgetsToBuild) {
-    const loadFile = (filepath: string) => {
-      entries[`${subdir!}/${filepath.replace(/\.[a-zA-Z0-9]*$/, '')}`] = resolveGadgetPath(subdir!, filepath);
-    }
-    (scripts || []).forEach(loadFile);
-    (styles || []).forEach(loadFile);
-    (i18n || []).forEach((i18nFile) => {
-      assets.push({ src: resolveGadgetPath(subdir!, i18nFile), dest: subdir!, overwrite: true });
-    });
+
+  const normalizeBuildOutputFileExtension = (filepath: string) => {
+    return filepath
+      .replace(/\.(?:less)$/, '.css')
+      .replace(/\.(?:ts|js)$/, '');
   }
+
+  mediawikiInterfaceCodeToBuild.forEach((definition) => {
+    const loadFile = (filepath: string) => {
+      const key = `mediawiki/${normalizeBuildOutputFileExtension(filepath)}`;
+      entries[key] = resolveMediaWikiInterfaceCodePath(filepath);
+    }
+    getStylesheetsToLoadFromGadgetDefinition(definition).forEach(loadFile);
+    getScriptsToLoadFromGadgetDefinition(definition).forEach(loadFile);
+  });
+
+  gadgetsToBuild.forEach((definition) => {
+    const subdir = definition.subdir!;
+    const loadFile = (filepath: string) => {
+      const key = `gadgets/${subdir}/${normalizeBuildOutputFileExtension(filepath)}`;
+      entries[key] = resolveGadgetPath(subdir, filepath);
+    }
+    getStylesheetsToLoadFromGadgetDefinition(definition).forEach(loadFile);
+    getScriptsToLoadFromGadgetDefinition(definition).forEach(loadFile);
+    (definition.i18n || []).forEach((i18nFile) => {
+      assets.push({ src: resolveGadgetPath(subdir, i18nFile), dest: subdir, overwrite: true });
+    });
+  });
+
   return [entries, assets];
 }

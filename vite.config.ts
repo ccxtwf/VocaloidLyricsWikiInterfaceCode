@@ -1,10 +1,11 @@
 import autogenerateEntrypoint from './plugins/autogenerate-entrypoint.js';
-import createMwGadgetImplementation from './plugins/create-mw-gadget-implementation.js';
+import addBundleBannerAndFooter from './plugins/add-bundle-banner-and-footer.js';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { 
   readGadgetsDefinition, 
   getGadgetsToBuild,
-  mapGadgetSourceFiles, 
+  getMediaWikiInterfaceCodeToBuild,
+  mapWikicodeSourceFiles, 
   setViteServerOrigin
 } from './dev-utils/build-orchestration.js';
 import { 
@@ -17,18 +18,22 @@ import {
 export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => {
   const env = loadEnv(mode, process.cwd(), '');
   const isDev = mode === 'development';
+  const isOnBuildWatch = mode === 'watch-build';
   if (isDev) { 
     setViteServerOrigin(env.VITE_SERVER_DEV_ORIGIN || 'http://localhost:5173'); 
+  } else {
+    setViteServerOrigin(env.VITE_SERVER_PREVIEW_ORIGIN || 'http://localhost:4173');
   }
   const gadgetsDefinition = await readGadgetsDefinition();
   const gadgetsToBuild = getGadgetsToBuild(gadgetsDefinition);
-  const [bundleInputs, bundleAssets] = mapGadgetSourceFiles(gadgetsToBuild);
+  const mwInterfaceCodeToBuild = await getMediaWikiInterfaceCodeToBuild();
+  const [bundleInputs, bundleAssets] = mapWikicodeSourceFiles(gadgetsToBuild, mwInterfaceCodeToBuild);
 
   return {
     plugins: [
-      // In Vite Serve, watches changes made to files in gadgets/ subdirectory
+      // In Vite Build, watches changes made to files in gadgets/ subdirectory
       // and generate the load.js entrypoint file 
-      autogenerateEntrypoint(gadgetsToBuild),
+      autogenerateEntrypoint(gadgetsToBuild, mwInterfaceCodeToBuild),
       
       // In Vite Build, copy the i18n.json files to dist/
       viteStaticCopy({
@@ -36,10 +41,15 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
         structured: false,
       }),
 
-      // In Vite Build, create the mw.loader.impl wrapped JS+CSS file
-      createMwGadgetImplementation(gadgetsToBuild),
+      // Automatically add banner and footer to each mapped JS & CSS file
+      addBundleBannerAndFooter(
+        env.VITE_GITHUB_REPOSITORY_URL, 
+        env.VITE_GITHUB_REPOSITORY_BRANCH
+      )
     ],
     build: {
+      minify: false,
+      cssMinify: false,
       rollupOptions: {
         input: bundleInputs,
         output: {
@@ -54,10 +64,18 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
             }
             return 'assets/[name][extname]';
           }
-        }
+        },
       },
       outDir: 'dist',
-      emptyOutDir: true
+      emptyOutDir: true,
+      watch: isOnBuildWatch ? {
+        clearScreen: true,
+        exclude: [
+          'node_modules/**',
+          'dist/**',
+          'load.js'
+        ]
+      } : null
     },
     css: {
       preprocessorOptions: {
@@ -66,6 +84,10 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
         }
       }
     },
+    esbuild: {
+      // Preserve banner & footer
+      legalComments: 'inline'
+    },
     optimizeDeps: {
       esbuildOptions: {
         loader: {
@@ -73,6 +95,9 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
           ".yml": "text"
         }
       }
+    },
+    preview: {
+      open: '/load.js'
     }
   }
 });

@@ -1,8 +1,9 @@
 import { 
   readGadgetsDefinition, 
   getGadgetsToBuild,
-  serveGadgetsForDevMode, 
-  resolveGadgetsDirectory 
+  getMediaWikiInterfaceCodeToBuild,
+  serveGadgets, 
+  resolveCodeDirectory 
 } from '../dev-utils/build-orchestration.js';
 import { dirname, relative } from 'path';
 import { PluginOption, HotUpdateOptions } from 'vite';
@@ -19,15 +20,14 @@ enum ViteServerChangeMode {
  * When a hot rebuild is triggered on Vite Serve, check if the changed file
  * necessitates a full or partial rebuild of the gadgets directory.
  * 
- * Only applicable when running the Vite Server in Dev Mode.
- * 
  * @param type string
  * @param filepath string
  */
 function checkChangedFile(type: "create" | "update" | "delete", filepath: string): ViteServerChangeMode {
-  const gadgetsDir = resolveGadgetsDirectory();
-  // Only subscribe to changes in the gadgets directory
-  if (dirname(filepath) !== gadgetsDir) {
+  const { gadgetsDir, mediawikiInterfaceDir } = resolveCodeDirectory();
+
+  // Only subscribe to changes in the gadgets or mediawiki directory
+  if (dirname(filepath) !== gadgetsDir && dirname(filepath) !== mediawikiInterfaceDir) {
     return ViteServerChangeMode.Unchanged;
   }
   // File gadgets-definition.yaml is changed
@@ -61,24 +61,35 @@ function checkChangedFile(type: "create" | "update" | "delete", filepath: string
  * 
  * @returns PluginOption
  */
-export default function autogenerateEntrypoint(gadgetsToBuildAtIntialState: GadgetDefinition[]): PluginOption {
+export default function autogenerateEntrypoint(gadgetsToBuildAtIntialState: GadgetDefinition[], mediawikiInterfaceCodeToBuildAtInitialState: GadgetDefinition[]): PluginOption {
   
   return {
     name: 'autogenerateEntrypoint',
     enforce: 'post', // Enforce after Vite build plugins
-    apply: 'serve', // Only on Dev Mode
 
-    configureServer() {
-      serveGadgetsForDevMode(gadgetsToBuildAtIntialState);
+    // Build Mode
+    buildEnd() {
+      console.log('\nBuilding dist/load.js...\n');
+      serveGadgets(gadgetsToBuildAtIntialState, mediawikiInterfaceCodeToBuildAtInitialState, false);
     },
-    hotUpdate({ type, file, modules }: HotUpdateOptions) {
+
+    // Serve/Dev Mode
+    configureServer() {
+      console.log('\nBuilding load.js for Dev Mode...\n');
+      serveGadgets(gadgetsToBuildAtIntialState, mediawikiInterfaceCodeToBuildAtInitialState, true);
+    },
+    hotUpdate({ type, file, modules,  }: HotUpdateOptions) {
       const refreshMode = checkChangedFile(type, file);
       if (refreshMode === ViteServerChangeMode.Unchanged) { return modules; }
       // Possible to do a partial rebuild based on the value of ViteServerChangeMode
       // Rn compiling load.js isn't a bottleneck, so optimizing this is unnecessary
       (async () => {
         const gadgetsDefinition = await readGadgetsDefinition();
-        await serveGadgetsForDevMode(getGadgetsToBuild(gadgetsDefinition));
+        const gadgetsToBuild = getGadgetsToBuild(gadgetsDefinition);
+        const mwInterfaceCodeToBuild = await getMediaWikiInterfaceCodeToBuild();
+        console.log(`Registered change for file ${file} (${type})`);
+        console.log('Rebuilding load.js for Dev Mode...');
+        await serveGadgets(gadgetsToBuild, mwInterfaceCodeToBuild, true);
       })();
       return modules;
     }

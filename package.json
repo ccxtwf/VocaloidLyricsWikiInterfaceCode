@@ -4,8 +4,11 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "dev": "vite dev",
+    "build": "vite build",
+    "watch": "vite build --mode watch-build",
+    "preview": "vite preview",
+    "build-show": "vite build && vite preview"
   },
   "devDependencies": {
     "@types/node": "^24.3.0",
