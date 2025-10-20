@@ -1,5 +1,6 @@
 import autogenerateEntrypoint from './plugins/autogenerate-entrypoint.js';
 import addBundleBannerAndFooter from './plugins/add-bundle-banner-and-footer.js';
+import generateGadgetsDefinitionWikitext from './plugins/generate-gadgets-definition-wikitext.js';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { 
   readGadgetsDefinition, 
@@ -34,6 +35,9 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
       // In Vite Build, watches changes made to files in gadgets/ subdirectory
       // and generate the load.js entrypoint file 
       autogenerateEntrypoint(gadgetsToBuild, mwInterfaceCodeToBuild),
+
+      // In Vite Build, generate the contents of MediaWiki:Gadgets-definition
+      generateGadgetsDefinitionWikitext(gadgetsDefinition),
       
       // In Vite Build, copy the i18n.json files to dist/
       viteStaticCopy({

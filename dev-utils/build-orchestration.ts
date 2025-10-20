@@ -166,22 +166,20 @@ export function getGadgetsToBuild(gadgetsDefinition: GadgetsDefinition): GadgetD
   
   // Determine which gadgets to include/exclude
   let gadgetsToBuild: GadgetDefinition[] = [];
-  Object.entries(gadgetsDefinition?.gadgets || {})
-    .forEach(([gadgetSectionName, gadgetSectionDefinition]) => {
-      Object.entries(gadgetSectionDefinition || {})
-        .forEach(([gadgetName, gadgetDefinition]) => {
-          // Always return early (i.e. do not build the gadget) if 
-          // "gadgets.<GADGET-NAME>.disabled" is set on the gadget definition 
-          if (gadgetDefinition?.disabled === true) { return; } 
-          // Otherwise defer to "workspace.enable_all", "workspace.enable", "workspace.disable" 
-          if (enableAll ? !disabledGadgets.has(gadgetName) : enabledGadgets.has(gadgetName)) {
-            gadgetsToBuild.push({
-              ...gadgetDefinition,
-              subdir: `${gadgetSectionName}/${gadgetName}`
-            });
-          }
-        })
-    });
+  for (const [gadgetSectionName, gadgetSectionDefinition] of Object.entries(gadgetsDefinition?.gadgets || {})) {
+    for (const [gadgetName, gadgetDefinition] of Object.entries(gadgetSectionDefinition || {})) {
+      // Always return early (i.e. do not build the gadget) if 
+      // "gadgets.<GADGET-NAME>.disabled" is set on the gadget definition 
+      if (gadgetDefinition?.disabled === true) { continue; } 
+      // Otherwise defer to "workspace.enable_all", "workspace.enable", "workspace.disable" 
+      if (enableAll ? !disabledGadgets.has(gadgetName) : enabledGadgets.has(gadgetName)) {
+        gadgetsToBuild.push({
+          ...gadgetDefinition,
+          subdir: `${gadgetSectionName}/${gadgetName}`
+        });
+      }
+    }
+  }
 
   // Check if the gadget exists
   const nonexistentGadgets: string[] = [];
