@@ -11,11 +11,13 @@
     "build-show": "vite build && vite preview"
   },
   "devDependencies": {
+    "@types/less": "^3.0.8",
     "@types/node": "^24.3.0",
     "less": "^4.4.1",
     "types-mediawiki": "^2.0.0",
     "typescript": "^5.9.2",
-    "vite": "^7.1.2",
+    "vite": "^7.1.11",
+    "vite-plugin-inspect": "^11.3.3",
     "vite-plugin-static-copy": "^3.1.2",
     "yaml": "^2.8.1"
   }

@@ -45,7 +45,7 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
         structured: false,
       }),
 
-      // Automatically add banner and footer to each mapped JS & CSS file
+      // In Vite Build, automatically add banner and footer to each mapped JS & CSS file
       addBundleBannerAndFooter(
         env.VITE_GITHUB_REPOSITORY_URL, 
         env.VITE_GITHUB_REPOSITORY_BRANCH
