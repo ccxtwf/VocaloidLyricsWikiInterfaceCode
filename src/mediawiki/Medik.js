@@ -1,7 +1,7 @@
-/* All JavaScript here will be loaded for users of the Medik skin */
+/*! All JavaScript here will be loaded for users of the Medik skin */
 'use strict';
 
-/* Configure collapsible sidebar menu */
+/*! Configure collapsible sidebar menu */
 $('#site-navigation > .mw-portlet > .mw-portlet-body').addClass('collapse');
 $('#site-navigation > #p-navigation > .mw-portlet-body, #site-navigation > #p-special-pages > .mw-portlet-body').addClass('show');
 $('#site-navigation > .mw-portlet[id^=\'p-^\'] > a.nav-link')
@@ -15,28 +15,28 @@ $('#site-navigation > .mw-portlet > a.nav-link').on('click', function (event) {
   event.stopPropagation();
 });
 
-/* On mobile: automatically scroll the page up if the hamburger menu on the persistent navbar is clicked */
+/*! On mobile: automatically scroll the page up if the hamburger menu on the persistent navbar is clicked */
 $('#p-logo .mw-hamb').on('click', function () {
   document.body.scrollTop = 0;
   document.documentElement.scrollTop = 0;
 });
 
-/* Set scroll offset for mobile & desktop view */
+/*! Set scroll offset for mobile & desktop view */
 window.MedikScrollOffset = 120;
 var mq = window.matchMedia("(max-width: 768px)");
 function _onMqChangeMedik(mq) {
   if (mq.matches) {
-    // mobile view
+    /*! mobile view */
     window.MedikScrollOffset = 120;
   } else {
-    // Desktop view
+    /*! Desktop view */
     window.MedikScrollOffset = 60;
   }
 }
 _onMqChangeMedik(mq);
 mq.addEventListener("change", function() { _onMqChangeMedik(mq); });
 
-/* When an anchor link is clicked, the browser will offset the vertical scroll position by window.MedikScrollOffset */
+/*! When an anchor link is clicked, the browser will offset the vertical scroll position by window.MedikScrollOffset */
 function _offsetScrollPosition(hash) {
   if (!hash) return;
   hash = $.escapeSelector(decodeURI(hash.substring(1)));
@@ -52,7 +52,7 @@ $('div#bodyContent a').click(function (e) {
   _offsetScrollPosition(hash);
 });
 
-/* If the page is loaded with a hash (e.g. when loaded from RC or when opening a DiscussionTools post/reply), then offset the scroll position */
+/*! If the page is loaded with a hash (e.g. when loaded from RC or when opening a DiscussionTools post/reply), then offset the scroll position */
 if (window.location.hash || '' !== '') {
   _offsetScrollPosition(window.location.hash);
 }

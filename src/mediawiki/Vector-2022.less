@@ -55,18 +55,18 @@
 .vector-menu-content.collapse.show {
   display: block;
 }
-html.skin-theme-clientpref-night {
+@dark-mode-css-definitions: {
   #vector-main-menu .mw-portlet > .vector-menu-heading > .menu-btn {
     filter: brightness(1) invert(1);
     backdrop-filter: brightness(1) invert(1);
   }
 }
+html.skin-theme-clientpref-night {
+  @dark-mode-css-definitions();
+}
 @media screen and (prefers-color-scheme: dark) {
   html.skin-theme-clientpref-os {
-    #vector-main-menu .mw-portlet > .vector-menu-heading > .menu-btn {
-      filter: brightness(1) invert(1);
-      backdrop-filter: brightness(1) invert(1);
-    }
+    @dark-mode-css-definitions();
   }
 }
 

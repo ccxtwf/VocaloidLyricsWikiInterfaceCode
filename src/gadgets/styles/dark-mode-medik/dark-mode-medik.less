@@ -1,3 +1,14 @@
+.invert() {
+  -moz-filter: brightness(1) invert(1);
+  -webkit-filter: brightness(1) invert(1);
+  filter: brightness(1) invert(1);
+}
+.no-invert() {
+  -moz-filter: none;
+  -webkit-filter: none;
+  filter: none;
+}
+
 html.theme-dark {
   background: #101010;
   
@@ -64,9 +75,9 @@ html.theme-dark {
       background-color: #101010;
       border-color: #666;
       color: #ccc;
-    }
-    .form-control::placeholder {
-      color: #979797;
+      &::placeholder {
+        color: #979797;
+      }
     }
     .suggestions-results {
       background-color: #101010;
@@ -78,9 +89,9 @@ html.theme-dark {
     .suggestions-special {
       background-color: #101010;
       border-color: #606367;
-    }
-    .suggestions-special .special-query {
-      color: #bbb;
+      .special-query {
+        color: #bbb;
+      }
     }
   }
   
@@ -91,13 +102,12 @@ html.theme-dark {
   }
   #content .subpages {
     color: #9c9ea2;
-  }
-  #content .subpages a:not(.new):link, 
-  #content .subpages a:not(.new):active {
-    color: #3998ff;
-  }
-  #content .subpages a:not(.new):visited {
-    color: #57a0f0;
+    a:not(.new):link, a:not(.new):active {
+      color: #3998ff;
+    }
+    a:not(.new):visited {
+      color: #57a0f0;
+    }
   }
   
   // Action buttons
@@ -137,9 +147,10 @@ html.theme-dark {
   .mw-collapsible-toggle-default .mw-collapsible-text {
     color: #2a80da !important;
   }
-  .mw-collapsible-toggle-default::before,
-  .mw-collapsible-toggle-default::after {
-    color: #e0e4d6 !important;
+  .mw-collapsible-toggle-default {
+    &::before, &::after {
+      color: #e0e4d6 !important;
+    }
   }
   
   // Gallery
@@ -149,14 +160,14 @@ html.theme-dark {
   }
   
   // Load random pages
-  .load-random .gallerybox .thumb img {
-    -moz-filter: brightness(1) invert(1);
-    -webkit-filter: brightness(1) invert(1);
-    filter: brightness(1) invert(1);
-    opacity: 0.6;
-  }
-  .load-random .gallerybox .gallerytext a {
-    color: #94dd8d !important;
+  .load-random .gallerybox {
+    .thumb img {
+      .invert();
+      opacity: 0.6;
+    }
+    .gallerytext a {
+      color: #94dd8d !important;
+    }
   }
   
   // Translator License
@@ -170,7 +181,6 @@ html.theme-dark {
     color: #ddd;
   }
   #pt-themes .ext-themetoggle-simple-icon::before {
-    filter: brightness(1) invert(1);
-    backdrop-filter: brightness(1) invert(1);
+    .invert();
   }
 }

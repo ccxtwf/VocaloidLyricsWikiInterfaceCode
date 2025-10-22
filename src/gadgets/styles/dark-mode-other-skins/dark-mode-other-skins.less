@@ -1,3 +1,14 @@
+.invert() {
+  -moz-filter: brightness(1) invert(1);
+  -webkit-filter: brightness(1) invert(1);
+  filter: brightness(1) invert(1);
+}
+.no-invert() {
+  -moz-filter: none;
+  -webkit-filter: none;
+  filter: none;
+}
+
 html {
   --unseen-fadeout-to-unread-1: #eaf3ff;
   --unseen-fadeout-to-unread-2: #fff;
@@ -71,9 +82,7 @@ html.theme-dark {
   // OOUI icons
   .oo-ui-iconElement-icon:not(.oo-ui-image-progressive):not(.oo-ui-image-invert), 
   .oo-ui-indicatorElement-indicator:not(.oo-ui-image-progressive):not(.oo-ui-image-invert) {
-    -moz-filter: brightness(1) invert(1);
-    -webkit-filter: brightness(1) invert(1);
-    filter: brightness(1) invert(1);
+    .invert();
   }
   
   textarea, input {
@@ -84,9 +93,7 @@ html.theme-dark {
   
   // jQuery Spinner
   .mw-spinner {
-    -moz-filter: brightness(1) invert(1);
-    -webkit-filter: brightness(1) invert(1);
-    filter: brightness(1) invert(1);
+    .invert();
   }
   
   // Article Notification templates
@@ -111,9 +118,7 @@ html.theme-dark {
   // Tabber
   .tabber__header__prev:after, 
   .tabber__header__next:after {
-    -moz-filter: brightness(1) invert(1);
-    -webkit-filter: brightness(1) invert(1);
-    filter: brightness(1) invert(1);
+    .invert();
   }
   
   // Default WikiEditor
@@ -123,9 +128,7 @@ html.theme-dark {
     caret-color: #eaeaea;
   }
   .editCheckboxes .oo-ui-iconWidget {
-    -moz-filter: none;
-    -webkit-filter: none;
-    filter: none;
+    .no-invert();
   }
   
   // WikiEditor Toolbar
@@ -133,9 +136,7 @@ html.theme-dark {
     color: #93a5ff;
   }
   .wikiEditor-ui-toolbar .tabs span.tab a::before {
-    -moz-filter: brightness(1) invert(1);
-    -webkit-filter: brightness(1) invert(1);
-    filter: brightness(1) invert(1);
+    .invert();
   }
   .wikiEditor-ui-toolbar .group .tool-select .label {
     color: #eee;
@@ -150,9 +151,7 @@ html.theme-dark {
     background-color: #727272;
   }
   .wikiEditor-ui-toolbar .group .tool-select .label::after {
-    -moz-filter: brightness(1) invert(1);
-    -webkit-filter: brightness(1) invert(1);
-    filter: brightness(1) invert(1);
+    .invert();
   }
   .wikiEditor-ui-toolbar .page-table th {
     color: #eee;
@@ -270,9 +269,7 @@ html.theme-dark {
     color: var(--color-subtle);
   }
   .ui-widget-header .ui-icon {
-    -moz-filter: brightness(1) invert(1);
-    -webkit-filter: brightness(1) invert(1);
-    filter: brightness(1) invert(1);
+    .invert();
   }
   
   // WikiEditor / CodeEditor
@@ -379,9 +376,7 @@ html.theme-dark {
     background: linear-gradient(to right,transparent 0,#444 90%) !important;
   }
   .ve-ui-mwTransclusionDialog-template-note .oo-ui-iconElement-icon.oo-ui-icon-alert.oo-ui-image-warning {
-    -moz-filter: none !important;
-    -webkit-filter: none !important;
-    filter: none !important;
+    .no-invert() !important;
   }
   .ve-ui-mwSaveDialog-options {
     background-color: var(--background-color-base);
@@ -422,253 +417,253 @@ html.theme-dark {
     box-shadow: inset 2.75em 0 0 #1d1d1d;
     border-color: #3c3c3c;
   }
-  .mw-highlight .hll {
-    background-color: #49483e;
-  }
   .mw-highlight {
     background: #272822;
     color: #b6b6b6;
-  }
-  .mw-highlight .c {
-    color: #959077;
-  }
-  .mw-highlight .err {
-    color: #ed007e;
-    background-color: #1e0010;
-  }
-  .mw-highlight .esc {
-    color: #b6b6b6;
-  }
-  .mw-highlight .g {
-    color: #b6b6b6;
-  }
-  .mw-highlight .k {
-    color: #51a3b3;
-  }
-  .mw-highlight .l {
-    color: #ae81ff;
-  }
-  .mw-highlight .n {
-    color: #b6b6b6;
-  }
-  .mw-highlight .o {
-    color: #a04566;
-  }
-  .mw-highlight .x {
-    color: #b6b6b6;
-  }
-  .mw-highlight .p {
-    color: #b6b6b6;
-  }
-  .mw-highlight .ch {
-    color: #959077;
-  }
-  .mw-highlight .cm {
-    color: #959077;
-  }
-  .mw-highlight .cp {
-    color: #959077;
-  }
-  .mw-highlight .cpf {
-    color: #959077;
-  }
-  .mw-highlight .c1 {
-    color: #959077;
-  }
-  .mw-highlight .cs {
-    color: #959077;
-  }
-  .mw-highlight .gd {
-    color: #a04566;
-  }
-  .mw-highlight .ge {
-    color: #b6b6b6;
-  }
-  .mw-highlight .ges {
-    color: #b6b6b6;
-  }
-  .mw-highlight .gr {
-    color: #b6b6b6;
-  }
-  .mw-highlight .gh {
-    color: #b6b6b6;
-  }
-  .mw-highlight .gi {
-    color: #96c538;
-  }
-  .mw-highlight .go {
-    color: #51a3b3;
-  }
-  .mw-highlight .gp {
-    color: #a04566;
-  }
-  .mw-highlight .gs {
-    color: #b6b6b6;
-  }
-  .mw-highlight .gu {
-    color: #959077;
-  }
-  .mw-highlight .gt {
-    color: #b6b6b6;
-  }
-  .mw-highlight .kc {
-    color: #51a3b3;
-  }
-  .mw-highlight .kd {
-    color: #51a3b3;
-  }
-  .mw-highlight .kn {
-    color: #a04566;
-  }
-  .mw-highlight .kp {
-    color: #51a3b3;
-  }
-  .mw-highlight .kr {
-    color: #51a3b3;
-  }
-  .mw-highlight .kt {
-    color: #51a3b3;
-  }
-  .mw-highlight .ld {
-    color: #bfb65d;
-  }
-  .mw-highlight .m {
-    color: #ae81ff;
-  }
-  .mw-highlight .s {
-    color: #bfb65d;
-  }
-  .mw-highlight .na {
-    color: #96c538;
-  }
-  .mw-highlight .nb {
-    color: #b6b6b6;
-  }
-  .mw-highlight .nc {
-    color: #96c538;
-  }
-  .mw-highlight .no {
-    color: #51a3b3;
-  }
-  .mw-highlight .nd {
-    color: #96c538;
-  }
-  .mw-highlight .ni {
-    color: #b6b6b6;
-  }
-  .mw-highlight .ne {
-    color: #96c538;
-  }
-  .mw-highlight .nf {
-    color: #96c538;
-  }
-  .mw-highlight .nl {
-    color: #b6b6b6;
-  }
-  .mw-highlight .nn {
-    color: #b6b6b6;
-  }
-  .mw-highlight .nx {
-    color: #96c538;
-  }
-  .mw-highlight .py {
-    color: #b6b6b6;
-  }
-  .mw-highlight .nt {
-    color: #a04566;
-  }
-  .mw-highlight .nv {
-    color: #b6b6b6;
-  }
-  .mw-highlight .ow {
-    color: #a04566;
-  }
-  .mw-highlight .pm {
-    color: #b6b6b6;
-  }
-  .mw-highlight .w {
-    color: #b6b6b6;
-  }
-  .mw-highlight .mb {
-    color: #ae81ff;
-  }
-  .mw-highlight .mf {
-    color: #ae81ff;
-  }
-  .mw-highlight .mh {
-    color: #ae81ff;
-  }
-  .mw-highlight .mi {
-    color: #ae81ff;
-  }
-  .mw-highlight .mo {
-    color: #ae81ff;
-  }
-  .mw-highlight .sa {
-    color: #bfb65d;
-  }
-  .mw-highlight .sb {
-    color: #bfb65d;
-  }
-  .mw-highlight .sc {
-    color: #bfb65d;
-  }
-  .mw-highlight .dl {
-    color: #bfb65d;
-  }
-  .mw-highlight .sd {
-    color: #bfb65d;
-  }
-  .mw-highlight .s2 {
-    color: #bfb65d;
-  }
-  .mw-highlight .se {
-    color: #ae81ff;
-  }
-  .mw-highlight .sh {
-    color: #bfb65d;
-  }
-  .mw-highlight .si {
-    color: #bfb65d;
-  }
-  .mw-highlight .sx {
-    color: #bfb65d;
-  }
-  .mw-highlight .sr {
-    color: #bfb65d;
-  }
-  .mw-highlight .s1 {
-    color: #bfb65d;
-  }
-  .mw-highlight .ss {
-    color: #bfb65d;
-  }
-  .mw-highlight .bp {
-    color: #b6b6b6;
-  }
-  .mw-highlight .fm {
-    color: #96c538;
-  }
-  .mw-highlight .vc {
-    color: #b6b6b6;
-  }
-  .mw-highlight .vg {
-    color: #b6b6b6;
-  }
-  .mw-highlight .vi {
-    color: #b6b6b6;
-  }
-  .mw-highlight .vm {
-    color: #b6b6b6;
-  }
-  .mw-highlight .il {
-    color: #ae81ff;
-  }
-  .mw-highlight .p {
-    color: #878787;
-  }
-  .mw-highlight .nx {
-    color: #e2e2e2;
+    .hll {
+      background-color: #49483e;
+    }
+    .c {
+      color: #959077;
+    }
+    .err {
+      color: #ed007e;
+      background-color: #1e0010;
+    }
+    .esc {
+      color: #b6b6b6;
+    }
+    .g {
+      color: #b6b6b6;
+    }
+    .k {
+      color: #51a3b3;
+    }
+    .l {
+      color: #ae81ff;
+    }
+    .n {
+      color: #b6b6b6;
+    }
+    .o {
+      color: #a04566;
+    }
+    .x {
+      color: #b6b6b6;
+    }
+    .p {
+      color: #b6b6b6;
+    }
+    .ch {
+      color: #959077;
+    }
+    .cm {
+      color: #959077;
+    }
+    .cp {
+      color: #959077;
+    }
+    .cpf {
+      color: #959077;
+    }
+    .c1 {
+      color: #959077;
+    }
+    .cs {
+      color: #959077;
+    }
+    .gd {
+      color: #a04566;
+    }
+    .ge {
+      color: #b6b6b6;
+    }
+    .ges {
+      color: #b6b6b6;
+    }
+    .gr {
+      color: #b6b6b6;
+    }
+    .gh {
+      color: #b6b6b6;
+    }
+    .gi {
+      color: #96c538;
+    }
+    .go {
+      color: #51a3b3;
+    }
+    .gp {
+      color: #a04566;
+    }
+    .gs {
+      color: #b6b6b6;
+    }
+    .gu {
+      color: #959077;
+    }
+    .gt {
+      color: #b6b6b6;
+    }
+    .kc {
+      color: #51a3b3;
+    }
+    .kd {
+      color: #51a3b3;
+    }
+    .kn {
+      color: #a04566;
+    }
+    .kp {
+      color: #51a3b3;
+    }
+    .kr {
+      color: #51a3b3;
+    }
+    .kt {
+      color: #51a3b3;
+    }
+    .ld {
+      color: #bfb65d;
+    }
+    .m {
+      color: #ae81ff;
+    }
+    .s {
+      color: #bfb65d;
+    }
+    .na {
+      color: #96c538;
+    }
+    .nb {
+      color: #b6b6b6;
+    }
+    .nc {
+      color: #96c538;
+    }
+    .no {
+      color: #51a3b3;
+    }
+    .nd {
+      color: #96c538;
+    }
+    .ni {
+      color: #b6b6b6;
+    }
+    .ne {
+      color: #96c538;
+    }
+    .nf {
+      color: #96c538;
+    }
+    .nl {
+      color: #b6b6b6;
+    }
+    .nn {
+      color: #b6b6b6;
+    }
+    .nx {
+      color: #96c538;
+    }
+    .py {
+      color: #b6b6b6;
+    }
+    .nt {
+      color: #a04566;
+    }
+    .nv {
+      color: #b6b6b6;
+    }
+    .ow {
+      color: #a04566;
+    }
+    .pm {
+      color: #b6b6b6;
+    }
+    .w {
+      color: #b6b6b6;
+    }
+    .mb {
+      color: #ae81ff;
+    }
+    .mf {
+      color: #ae81ff;
+    }
+    .mh {
+      color: #ae81ff;
+    }
+    .mi {
+      color: #ae81ff;
+    }
+    .mo {
+      color: #ae81ff;
+    }
+    .sa {
+      color: #bfb65d;
+    }
+    .sb {
+      color: #bfb65d;
+    }
+    .sc {
+      color: #bfb65d;
+    }
+    .dl {
+      color: #bfb65d;
+    }
+    .sd {
+      color: #bfb65d;
+    }
+    .s2 {
+      color: #bfb65d;
+    }
+    .se {
+      color: #ae81ff;
+    }
+    .sh {
+      color: #bfb65d;
+    }
+    .si {
+      color: #bfb65d;
+    }
+    .sx {
+      color: #bfb65d;
+    }
+    .sr {
+      color: #bfb65d;
+    }
+    .s1 {
+      color: #bfb65d;
+    }
+    .ss {
+      color: #bfb65d;
+    }
+    .bp {
+      color: #b6b6b6;
+    }
+    .fm {
+      color: #96c538;
+    }
+    .vc {
+      color: #b6b6b6;
+    }
+    .vg {
+      color: #b6b6b6;
+    }
+    .vi {
+      color: #b6b6b6;
+    }
+    .vm {
+      color: #b6b6b6;
+    }
+    .il {
+      color: #ae81ff;
+    }
+    .p {
+      color: #878787;
+    }
+    .nx {
+      color: #e2e2e2;
+    }
   }
   
   // Diffs
@@ -756,14 +751,10 @@ html.theme-dark {
     color: #838383;
   }
   .mw-rcfilters-ui-filterWrapperWidget-showNewChanges .oo-ui-iconElement-icon {
-    -moz-filter: none;
-    -webkit-filter: none;
-    filter: none;
+    .no-invert();
   }
   .mw-enhancedchanges-checkbox + * .mw-enhancedchanges-arrow {
-    -moz-filter: brightness(1) invert(1);
-    -webkit-filter: brightness(1) invert(1);
-    filter: brightness(1) invert(1);
+    .invert();
   }
   .mw-rcfilters-container .mw-rcfilters-ui-filterTagMultiselectWidget-views-select-widget.oo-ui-widget {
     border-color: #888;
@@ -788,9 +779,7 @@ html.theme-dark {
     border-color: var(--border-color-success, #196551);
   }
   .mw-notification-content .oo-ui-iconElement-icon {
-    -moz-filter: none !important;
-    -webkit-filter: none !important;
-    filter: none !important;
+    .no-invert() !important;
   }
   
   // Echo Notifications
@@ -890,39 +879,39 @@ html.theme-dark {
   .ssi-modalWindow {
     background: #2f2f2f;
   }
-  .in-page-edit .diff-deletedline.diff-side-deleted,
-  .in-page-edit .diff-addedline.diff-side-added {
-    background-color: #000;
-    color: #eee;
-  }
-  .in-page-edit .diff-context {
-    background-color: #222;
-    color: #aaa;
-  }
-  .in-page-edit:not(.notify) .ssi-modalTitle {
-    background: #2f2f2f;
-    color: #ccc;
-  }
+  
   .in-page-edit {
     color: #ccc;
-  }
-  .in-page-edit .ssi-overflow:before, 
-  .in-page-edit .ssi-overflow:after {
-    background-color: #2f2f2f;
-  }
-  .in-page-edit .dialog .ssi-buttons .btn {
-    color: #ccc;
-  }
-  .in-page-edit .dialog .ssi-buttons .btn:hover {
-    background: #717171 !important;
-  }
-  .in-page-edit input {
-    background-color: #3b3b3b;
-    color: #ccc;
-  }
-  .in-page-edit.ipe-editor .ssi-buttons {
-    background-color: #2f2f2f;
-    color: #ccc;
+    .diff-deletedline.diff-side-deleted,
+    .diff-addedline.diff-side-added {
+      background-color: #000;
+      color: #eee;
+    }
+    .diff-context {
+      background-color: #222;
+      color: #aaa;
+    }
+    &:not(.notify) .ssi-modalTitle {
+      background: #2f2f2f;
+      color: #ccc;
+    }
+    .ssi-overflow:before, .ssi-overflow:after {
+      background-color: #2f2f2f;
+    }
+    .dialog .ssi-buttons .btn {
+      color: #ccc;
+      &:hover {
+        background: #717171 !important;
+      }
+    }
+    input {
+      background-color: #3b3b3b;
+      color: #ccc;
+    }
+    &.ipe-editor .ssi-buttons {
+      background-color: #2f2f2f;
+      color: #ccc;
+    }
   }
   .ipe-editor .editArea {
     background-color: #3b3b3b;

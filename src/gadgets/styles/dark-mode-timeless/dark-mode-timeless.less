@@ -1,3 +1,14 @@
+.invert() {
+  -moz-filter: brightness(1) invert(1);
+  -webkit-filter: brightness(1) invert(1);
+  filter: brightness(1) invert(1);
+}
+.no-invert() {
+  -moz-filter: none;
+  -webkit-filter: none;
+  filter: none;
+}
+
 html.theme-dark {
   background: #212121;
   @media screen and (max-width: 850px) {
@@ -80,9 +91,7 @@ html.theme-dark {
     border-color: #dedede;
   }
   #searchButton {
-    -moz-filter: brightness(1) invert(1);
-    -webkit-filter: brightness(1) invert(1);
-    filter: brightness(1) invert(1);
+    .invert();
   }
   #personal .dropdown {
     background: #1d1d1d;
@@ -91,9 +100,7 @@ html.theme-dark {
     border-bottom-color:  #3c3c3c;
   }
   #ca-more {
-    -moz-filter: brightness(1) invert(1);
-    -webkit-filter: brightness(1) invert(1);
-    filter: brightness(1) invert(1);
+    .invert();
   }
   
   // Search bar suggestions
@@ -156,9 +163,7 @@ html.theme-dark {
     color: #d0d0d0;
   }
   #site-navigation > .sidebar-inner > .mw-portlet > h3 > .menu-btn {
-    -moz-filter: brightness(1) invert(1);
-    -webkit-filter: brightness(1) invert(1);
-    filter: brightness(1) invert(1);
+    .invert();
     opacity: 1;
   }
   @media screen and (max-width: 850px) {
@@ -198,9 +203,7 @@ html.theme-dark {
   }
   .tools-inline li a {
     color: #1e2221;
-    -moz-filter: brightness(1) invert(1);
-    -webkit-filter: brightness(1) invert(1);
-    filter: brightness(1) invert(1);
+    .invert();
   }
   .tools-inline li:hover {
     color: #000;
@@ -256,9 +259,7 @@ html.theme-dark {
   
   // Load random pages
   .load-random .gallerybox .thumb img {
-    -moz-filter: brightness(1) invert(1);
-    -webkit-filter: brightness(1) invert(1);
-    filter: brightness(1) invert(1);
+    .invert();
     opacity: 0.6;
   }
   .load-random .gallerybox .gallerytext a {

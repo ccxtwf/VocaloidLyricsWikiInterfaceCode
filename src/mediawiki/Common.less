@@ -1,6 +1,5 @@
 /* CSS placed here will be applied to all skins */
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import (css) url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 .bold {
   font-weight: bold;
@@ -46,10 +45,11 @@ table.lyrics-table > tbody > tr.lyrics-table-header {
   background-color: var(--lyrics-table-header);
   position: sticky;
   top: 0px;
-}
-table.lyrics-table > tbody > tr.lyrics-table-header > th {
-  padding-top: 5px;
-  padding-bottom: 5px;
+
+  & > th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
 }
 td.lyrics-comb {
   text-align: center;
@@ -111,33 +111,35 @@ td.lyrics-comb.only-selected.italic {
 #custom-btn-add-new-topic {
   text-align: right;
   margin-bottom: 20px;
-}
-#custom-btn-add-new-topic > a {
-  padding: 5px 40px;
-  background-color: #0275da;
-  color: #ffffff;
-  font-size: larger;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px #12121247;
-}
-#custom-btn-add-new-topic > a:hover, 
-#custom-btn-add-new-topic > a:focus, 
-#custom-btn-add-new-topic > a:active {
-  background-color: #1181e4;
-  text-decoration: none;
-  color: #f1ede7;
+  
+  & > a {
+    padding: 5px 40px;
+    background-color: #0275da;
+    color: #ffffff;
+    font-size: larger;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px #12121247;
+
+    &:hover, &:focus, &:active {
+      background-color: #1181e4;
+      text-decoration: none;
+      color: #f1ede7;
+    }
+  }
 }
 
 /* Sitenotice on mobile */
 @media (max-width: 500px) {
-  .sitedir-ltr .mw-dismissable-notice-body {
-    margin-left:0;
-    margin-right:0;
-  } 
-  .sitedir-ltr .mw-dismissable-notice-close {
-    float: none;
-    display: block;
-    text-align: right;
+  .sitedir-ltr {
+    .mw-dismissable-notice-body {
+      margin-left:0;
+      margin-right:0;
+    } 
+    .mw-dismissable-notice-close {
+      float: none;
+      display: block;
+      text-align: right;
+    }
   }
 }
 
@@ -150,19 +152,18 @@ td.lyrics-comb.only-selected.italic {
 }
 
 /* Images */
-figure[typeof~='mw:File/Thumb'] > figcaption, 
-figure[typeof~='mw:File/Frame'] > figcaption {
-  background-color: var(--background-color-neutral, #f8f9fa);
-  border-color: var(--border-color-base, #eaecf0);
-}
 figure[typeof~='mw:File/Thumb'], 
 figure[typeof~='mw:File/Frame'] {
   background-color: var(--background-color-neutral, #f8f9fa);
   border-color: var(--border-color-base, #eaecf0);
-}
-figure[typeof~='mw:File/Thumb'] > :not(figcaption) .mw-file-element, 
-figure[typeof~='mw:File/Frame'] > :not(figcaption) .mw-file-element {
-  border-color: var(--border-color-subtle, #eaecf0);
+
+  & > figcaption {
+    background-color: var(--background-color-neutral, #f8f9fa);
+    border-color: var(--border-color-base, #eaecf0);
+  }
+  & > :not(figcaption) .mw-file-element {
+    border-color: var(--border-color-subtle, #eaecf0);
+  }
 }
 
 /* Carousel Gallery */
@@ -173,23 +174,27 @@ figure[typeof~='mw:File/Frame'] > :not(figcaption) .mw-file-element {
     flex-direction: row;
     scroll-snap-type: x mandatory;
     scroll-padding-left: 50px;
-  }
-  .gallery.mobile-scrollx li.gallerybox {
-    display: block;
-    scroll-snap-align: start;
-  }
-  .gallery.mobile-scrollx li.gallerybox:first-child {
-    padding-left: 50px;
-    box-sizing: content-box;
-  }
-  .gallery.mobile-scrollx li.gallerybox:last-child {
-    padding-right: 50px;
-    box-sizing: content-box;
+
+    li.gallerybox {
+      display: block;
+      scroll-snap-align: start;
+
+      &:first-child {
+        padding-left: 50px;
+        box-sizing: content-box;
+      }
+
+      &:last-child {
+        padding-right: 50px;
+        box-sizing: content-box;
+      }
+    }
   }
 }
 
 /* DiscussionTools */
-dl > dd:has(> span[data-mw-comment-start]) {
+dl > dd:has(> span[data-mw-comment-start]), 
+dl > dd:has(> *:first-child:not(dl) span[data-mw-comment-start]) {
   padding-top: 1em;
   margin-top: 2em;
   border-top: solid 1px var(--border-color-base, #a2a9b1);
@@ -208,12 +213,14 @@ dl > dd:has(> span[data-mw-comment-start]) {
 }
 
 /* MW1.44 Upgrade Workaround: Force exticon link to use MW1.44 resource instead of MW1.43 */
-body:not(.skin-citizen) .mw-parser-output a.external, 
-body:not(.skin-citizen) .link-mailto, 
-body:not(.skin-citizen) .link-ftp, 
-body:not(.skin-citizen) .link-irc, 
-body:not(.skin-citizen) .link-audio, 
-body:not(.skin-citizen) .link-video, 
-body:not(.skin-citizen) .link-document {
-  background-image: url(/1.44/resources/src/mediawiki.skinning/images/external-ltr.svg);
+body:not(.skin-citizen) {
+  .mw-parser-output a.external, 
+  .link-mailto, 
+  .link-ftp, 
+  .link-irc, 
+  .link-audio, 
+  .link-video, 
+  .link-document {
+    background-image: url(/1.44/resources/src/mediawiki.skinning/images/external-ltr.svg);
+  }
 }

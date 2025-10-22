@@ -1,7 +1,7 @@
-/* All JavaScript here will be loaded for users of the Timeless skin */
+/*! All JavaScript here will be loaded for users of the Timeless skin */
 'use strict';
 
-/* Collapsible navigation menus */
+/*! Collapsible navigation menus */
 $('#site-navigation > .sidebar-inner > .mw-portlet > .mw-portlet-body').addClass('collapse');
 $('#p-navigation > .mw-portlet-body, #p-special-pages > .mw-portlet-body').addClass('show');
 $('#site-navigation > .sidebar-inner > .mw-portlet[id^=\'p-^\'] > h3')
