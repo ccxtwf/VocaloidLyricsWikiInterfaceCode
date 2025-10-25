@@ -1,0 +1,81 @@
+{
+  "batchcomplete": "",
+  "query": {
+    "recentchanges": [
+      {
+        "type": "edit",
+        "ns": 0,
+        "title": "Page 1",
+        "pageid": 1,
+        "revid": 2,
+        "old_revid": 1,
+        "rcid": 1,
+        "user": "NewUser1",
+        "timestamp": "2025-10-25T08:26:49Z",
+        "comment": "/* I am a new comment on an existing page! */ new section",
+        "tags": [
+          "discussiontools-added-comment",
+          "discussiontools",
+          "discussiontools-newtopic",
+          "discussiontools-source",
+          "discussiontools-source-enhanced"
+        ]
+      },
+      {
+        "type": "edit",
+        "ns": 0,
+        "title": "Page 2",
+        "pageid": 2,
+        "revid": 4,
+        "old_revid": 3,
+        "rcid": 2,
+        "user": "NewUser2",
+        "timestamp": "2025-10-25T08:25:30Z",
+        "comment": "/* I am a reply! */ Reply",
+        "tags": [
+          "discussiontools-added-comment",
+          "discussiontools",
+          "discussiontools-source",
+          "discussiontools-source-enhanced",
+          "discussiontools-reply"
+        ]
+      },
+      {
+        "type": "edit",
+        "ns": 0,
+        "title": "Page 3",
+        "pageid": 3,
+        "revid": 5,
+        "old_revid": 0,
+        "rcid": 3,
+        "user": "NewUser3",
+        "timestamp": "2025-10-25T08:24:15Z",
+        "comment": "/* I am a new page made using DiscussionTools */ new section",
+        "tags": [
+          "discussiontools-added-comment",
+          "discussiontools",
+          "discussiontools-newtopic",
+          "discussiontools-source",
+          "discussiontools-source-enhanced"
+        ]
+      },
+      {
+        "type": "edit",
+        "ns": 0,
+        "title": "Page 4",
+        "pageid": 4,
+        "revid": 6,
+        "old_revid": 0,
+        "rcid": 4,
+        "user": "NewUser4",
+        "timestamp": "2025-10-25T08:23:01Z",
+        "comment": "Created page with \"I am a comment without a topic sad emoji ~~~~\"",
+        "tags": [
+          "discussiontools",
+          "discussiontools-visual",
+          "discussiontools-newtopic"
+        ]
+      }
+    ]
+  }
+}

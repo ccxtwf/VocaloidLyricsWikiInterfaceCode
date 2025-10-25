@@ -88,6 +88,10 @@
   margin-top: 8px;
 }
 
+.oo-ui-icon-reload, .mw-ui-icon-reload:before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E%3Ctitle%3E reload %3C/title%3E%3Cpath d=%22M15.65 4.35A8 8 0 1 0 17.4 13h-2.22a6 6 0 1 1-1-7.22L11 9h7V2z%22/%3E%3C/svg%3E");
+}
+
 @media (max-width: 500px) {
   #rc-discussion-dropdown .oo-ui-fieldLayout-body {
     flex-direction: column;

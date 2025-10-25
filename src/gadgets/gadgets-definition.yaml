@@ -79,14 +79,14 @@ gadgets:
           - view
     rc-discussion:
       code:
-        - rc-discussion.js
+        - rc-discussion.ts
         - rc-discussion.css
       resourceLoader:
         default: true
         dependencies:
-          - oojs-ui-core
-          - oojs-ui-widgets
-          - jquery.spinner
+          - mediawiki.util
+          - vue
+          - '@wikimedia/codex'
         actions:
           - view
     tl-checking-utils:

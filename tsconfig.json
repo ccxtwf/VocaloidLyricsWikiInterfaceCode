@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "es2015",
     "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": ["ES2015", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 
     "module": "nodenext",
@@ -15,7 +15,11 @@
 
     "outDir": "build",
 
-    "typeRoots": ["./node_modules/@types", "./node_modules/types-mediawiki"],
+    "typeRoots": [
+      "./node_modules/@types", 
+      "./node_modules/types-mediawiki", 
+      "./node_modules/@vue"
+    ],
     
     /* Linting */
     "noUnusedLocals": true,
@@ -25,5 +29,5 @@
     "strictNullChecks": true,
     "strict": false
   },
-  "include": ["dev-utils/*", "plugins/*", "gadgets/**/*"]
+  "include": ["dev-utils/**/*", "plugins/**/*", "src/**/*"]
 }

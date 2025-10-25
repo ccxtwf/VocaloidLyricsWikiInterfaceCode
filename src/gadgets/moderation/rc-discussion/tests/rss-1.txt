@@ -1,0 +1,269 @@
+<?xml version="1.0"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+  <channel>
+    <title>Local Wiki - Recent changes [en]</title>
+    <link>https://my.local.wiki/wiki/Special:RecentChanges</link>
+    <description>Track the most recent changes to the wiki in this feed.</description>
+    <language>en</language>
+    <generator>MediaWiki 1.44.2</generator>
+    <lastBuildDate>Sat, 25 Oct 2025 11:07:50 GMT</lastBuildDate>
+    <item>
+      <title>Page 1</title>
+      <link>https://my.local.wiki/wiki/Page_1?diff=2&amp;oldid=1</link>
+      <guid isPermaLink="false">https://my.local.wiki/wiki/Page_1?diff=2&amp;oldid=1</guid>
+      <description>
+        &lt;p&gt;&lt;span class=&quot;autocomment&quot;&gt;I am a new comment on an existing page!: &lt;/span&gt; new section&lt;/p&gt;
+        &lt;table style=&quot;background-color: #fff; color: #202122;&quot; data-mw=&quot;interface&quot;&gt;
+          &lt;col class=&quot;diff-marker&quot; /&gt;
+          &lt;col class=&quot;diff-content&quot; /&gt;
+          &lt;col class=&quot;diff-marker&quot; /&gt;
+          &lt;col class=&quot;diff-content&quot; /&gt;
+          &lt;tr class=&quot;diff-title&quot; lang=&quot;en&quot;&gt;
+            &lt;td colspan=&quot;2&quot; style=&quot;background-color: #fff; color: #202122; text-align: center;&quot;&gt;
+              ← Older revision
+            &lt;/td&gt;
+            &lt;td colspan=&quot;2&quot; style=&quot;background-color: #fff; color: #202122; text-align: center;&quot;&gt;
+              Revision as of 15:26, 25 October 2025
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-lineno&quot;&gt;
+              Line 1:
+            &lt;/td&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-lineno&quot;&gt;
+              Line 1:
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;br /&gt;
+            &lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;br /&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                lorem ipsum dolor sit amet
+              &lt;/div&gt;
+            &lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                lorem ipsum dolor sit amet
+              &lt;/div&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;br /&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                == I am a new comment on an existing page! ==
+              &lt;/div&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;br /&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                I am a new comment!!
+              &lt;/div&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;br /&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                ...So what&apos;s up with airplane food?
+              &lt;/div&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;br /&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+              -- [[User:NewUser1|NewUser1]] ([[User talk:NewUser1|talk]]) 08:26, 25 October 2025 (UTC)
+              &lt;/div&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/table&gt;
+      </description>
+      <pubDate>Sat, 25 Oct 2025 08:26:49 GMT</pubDate>
+      <dc:creator>NewUser1</dc:creator>
+      <comments>https://my.local.wiki/wiki/Page_1</comments>
+    </item>
+    <item>
+      <title>Page 2</title>
+      <link>https://my.local.wiki/wiki/Page_2?diff=4&amp;oldid=3</link>
+      <guid isPermaLink="false">https://my.local.wiki/wiki/Page_2?diff=4&amp;oldid=3</guid>
+      <description>
+        &lt;p&gt;&lt;span class=&quot;autocomment&quot;&gt;I am a reply!: &lt;/span&gt; Reply&lt;/p&gt;)
+        &lt;table style=&quot;background-color: #fff; color: #202122;&quot; data-mw=&quot;interface&quot;&gt;
+          &lt;col class=&quot;diff-marker&quot; /&gt;
+          &lt;col class=&quot;diff-content&quot; /&gt;
+          &lt;col class=&quot;diff-marker&quot; /&gt;
+          &lt;col class=&quot;diff-content&quot; /&gt;
+          &lt;tr class=&quot;diff-title&quot; lang=&quot;en&quot;&gt;
+            &lt;td colspan=&quot;2&quot; style=&quot;background-color: #fff; color: #202122; text-align: center;&quot;&gt;
+              ← Older revision
+            &lt;/td&gt;
+            &lt;td colspan=&quot;2&quot; style=&quot;background-color: #fff; color: #202122; text-align: center;&quot;&gt;
+              Revision as of 15:26, 25 October 2025
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-lineno&quot;&gt;
+              Line 5:
+            &lt;/td&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-lineno&quot;&gt;
+              Line 5:
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;br /&gt;
+            &lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;br /&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                I am the comment being replied to!
+              &lt;/div&gt;
+            &lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                I am the comment being replied to!
+              &lt;/div&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;br /&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                :I am a reply.
+              &lt;/div&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                &lt;br /&gt;
+              &lt;/div&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                :Apropos of nothing. [[User:NewUser2|NewUser2]] ([[User talk:NewUser2|talk]]) 08:25, 25 October 2025 (UTC)
+              &lt;/div&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;br /&gt;
+            &lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;br /&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                == Some Heading ==
+              &lt;/div&gt;
+            &lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                == Some Heading ==
+              &lt;/div&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/table&gt;
+      </description>
+      <pubDate>Sat, 25 Oct 2025 08:25:30 GMT</pubDate>
+      <dc:creator>NewUser2</dc:creator>
+      <comments>https://my.local.wiki/wiki/Page_2</comments>
+    </item>
+    <item>
+      <title>Page 3</title>
+      <link>https://my.local.wiki/wiki/Page_3?diff=5&amp;oldid=0</link>
+      <guid isPermaLink="false">https://my.local.wiki/wiki/Page_3?diff=5&amp;oldid=0</guid>
+      <description>
+        &lt;p&gt;&lt;span class=&quot;autocomment&quot;&gt;I am a new page made using DiscussionTools: &lt;/span&gt; new section&lt;/p&gt; &lt;p&gt;&lt;b&gt;New page&lt;/b&gt;&lt;/p&gt;&lt;div&gt;== I am a new page made using DiscussionTools ==&lt;br /&gt; &lt;br /&gt; lorem ipsum dolor sit amet... is how the lore goes. [[User:NewUser3|NewUser3]] ([[User talk:NewUser3|talk]]) 08:24, 25 October 2025 (UTC)&lt;/div&gt;
+      </description>
+      <pubDate>Sat, 25 Oct 2025 08:24:15 GMT</pubDate>
+      <dc:creator>NewUser3</dc:creator>
+      <comments>https://my.local.wiki/wiki/Page_3</comments>
+    </item>
+    <item>
+      <title>Page 4</title>
+      <link>https://my.local.wiki/wiki/Page_4?diff=6&amp;oldid=0</link>
+      <guid isPermaLink="false">https://my.local.wiki/wiki/Page_4?diff=6&amp;oldid=0</guid>
+      <description>
+        &lt;p&gt;Created page with &amp;quot;I am a comment without a topic sad emoji ~~~~&amp;quot;&lt;/p&gt; &lt;p&gt;&lt;b&gt;New page&lt;/b&gt;&lt;/p&gt;&lt;div&gt;I am a comment without a topic sad emoji [[User:NewUser4|NewUser4]] ([[User talk:NewUser4|talk]]) 08:23, 25 October 2025 (UTC)&lt;/div&gt;
+      </description>
+      <pubDate>Sat, 25 Oct 2025 08:23:01 GMT</pubDate>
+      <dc:creator>NewUser4</dc:creator>
+      <comments>https://my.local.wiki/wiki/Page_3</comments>
+    </item>
+  </channel>
+</rss>
