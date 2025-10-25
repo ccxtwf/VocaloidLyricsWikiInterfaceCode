@@ -1,5 +1,5 @@
 import autogenerateEntrypoint from './plugins/autogenerate-entrypoint.js';
-import addBundleBannerAndFooter from './plugins/add-bundle-banner-and-footer.js';
+import generateCssBanner from './plugins/generate-css-banner.js';
 import generateGadgetsDefinitionWikitext from './plugins/generate-gadgets-definition-wikitext.js';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { 
@@ -9,6 +9,7 @@ import {
   mapWikicodeSourceFiles, 
   setViteServerOrigin
 } from './dev-utils/build-orchestration.js';
+import { createBanner } from './dev-utils/generate-banner.js';
 import { 
   ConfigEnv, 
   defineConfig, 
@@ -32,21 +33,21 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
 
   return {
     plugins: [
-      // In Vite Build, watches changes made to files in gadgets/ subdirectory
+      // On Vite Build, watches changes made to files in gadgets/ subdirectory
       // and generate the load.js entrypoint file 
       autogenerateEntrypoint(gadgetsToBuild, mwInterfaceCodeToBuild),
 
-      // In Vite Build, generate the contents of MediaWiki:Gadgets-definition
+      // On Vite Build, generate the contents of MediaWiki:Gadgets-definition
       generateGadgetsDefinitionWikitext(gadgetsDefinition),
       
-      // In Vite Build, copy the i18n.json files to dist/
+      // On Vite Build, copy the i18n.json files to dist/
       viteStaticCopy({
         targets: bundleAssets,
         structured: false,
       }),
 
-      // In Vite Build, automatically add banner and footer to each mapped JS & CSS file
-      addBundleBannerAndFooter(
+      // On Vite Build, automatically add banner to each CSS file
+      generateCssBanner(
         env.VITE_GITHUB_REPOSITORY_URL, 
         env.VITE_GITHUB_REPOSITORY_BRANCH
       )
@@ -67,6 +68,13 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
               return assetInfo.name;
             }
             return 'assets/[name][extname]';
+          },
+          banner: (chunk): string => {
+            return createBanner(
+              env.VITE_GITHUB_REPOSITORY_URL, 
+              env.VITE_GITHUB_REPOSITORY_BRANCH,
+              chunk.facadeModuleId || chunk.moduleIds[0]!
+            )
           }
         },
       },
@@ -86,11 +94,11 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
         less: {
           // Add any Less-specific options here
         }
-      }
+      },
     },
     esbuild: {
       // Preserve banner & footer
-      legalComments: 'inline'
+      legalComments: 'inline',
     },
     optimizeDeps: {
       esbuildOptions: {
