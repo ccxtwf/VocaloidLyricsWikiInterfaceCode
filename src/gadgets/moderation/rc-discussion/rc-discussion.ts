@@ -8,8 +8,11 @@ import type {
 	IMenuUption, 
 	IParsedApiQueryRc, 
 	IGroupedParsedApiQueryRc, 
-	IExpectedApiQueryRvResponse 
+	IExpectedApiQueryRcResponse,
+	IExpectedApiQueryRvResponse, 
+	IAppStore,
 } from "./types.js";
+import type { Reactive } from "vue";
 
 import { 
 	parseRcFeeds, 
@@ -18,7 +21,6 @@ import {
 	compareParsedRcs,
 	groupDiscussionsByDate,
 } from './utils.js';
-
 
 ( function ( $, mw ) {
 	'use strict';
@@ -102,11 +104,19 @@ import {
 	const DEBUGGING_ID = 'gadget-recent-discussions';
 
 	const messages = {
-		'rc-discussion--app-overview': "Use this page to look at recent discussion throughout the $1  (max $2 posts for a $3 day period)."
+		'rc-discussion--title': 'Recent Discussions - $1',
+		'rc-discussion--app-overview': "Use this page to look at recent discussion throughout the $1 (max $2 posts for a $3 day period).",
+		'rc-discussion--prompt-filter': 'Filter Discussions',
+		'rc-discussion--prompt-refresh': 'Refresh',
+		'rc-discussion--action-new-topic': 'posted a new topic',
+		'rc-discussion--action-new-reply': 'posted a reply',
+		'rc-discussion--failed-to-load': "Failed to load the comment. Click the link to the post to see the full discussion.",
+		'rc-discussion--unexpected-error': 'An unexpected error has occured. Please report this bug if it persists.'
 	};
+	mw.messages.set(messages);
 
 	// =================
-	//   Main Fetching Logic
+	//   UI
 	// =================
 	const config = mw.config.get([
 		'wgPageName',
@@ -125,81 +135,191 @@ import {
 		new mw.ForeignApi(`${DEBUG_FOREIGN_WIKI}${config.wgScriptPath}/api.php`, { anonymous: true })
 	);
 
-	function loadApp() {
-		const App = Vue.createMwApp({
-			template: `
-			<div id="rc-discussion-feeds">
-				<div>
-					{{ $i18n( 'rc-discussion--app-overview', siteName, maxPosts, maxDuration ).text() }}
-				</div>
-				<div id="rc-discussion-dropdown">
-				</div>
-				<div id="rc-discussion-actions">
-				</div>
-				<div id="rc-discussion-feeds-articles-container">
-					<div id="rc-discussion-feeds-articles">
+	let store: Reactive<IAppStore> | undefined;
+
+	function loadApp(): void {
+		mw.loader.using( ['vue', '@wikimedia/codex'] ).then(require => {
+			const Vue = require('vue');
+			const { CdxButton, CdxIcon, CdxComboBox, CdxField } = require('@wikimedia/codex');
+			
+			//@ts-ignore
+			store = Vue.reactive({
+				option: 0,
+				data: null,
+				isLoading: false,
+			});
+			//@ts-ignore
+			const App = Vue.createMwApp({
+				template: `
+				<div id="rc-discussion-feeds">
+					<div>
+						{{ $i18n( 'rc-discussion--app-overview', siteName, maxPosts, maxDuration ).text() }}
+					</div>
+					<div id="rc-discussion-dropdown">
+						<cdx-field>
+							<cdx-combobox 
+								v-model:selected="store.option"
+								:menu-items="dropdownConfig.items"
+								:menu-config="dropdownConfig.config"
+							/>
+							<template #label>
+								{{ $i18n( 'rc-discussion--prompt-filter' ).text() }}
+							</template>
+						</cdx-field>
+					</div>
+					<div id="rc-discussion-actions">
+						<cdx-button @click="onClickedRefresh">
+							<cdx-icon :icon="cdxIconReload" />
+							{{ $i18n( 'rc-discussion--prompt-refresh' ).text() }}
+						</cdx-button>
+					</div>
+					<div id="rc-discussion-feeds-articles-container">
+						<div id="rc-discussion-feeds-articles">
+							<rc-discussion-cards 
+								v-for="(dateGroup, index) in dateGroups" 
+								:key="index" 
+								date="dateGroup"
+								posts="data[dateGroup]"
+							/>
+						</div>
 					</div>
 				</div>
-			</div>
-			`,
-			setup: () => ({
-				siteName: config.wgSiteName,
-				maxPosts: NUMBER_OF_POSTS,
-				maxDuration: MAX_DURATION_IN_DAYS
-			})
-		});
+				`,
+				components: { CdxButton, CdxIcon, CdxComboBox, CdxField },
+				setup: () => ({
+					siteName: config.wgSiteName,
+					maxPosts: NUMBER_OF_POSTS,
+					maxDuration: MAX_DURATION_IN_DAYS,
+					data: store?.data,
+					dropdownConfig: {
+						items: MENU_OPTIONS.map((option, idx) => ({
+							label: option.label,
+							value: idx
+						})),
+						config: {
+							visibleItemLimit: 5
+						}
+					}
+				}),
+				computed: {
+					dateGroups(): string[] {
+						return Object.keys(this.data);
+					}
+				},
+				methods: {
+					onClickedRefresh() {
+						loadDiscussions(store!.option, true);
+					}
+				}
+			});
 
-		App.component('rc-discussion-cards', {
-			template: `
-			<div class="rc-discussion-date-group">
-				<div class="rc-discussion-date">
-				{{}}
+			App.component('rc-discussion-cards', {
+				template: `
+				<div class="rc-discussion-date-group">
+					<div class="rc-discussion-date">
+						{{ date }}
+					</div>
+					<rc-discussion-card 
+						v-for="(post, index) in posts" 
+						:key="index" 
+						post="post" 
+					/>
 				</div>
-				<rc-discussion-card v-for: />
-			</div>
-			`
-		});
+				`,
+				props: ['date', 'posts'],
+				setup: ({ date, posts }: { date: string, posts: IParsedApiQueryRc[] }) => ({ date, posts })
+			});
 
-		App.component('rc-discussion-card', {
-			template: `
-			<article>
+			App.component('rc-discussion-card', {
+				template: `
+				<article>
 
-				<div class="rc-discussion-feed-comment-summary">
-					<span class="rc-discussion-feed-post-author"></span>
-					<span class="rc-discussion-feed-user-info">
-						&nbsp;(
-						<a href="" rel="nofollow noindex">
-							talk
+					<div class="rc-discussion-feed-comment-summary">
+						<span class="rc-discussion-feed-post-author">
+							{{ username }}
+						</span>
+						<span class="rc-discussion-feed-user-info">
+							&nbsp;(
+							<a v-bind:href="userTalkPage" rel="nofollow noindex">
+								talk
+							</a>
+							&nbsp;|&nbsp;
+							<a v-bind:href="userContribs" rel="nofollow noindex">
+								contribs
+							</a>
+							) {{ summaryAction }} on
+							<a v-bind:href="pageUrl" rel="nofollow noindex" class="rc-discussion-feed-post-title">
+								{{ pageTitle }}
+							</a>
+						</span>
+					</div>
+					
+					<div class="rc-discussion-feed-comment-heading">
+						<a v-bind:href="postUrl" rel="nofollow noindex">
+							{{ heading }}
 						</a>
-						&nbsp;|&nbsp;
-						<a href="" rel="nofollow noindex">
-							contribs
-						</a>
-						)&nbsp;
-					</span>
-				</div>
-				
-				<div class="rc-discussion-feed-comment-heading">
-					<a href="" rel="nofollow noindex">
-					</a>
-				</div>
+					</div>
 
-				<div class="rc-discussion-feed-added-comment">
+					<div class="rc-discussion-feed-added-comment">
+						<span v-if="contents === null" class="rc-discussion-error">
+							{{ $i18n( 'rc-discussion--failed-to-load' ).text() }}
+						</span>
+						<span v-else>
+							{{ contents }}
+						</span>
+					</div>
 
-				</div>
+					<div class="rc-discussion-feed-timestamp">
+						{{ renderedDate }}
+					</div>
 
-				<div class="rc-discussion-feed-timestamp">
-				</div>
+				</article>
+				`,
+				props: ['post'],
+				setup: ({ post }: { post: IParsedApiQueryRc }) => {
+					const { username, heading, contents, timestamp, pageTitle, isNewTopic, isReply } = post;
+					return { username, heading, contents, timestamp, pageTitle, isNewTopic, isReply };
+				},
+				computed: {
+					userTalkPage() {
+						return mw.util.getUrl(`User talk:${this.username}`)
+					},
+					userContribs() {
+						return mw.util.getUrl(`Special:Contributions/${this.username}`)
+					},
+					summaryAction() {
+						if (this.isNewTopic) {
+							return mw.message('rc-discussion--action-new-topic').plain();
+						} else if (this.isReply) {
+							return mw.message('rc-discussion--action-new-reply').plain();
+						}
+						return '';
+					},
+					pageUrl() {
+						return `${DEBUG_FOREIGN_WIKI}${mw.util.getUrl(this.pageTitle)}`;
+					},
+					postUrl() {
+						return `${this.pageUrl()}#${this.heading.replace(/[\{\}]/g, '').replace(/\s+/g, '_')}`;
+					},
+					renderedDate() {
+						const d = new Date(this.timestamp);
+						const timestamp = d.toLocaleString(navigator.language || 'en', { 
+							'year': 'numeric', 
+							'month': 'long', 
+							'day': 'numeric'
+						}) + ', ' + d.toLocaleString(navigator.language || 'en', { 
+							'hour': 'numeric', 
+							'minute': 'numeric', 
+							'timeZoneName': 'shortOffset'
+						});
+						return timestamp;
+					}
+				}
+			});
 
-			</article>
-			`
+			loadDiscussions(store!.option, false);
 		});
 	}
-
-
-
-
-
 
 	function loadDiscussions(idx: number, noCache?: boolean): void {
 		idx = +idx;
@@ -207,35 +327,39 @@ import {
 			console.error('Read recent changes: Invalid Argument', DEBUGGING_ID);
 			return;
 		}
-		$('#rc-discussion-feeds-articles').html('');
-		$('#rc-discussion-feeds-articles-container .mw-spinner').show();
+		store!.isLoading = true;
 		if (idx === 0 && !noCache) {
 			const fetchedFromCache = fetchFromCache();
 			if (fetchedFromCache !== null) {
-				populateRecentDiscussion(fetchedFromCache);
-				$('#rc-discussion-feeds-articles-container .mw-spinner').hide();
+				store!.data = fetchedFromCache;
+				store!.isLoading = false;
 				return;
 			}
 		}
 		readRecentChangesFeed(idx)
 			.then(([a, b]: [PromiseSettledResult<string>, PromiseSettledResult<ApiResponse>]) => {
-				const parsedFeeds = parseRcFeeds(a);
-				const parsedApiRcs = parseRcApiQuery(b);
-				const [comparedApiRcs, fillIndexes, revIds] = compareParsedRcs(parsedFeeds, parsedApiRcs);
-				return fillIntermediaryRevs(comparedApiRcs, fillIndexes, revIds);
+				if (a.status !== 'fulfilled') {
+					throw new Error('Failed to fetch data.' + a.reason);
+				}
+				if (b.status !== 'fulfilled') {
+					throw new Error('Failed to fetch data.' + b.reason);
+				}
+				const parsedFeeds = parseRcFeeds(a.value);
+				const parsedApiRcs = parseRcApiQuery(b.value as IExpectedApiQueryRcResponse);
+				const [comparedApiRcs, revToIdx] = compareParsedRcs(parsedFeeds, parsedApiRcs);
+				return fillIntermediaryRevs(comparedApiRcs, revToIdx);
 			})
 			.then(groupDiscussionsByDate)
 			.then((data: IGroupedParsedApiQueryRc) => {
 				if (idx === 0) { saveToCache(data); }
-				return data;
+				store!.data = data;
 			})
-			.then(populateRecentDiscussion)
 			.catch((err) => {
-				mw.notify('An unexpected error has occured. Please report this bug if it persists.', { type: 'error' });
+				mw.notify(mw.message('rc-discussion--unexpected-error').text(), { type: 'error' });
 				console.error( err, DEBUGGING_ID );
 			})
 			.finally(function () {
-				$('#rc-discussion-feeds-articles-container .mw-spinner').hide();
+				store!.isLoading = false;
 			});
 	}
 
@@ -263,10 +387,10 @@ import {
 		]);
 	}
 
-	function fillIntermediaryRevs(parsedApiRcs: IParsedApiQueryRc[], fillIndexes: number[], revids: number[]): Promise<IParsedApiQueryRc[]> {
+	function fillIntermediaryRevs(parsedApiRcs: IParsedApiQueryRc[], revToIdx: Map<number, number>) {
 		return new Promise(function (resolve, reject) {
-			if (revids.length === 0) { resolve(parsedApiRcs); }
-			
+			if (revToIdx.size === 0) { resolve(parsedApiRcs); }
+			const revids = Array.from(revToIdx.keys());
 			api.get({
 				action: 'query', 
 				format: 'json',
@@ -284,7 +408,6 @@ import {
 			.fail(reject);
 		});
 	}
-
 
 	// =================
 	//   Caching
@@ -315,10 +438,9 @@ import {
 		localStorage.removeItem(LOCAL_STORAGE_EXPIRATION_KEY);
 	}
 
-	
-
-	
-
+	// =================
+	//   Misc
+	// =================
 	function installPortletLink(): void {
 		const label = 'Recent Discussions';
 		const tooltipText = `View recent discussion on the ${config.wgSiteName}`;
@@ -359,5 +481,5 @@ import {
 	// =================
 	//   Run
 	// =================	
-	init();
+	loadApp();
 } )( jQuery, mediaWiki );

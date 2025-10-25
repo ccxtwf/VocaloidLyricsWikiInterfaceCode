@@ -84,3 +84,9 @@ export interface IExpectedApiQueryRvResponse extends IApiResponse {
 		}
 	}
 }
+
+export interface IAppStore {
+	option: number
+	data: IGroupedParsedApiQueryRc
+	isLoading: boolean
+}
