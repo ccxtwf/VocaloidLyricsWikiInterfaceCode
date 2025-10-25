@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { normalizePath } from 'vite';
 import { resolve } from 'path';
+import type { GadgetDefinition, GadgetsDefinition, ResourceLoaderConditions } from './types.js';
 
 function resolveGadgetsDefinitionWikitextFile() {
   const distFolder = resolve(__dirname, '../dist');

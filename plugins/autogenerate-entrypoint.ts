@@ -7,6 +7,7 @@ import {
 } from '../dev-utils/build-orchestration.js';
 import { dirname, relative } from 'path';
 import { PluginOption, HotUpdateOptions } from 'vite';
+import type { GadgetDefinition } from '../dev-utils/types.js';
 
 enum ViteServerChangeMode {
   Unchanged,

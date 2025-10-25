@@ -5,6 +5,7 @@ import { parse } from 'yaml';
 import * as crypto from 'crypto';
 import { normalizePath } from 'vite';
 import { Target } from 'vite-plugin-static-copy';
+import type { GadgetDefinition, GadgetsDefinition } from './types.js';
 
 let gadgetsDir: string;
 let mediawikiInterfaceDir: string;

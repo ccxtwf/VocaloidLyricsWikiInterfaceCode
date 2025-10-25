@@ -1,7 +1,7 @@
 /* 
  * Schema for gadgets-definition.yaml 
  */
-interface GadgetsDefinition {
+export interface GadgetsDefinition {
   workspace: {
     // If enable_all is set to true, Vite will include all gadgets except those in "workspace.disable"
     // If enable_all is set to false, Vite will only include gadgets listed in "workspace.enable"
@@ -16,7 +16,7 @@ interface GadgetsDefinition {
   }
 }
 
-interface GadgetDefinition {
+export interface GadgetDefinition {
   // Purely informational metadata
   description?: string
   authors?: string[]
@@ -46,7 +46,7 @@ interface GadgetDefinition {
  * Refer to https://www.mediawiki.org/wiki/Extension:Gadgets#Options 
  * for more information on what these parameters mean 
  */
-interface ResourceLoaderConditions {
+export interface ResourceLoaderConditions {
   default?: boolean
   hidden?: boolean
   

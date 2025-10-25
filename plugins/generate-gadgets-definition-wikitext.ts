@@ -1,5 +1,6 @@
 import { writeWikitextFile } from '../dev-utils/generate-gadgets-definition-wikitext.js';
 import { PluginOption } from 'vite';
+import type { GadgetsDefinition } from '../dev-utils/types.js';
 
 /**
  * A Vite plugin that automatically generates the contents of MediaWiki:Gadgets-definition 
