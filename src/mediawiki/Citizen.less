@@ -64,18 +64,20 @@ table.lyrics-table > tbody > tr.lyrics-table-header {
 .citizen-menu__content.collapse.show {
   display: block;
 }
-@dark-mode-css-definitions: {
-  --border-color-base: rgba(255, 255, 255, 0.3);
-  
+@dark-mode-css-definitions: {  
   #citizen-drawer__card .mw-portlet > .citizen-menu__heading > .menu-btn {
     filter: brightness(1) invert(1);
     backdrop-filter: brightness(1) invert(1);
   }
 }
 :root.skin-theme-clientpref-night {
+  --border-color-base: rgba(255, 255, 255, 0.3);
   @dark-mode-css-definitions();
 }
 @media screen and (prefers-color-scheme: dark) {
+  :root {
+    --border-color-base: rgba(255, 255, 255, 0.3);
+  }
   @dark-mode-css-definitions();
 }
 
