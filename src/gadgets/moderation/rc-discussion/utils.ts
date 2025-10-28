@@ -1,3 +1,7 @@
+/*!
+ * Adds a special page to browse through recent posts and replies made using the DiscussionTools extension.
+ * Authored by [[User:CoolMikeHatsune22]]
+ */
 import type {  
   IParsedRssRcFeed, 
   IParsedApiQueryRc, 
@@ -62,15 +66,13 @@ export function parseRcFeeds(rss: string): IParsedRssRcFeed[] {
     
     let textAdditions: string[] | null = null;
     if (isNewPage) {
-      textAdditions = Array.from(doc.documentElement.children).slice(2)
-      .map((el: Element) => el.innerHTML.replace(/<br\s*\/?>/g, '\n'))
-      .map((s: string) => {
-        // Trim unneeded whitespace
-        while (s.match(/^[\n ]*<br\s?\/>[\n ]*/) !== null) {
-          s = s.replace(/^[\n ]*<br\s?\/>[\n ]*/, '');
-        }
-        return s;
-      });
+      textAdditions = [];
+      Array.from(doc.documentElement.children).slice(2)
+        .forEach((el: Element) => {
+          Array.from(el.childNodes).forEach((c: Element) => {
+            textAdditions!.push(c.tagName === 'br' ? '' : c.textContent.trim());
+          });
+        });
     } else if (!hasMultipleRevs) {
       textAdditions = parseNewAdditionDiffs(doc);
     }
@@ -110,6 +112,7 @@ export function parseRcApiQuery(res: IExpectedApiQueryRcResponse): IParsedApiQue
       comment: revSummary, 
       user: username
     } = curComment;
+    const isAnon = (curComment.anon !== undefined);
     const isReply = (curComment.tags || []).indexOf("discussiontools-reply") > -1;
     const isNewTopic = (curComment.tags || []).indexOf("discussiontools-newtopic") > -1;
     const timestamp = ((curComment.timestamp || '') === '') ? null : Date.parse(curComment.timestamp);
@@ -126,6 +129,7 @@ export function parseRcApiQuery(res: IExpectedApiQueryRcResponse): IParsedApiQue
       pageTitle,
       heading,
       username,
+      isAnon,
       timestamp,
       isReply,
       isNewTopic,
@@ -249,10 +253,18 @@ export function groupDiscussionsByDate(items: IParsedApiQueryRc[]): IGroupedPars
   const res: IGroupedParsedApiQueryRc = {};
   let prevDate: string | null = null;
   for (const item of items) {
-    const curDate = item.timestamp === null ? '' : 
-      new Date(item.timestamp).toLocaleString(navigator.language || 'en', { 
-        'year': 'numeric', 'month': 'long', 'day': 'numeric'
-      });
+    let curDate: string = '';
+    if (item.timestamp !== null) {
+      const d = new Date(item.timestamp);
+      // Get date in local time and in standard yyyy-MM-dd format
+      curDate = `${
+        d.getFullYear()
+      }-${
+        (d.getMonth()+1).toString().padStart(2, '0')
+      }-${
+        d.getDate().toString().padStart(2, '0')
+      }`;
+    }
     if (prevDate !== curDate) {
       res[curDate] = [];
       prevDate = curDate;
@@ -269,7 +281,7 @@ export function groupDiscussionsByDate(items: IParsedApiQueryRc[]): IGroupedPars
  */
 export function decodeXmlContents(text: string | null | undefined): string {
   if (!text) return '';
-  return text.replace(/&(lt|gt|amp|apos|quot);/g, (_: string, t: string): string => {
+  return text.replace(/&(lt|gt|amp|#039|quot|apos);/g, (_: string, t: string): string => {
     switch (t) {
       case 'lt': 
         return '<';
@@ -277,10 +289,11 @@ export function decodeXmlContents(text: string | null | undefined): string {
         return '>';
       case 'amp': 
         return '&';
-      case 'apos': 
-        return '\'';
       case 'quot': 
         return '"';
+      case '#039':
+      case 'apos': 
+        return '\'';
     }
     return '';
   });
@@ -335,7 +348,7 @@ export function parseNewAdditionDiffs(doc: Document): string[] {
       return tr.querySelector('td:not(.diff-empty):not(.diff-side-deleted):not(.diff-marker)');
     })
     .map((td: Element | null) => { 
-      return decodeXmlContents(td?.textContent.trim()); 
+      return td?.textContent.trim() || ''; 
     });
   return diffs;
 }
@@ -352,7 +365,7 @@ export function parseNewAdditionDiffs(doc: Document): string[] {
  * @returns 
  */
 export function buildStringFromDiffs(diffs: string[], filterHeading: string | null, isReply: boolean): string {
-  const rxTaggedSignature = /\s*\[\[User:[^\]]+?\]\]\s+\(\[\[User[ _]talk:[^\]\|]+?\|talk\]\]\)\s+\d{1,2}:\d{1,2},\s+\d{1,2}\s+[a-zA-Z]+\s+\d{4}\s+\(UTC\)\s*$/;
+  const rxTaggedSignature = /\s*(?:\[\[User:[^\]]+?\]\]\s+\(\[\[User[ _]talk:[^\]\|]+?\|talk\]\]\)|\[\[Special:Contributions\/[^\]]+?\]\])\s+\d{1,2}:\d{1,2},\s+\d{1,2}\s+[a-zA-Z]+\s+\d{4}\s+\(UTC\)\s*$/;
   const rxHeadingWikitext = new RegExp("(?<=^|\\n|<br\\s?\\/?>)={2}\\s*" + escapeRegExp(filterHeading || '').replace(/[ _]/g, '[ _]') + "\\s*={2}(?=\\n|<br\\s?\/?>|$)");
   
   // Clear heading

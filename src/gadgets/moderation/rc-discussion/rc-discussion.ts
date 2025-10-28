@@ -1,4 +1,4 @@
-/*! 
+/*
  * Adds a special page to browse through recent posts and replies made using the DiscussionTools extension.
  * Authored by [[User:CoolMikeHatsune22]]
  */
@@ -105,6 +105,8 @@ import {
 
 	const messages = {
 		'rc-discussion--title': 'Recent Discussions - $1',
+		'rc-discussion--menu-label': 'Recent Discussions',
+		'rc-discussion--menu-tooltip': 'View recent discussion on the $1',
 		'rc-discussion--app-overview': "Use this page to look at recent discussion throughout the $1 (max $2 posts for a $3 day period).",
 		'rc-discussion--prompt-filter': 'Filter Discussions',
 		'rc-discussion--prompt-refresh': 'Refresh',
@@ -277,8 +279,8 @@ import {
 				`,
 				props: ['post'],
 				setup: ({ post }: { post: IParsedApiQueryRc }) => {
-					const { username, heading, contents, timestamp, pageTitle, isNewTopic, isReply } = post;
-					return { username, heading, contents, timestamp, pageTitle, isNewTopic, isReply };
+					const { username, heading, contents, timestamp, pageTitle, isNewTopic, isReply, isAnon } = post;
+					return { username, heading, contents, timestamp, pageTitle, isNewTopic, isReply, isAnon };
 				},
 				computed: {
 					userTalkPage() {
@@ -442,8 +444,8 @@ import {
 	//   Misc
 	// =================
 	function installPortletLink(): void {
-		const label = 'Recent Discussions';
-		const tooltipText = `View recent discussion on the ${config.wgSiteName}`;
+		const label = mw.message( 'rc-discussion--menu-label' ).text();
+		const tooltipText = mw.message( 'rc-discussion--menu-tooltip', config.wgSiteName ).text();
 		if (!$('#t-rc-discussion').length) {
 			mw.util.addPortletLink(
 				'p-tb',

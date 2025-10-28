@@ -75,6 +75,83 @@
           "discussiontools-visual",
           "discussiontools-newtopic"
         ]
+      },
+      {
+        "type": "edit",
+        "ns": 0,
+        "title": "Page 5",
+        "pageid": 5,
+        "revid": 7,
+        "old_revid": 0,
+        "rcid": 5,
+        "user": "NewUser5",
+        "timestamp": "2025-10-25T08:20:29Z",
+        "comment": "/* I am a long comment */ new section",
+        "tags": [
+          "discussiontools-added-comment",
+          "discussiontools",
+          "discussiontools-newtopic",
+          "discussiontools-source",
+          "discussiontools-source-enhanced"
+        ]
+      },
+      {
+        "type": "edit",
+        "ns": 0,
+        "title": "Page 6",
+        "pageid": 6,
+        "revid": 8,
+        "old_revid": 0,
+        "rcid": 6,
+        "user": "127.0.0.1",
+        "anon": "",
+        "timestamp": "2025-10-25T06:59:15Z",
+        "comment": "/* I am a post added by an anonymous editor */ new section",
+        "tags": [
+          "discussiontools-added-comment",
+          "discussiontools",
+          "discussiontools-newtopic",
+          "discussiontools-source",
+          "discussiontools-source-enhanced"
+        ]
+      },
+      {
+        "type": "edit",
+        "ns": 0,
+        "title": "Page 7",
+        "pageid": 7,
+        "revid": 9,
+        "old_revid": 0,
+        "rcid": 7,
+        "user": "NewUser6",
+        "timestamp": "2025-10-25T03:10:55Z",
+        "comment": "/* I am a comment with certain special characters [&<>'\"] */ new section",
+        "tags": [
+          "discussiontools-added-comment",
+          "discussiontools",
+          "discussiontools-newtopic",
+          "discussiontools-source",
+          "discussiontools-source-enhanced"
+        ]
+      },
+      {
+        "type": "edit",
+        "ns": 0,
+        "title": "Page 1",
+        "pageid": 1,
+        "revid": 10,
+        "old_revid": 2,
+        "rcid": 8,
+        "user": "NewUser6",
+        "timestamp": "2025-10-25T03:09:49Z",
+        "comment": "/* I am a comment with certain special characters [&<>'\"] */ new section",
+        "tags": [
+          "discussiontools-added-comment",
+          "discussiontools",
+          "discussiontools-newtopic",
+          "discussiontools-source",
+          "discussiontools-source-enhanced"
+        ]
       }
     ]
   }

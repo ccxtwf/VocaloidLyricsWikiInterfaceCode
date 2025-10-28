@@ -22,6 +22,7 @@ export interface IParsedApiQueryRc {
 	pageTitle: string
 	heading: string | null
 	username: string
+	isAnon: boolean
 	timestamp: number | null
 	isReply: boolean
 	isNewTopic: boolean
@@ -54,6 +55,7 @@ export interface IExpectedApiQueryRcResponse extends IApiResponse {
     	old_revid: number
       rcid: number
       user: string
+			anon?: ''
       timestamp: string
       comment: string
       tags: string[]

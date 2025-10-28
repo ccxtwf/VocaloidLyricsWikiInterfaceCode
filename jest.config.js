@@ -16,6 +16,7 @@ export default {
       useESM: true
     }
   },
+  globalSetup: "./setup-test-env.js",
   moduleNameMapper: {
     '(.+)\\.js': '$1'
   },

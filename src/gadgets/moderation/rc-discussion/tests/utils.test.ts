@@ -5,10 +5,7 @@
  */ 
 import { readFileSync } from "fs";
 import { resolve } from "path";
-import type {  
-  IParsedRssRcFeed, 
-  IParsedApiQueryRc, 
-  // IGroupedParsedApiQueryRc,
+import type {
   IExpectedApiQueryRcResponse, 
   // IExpectedApiQueryRvResponse 
 } from "../types.js";
@@ -17,193 +14,94 @@ import {
 	parseRcApiQuery,
 	// parseRvApiQuery,
 	compareParsedRcs,
-	// groupDiscussionsByDate,
+	groupDiscussionsByDate,
 } from "../utils.js";
 
-describe('simple case - get the posted comments from edits with no intermediary rev', () => {
-  const expectedParsedRss: IParsedRssRcFeed[] = [
-    {
-      author: 'NewUser1',
-      pageTitle: 'Page 1',
-      heading: 'I am a new comment on an existing page!',
-      textAdditions: [
-        '',
-        '== I am a new comment on an existing page! ==',
-        '',
-        'I am a new comment!!',
-        '',
-        '...So what\'s up with airplane food?',
-        '',
-        '-- [[User:NewUser1|NewUser1]] ([[User talk:NewUser1|talk]]) 08:26, 25 October 2025 (UTC)'
-      ],
-      timestamp: Date.parse('2025-10-25T08:26:49Z'),
-      isReply: false,
-      fromRev: 1, 
-      toRev: 2,
-      isNewPage: false,
-      hasMultipleRevs: false
-    },
-    {
-      author: 'NewUser2',
-      pageTitle: 'Page 2',
-      heading: 'I am a reply!',
-      textAdditions: [
-        '',
-        ':I am a reply.',
-        '',
-        ':Apropos of nothing. [[User:NewUser2|NewUser2]] ([[User talk:NewUser2|talk]]) 08:25, 25 October 2025 (UTC)'
-      ],
-      timestamp: Date.parse('2025-10-25T08:25:30Z'),
-      isReply: true,
-      fromRev: 3, 
-      toRev: 4,
-      isNewPage: false,
-      hasMultipleRevs: false
-    },
-    {
-      author: 'NewUser3',
-      pageTitle: 'Page 3',
-      heading: 'I am a new page made using DiscussionTools',
-      textAdditions: [
-        '== I am a new page made using DiscussionTools ==\n \n lorem ipsum dolor sit amet... is how the lore goes. [[User:NewUser3|NewUser3]] ([[User talk:NewUser3|talk]]) 08:24, 25 October 2025 (UTC)'
-      ],
-      timestamp: Date.parse('2025-10-25T08:24:15Z'),
-      isReply: false,
-      fromRev: 0, 
-      toRev: 5,
-      isNewPage: true,
-      hasMultipleRevs: false
-    },
-    {
-      author: 'NewUser4',
-      pageTitle: 'Page 4',
-      heading: null,
-      textAdditions: [
-        'I am a comment without a topic sad emoji [[User:NewUser4|NewUser4]] ([[User talk:NewUser4|talk]]) 08:23, 25 October 2025 (UTC)'
-      ],
-      timestamp: Date.parse('2025-10-25T08:23:01Z'),
-      isReply: false,
-      fromRev: 0, 
-      toRev: 6,
-      isNewPage: true,
-      hasMultipleRevs: false
-    }
-  ];
-  const expectedParsedApiRcs: IParsedApiQueryRc[] = [
-    {
-      pageId: 1,
-      pageTitle: 'Page 1',
-      heading: 'I am a new comment on an existing page!',
-      username: 'NewUser1',
-      timestamp: Date.parse('2025-10-25T08:26:49Z'),
-      isReply: false,
-      isNewTopic: true,
-      fromRev: 1,
-      toRev: 2,
-      contents: null
-    },
-    {
-      pageId: 2,
-      pageTitle: 'Page 2',
-      heading: 'I am a reply!',
-      username: 'NewUser2',
-      timestamp: Date.parse('2025-10-25T08:25:30Z'),
-      isReply: true,
-      isNewTopic: false,
-      fromRev: 3,
-      toRev: 4,
-      contents: null
-    },
-    {
-      pageId: 3,
-      pageTitle: 'Page 3',
-      heading: 'I am a new page made using DiscussionTools',
-      username: 'NewUser3',
-      timestamp: Date.parse('2025-10-25T08:24:15Z'),
-      isReply: false,
-      isNewTopic: true,
-      fromRev: 0,
-      toRev: 5,
-      contents: null
-    },
-    {
-      pageId: 4,
-      pageTitle: 'Page 4',
-      heading: null,
-      username: 'NewUser4',
-      timestamp: Date.parse('2025-10-25T08:23:01Z'),
-      isReply: false,
-      isNewTopic: true,
-      fromRev: 0,
-      toRev: 6,
-      contents: null
-    }
-  ];
-  const expectedCombinedOutput: IParsedApiQueryRc[] = [
-    {
-      pageId: 1,
-      pageTitle: 'Page 1',
-      heading: 'I am a new comment on an existing page!',
-      username: 'NewUser1',
-      timestamp: Date.parse('2025-10-25T08:26:49Z'),
-      isReply: false,
-      isNewTopic: true,
-      fromRev: 1,
-      toRev: 2,
-      contents: `I am a new comment!! ...So what\'s up with airplane food? --`
-    },
-    {
-      pageId: 2,
-      pageTitle: 'Page 2',
-      heading: 'I am a reply!',
-      username: 'NewUser2',
-      timestamp: Date.parse('2025-10-25T08:25:30Z'),
-      isReply: true,
-      isNewTopic: false,
-      fromRev: 3,
-      toRev: 4,
-      contents: `I am a reply. Apropos of nothing.`
-    },
-    {
-      pageId: 3,
-      pageTitle: 'Page 3',
-      heading: 'I am a new page made using DiscussionTools',
-      username: 'NewUser3',
-      timestamp: Date.parse('2025-10-25T08:24:15Z'),
-      isReply: false,
-      isNewTopic: true,
-      fromRev: 0,
-      toRev: 5,
-      contents: `lorem ipsum dolor sit amet... is how the lore goes.`
-    },
-    {
-      pageId: 4,
-      pageTitle: 'Page 4',
-      heading: null,
-      username: 'NewUser4',
-      timestamp: Date.parse('2025-10-25T08:23:01Z'),
-      isReply: false,
-      isNewTopic: true,
-      fromRev: 0,
-      toRev: 6,
-      contents: `I am a comment without a topic sad emoji`
-    }
-  ];
-  test('Parse from Recent Changes RSS Feed', () => {
+import { expectedParsedRss, expectedParsedApiRcs, expectedCombinedOutput } from "./case-1.js";
+import { beforeGrouping, expectedGroupingResults } from "./groups.js";
+
+describe('Successfully parse the Recent Changes RSS Feed', () => {
+  const gotResults = (() => {
     const rssBody = readFileSync(resolve(__dirname, "./rss-1.txt"), { encoding: 'utf-8' });
-    const gotResults = parseRcFeeds(rssBody);
-    expect(gotResults).toEqual(expectedParsedRss);
+    return parseRcFeeds(rssBody);
+  })();
+  
+  test('simple case - a new comment made on an existing page', () => {
+    expect(gotResults[0]).toEqual(expectedParsedRss[0]);
   });
-  test('Parse from Recent Changes Query API', () => {
+  test('simple case - a new comment reply', () => {
+    expect(gotResults[1]).toEqual(expectedParsedRss[1]);
+  });
+  test('simple case - a new page that is made using DiscussionTools', () => {
+    expect(gotResults[2]).toEqual(expectedParsedRss[2]);
+  });
+  test('simple case - a new page (new topic) made without a comment topic', () => {
+    expect(gotResults[3]).toEqual(expectedParsedRss[3]);
+  });
+  test('simple case - a long comment', () => {
+    expect(gotResults[4]).toEqual(expectedParsedRss[4]);
+  });
+  test('simple case - an edit by an anonymous user', () => {
+    expect(gotResults[5]).toEqual(expectedParsedRss[5]);
+  });
+  test('simple case - a comment (new page) that contains special characters', () => {
+    expect(gotResults[6]).toEqual(expectedParsedRss[6]);
+  });
+  test('simple case - a comment (existing page) that contains special characters', () => {
+    expect(gotResults[7]).toEqual(expectedParsedRss[7]);
+  });
+})
+
+describe('Successfully parse the Recent Changes Query API', () => {
+  const gotResults = (() => {
     const rcApiRes: IExpectedApiQueryRcResponse = JSON.parse(
       readFileSync(resolve(__dirname, "./rc-api-1.txt"), { encoding: 'utf-8' })
     );
-    const gotResults = parseRcApiQuery(rcApiRes);
-    expect(gotResults).toEqual(expectedParsedApiRcs);
+    return parseRcApiQuery(rcApiRes); 
+  })();
+
+  test('simple case - a new comment made on an existing page', () => {
+    expect(gotResults[0]).toEqual(expectedParsedApiRcs[0]);
   });
-  test('Compare both outputs', () => {
+  test('simple case - a new comment reply', () => {
+    expect(gotResults[1]).toEqual(expectedParsedApiRcs[1]);
+  });
+  test('simple case - a new page that is made using DiscussionTools', () => {
+    expect(gotResults[2]).toEqual(expectedParsedApiRcs[2]);
+  });
+  test('simple case - a new page (new topic) made without a comment topic', () => {
+    expect(gotResults[3]).toEqual(expectedParsedApiRcs[3]);
+  });
+  test('simple case - a long comment', () => {
+    expect(gotResults[4]).toEqual(expectedParsedApiRcs[4]);
+  });
+  test('simple case - an edit by an anonymous user', () => {
+    expect(gotResults[5]).toEqual(expectedParsedApiRcs[5]);
+  });
+  test('simple case - a comment (new page) that contains special characters', () => {
+    expect(gotResults[6]).toEqual(expectedParsedApiRcs[6]);
+  });
+  test('simple case - a comment (existing page) that contains special characters', () => {
+    expect(gotResults[7]).toEqual(expectedParsedApiRcs[7]);
+  });
+});
+
+describe('Compare both feedrecentchanges & query API outputs', () => {
+  test('simple case', () => {
     const [gotCombined, gotMap] = compareParsedRcs([...expectedParsedRss], [...expectedParsedApiRcs]);
-    expect(gotMap.size).toBe(0);  // No intermediary rev
+    expect(gotMap.size).toBe(0);
     expect(gotCombined).toEqual(expectedCombinedOutput);
+  });
+});
+
+describe('Successfully group discussions by date', () => {
+  test('group results by date', () => {
+    // Expect timezone to be UTC+7 (this should have been alr have been taken care of
+    // in jest.config (globalSetup))
+    expect(new Date().getTimezoneOffset()).toBe(-420);
+    
+    const gotResults = groupDiscussionsByDate(beforeGrouping);
+    expect(Object.keys(gotResults)).toEqual(Object.keys(expectedGroupingResults));
+    expect(gotResults).toEqual(expectedGroupingResults);
   })
 });

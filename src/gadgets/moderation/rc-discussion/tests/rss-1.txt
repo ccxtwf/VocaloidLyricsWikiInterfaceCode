@@ -133,7 +133,7 @@
       <link>https://my.local.wiki/wiki/Page_2?diff=4&amp;oldid=3</link>
       <guid isPermaLink="false">https://my.local.wiki/wiki/Page_2?diff=4&amp;oldid=3</guid>
       <description>
-        &lt;p&gt;&lt;span class=&quot;autocomment&quot;&gt;I am a reply!: &lt;/span&gt; Reply&lt;/p&gt;)
+        &lt;p&gt;&lt;span class=&quot;autocomment&quot;&gt;I am a reply!: &lt;/span&gt; Reply&lt;/p&gt;
         &lt;table style=&quot;background-color: #fff; color: #202122;&quot; data-mw=&quot;interface&quot;&gt;
           &lt;col class=&quot;diff-marker&quot; /&gt;
           &lt;col class=&quot;diff-content&quot; /&gt;
@@ -265,5 +265,127 @@
       <dc:creator>NewUser4</dc:creator>
       <comments>https://my.local.wiki/wiki/Page_3</comments>
     </item>
+    <item>
+      <title>Page 5</title>
+      <link>https://my.local.wiki/wiki/Page_5?diff=7&amp;oldid=0</link>
+      <guid isPermaLink="false">https://my.local.wiki/wiki/Page_5?diff=7&amp;oldid=0</guid>
+      <description>
+        '&lt;p&gt;&lt;span class="autocomment"&gt;I am a long comment: &lt;/span&gt; new section&lt;/p&gt; &lt;p&gt;&lt;b&gt;New page&lt;/b&gt;&lt;/p&gt;&lt;div&gt;== I am a long comment ==&lt;br /&gt; &lt;br /&gt; Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean vulputate felis vel aliquam facilisis. Fusce consectetur eros ex, sed rutrum quam dapibus in. Ut bibendum justo sit amet magna hendrerit, sed consequat dolor porta. Vestibulum rhoncus nibh id risus semper, eu ultricies mi consequat. Mauris et placerat libero. Curabitur pulvinar ac enim et maximus. Curabitur luctus lobortis est, nec ornare enim maximus eget.&lt;br /&gt; &lt;br /&gt; Quisque dictum consequat metus in suscipit. Ut gravida risus tortor, vitae vulputate ex pretium eu. Aliquam maximus nunc sed lacus ultricies interdum. Suspendisse non dui non lorem consequat faucibus eu et sem. Pellentesque pretium leo quis tincidunt ullamcorper. Phasellus ac tempor enim. Mauris ullamcorper non ex ac molestie. Cras non sapien eu ipsum porttitor sagittis eu in orci. Fusce scelerisque aliquet elit ut dignissim. Sed bibendum dapibus tortor, eget vulputate dui lobortis quis. Morbi a scelerisque lacus, vitae pellentesque sapien. Sed arcu libero, fermentum quis tortor sit amet, venenatis lacinia nunc. Duis sit amet arcu neque. Ut finibus posuere scelerisque. In quis auctor metus, sed egestas libero.&lt;br /&gt; &lt;br /&gt; Nulla quis dui risus. Donec et lacinia magna. Fusce mattis sapien et mi blandit cursus. Mauris varius, nibh congue iaculis commodo, libero enim convallis ligula, in semper sem nunc vitae ligula. Vestibulum et urna ligula. Mauris dictum metus ac quam efficitur aliquet. Mauris pharetra finibus ex, ac gravida erat tempus id.&lt;br /&gt; &lt;br /&gt; Fusce tempus velit eu lacus imperdiet, fringilla euismod lacus rutrum. Phasellus faucibus, augue et iaculis luctus, turpis metus mollis risus, eget dignissim enim lorem nec turpis. Suspendisse dictum ornare volutpat. Aenean ultricies dolor a ligula dictum, in viverra dui mollis. In sit amet dictum lacus, sed ullamcorper lacus. Praesent ac tortor at metus fringilla tempus quis non elit. Sed at quam volutpat sem cursus mollis non quis neque. Nullam pharetra turpis nec dictum molestie. In hac habitasse platea dictumst. Suspendisse nec tristique felis. Ut efficitur augue dui, eu imperdiet lectus elementum semper. Cras ut sagittis ante. Etiam dictum enim in lacinia mattis. Nunc eu interdum lorem. Nulla a nisi tincidunt, auctor metus at, ornare massa. Etiam eu placerat leo.&lt;br /&gt; &lt;br /&gt; Nulla nec erat tempus orci lobortis dapibus quis ac risus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Ut tempor tellus a odio posuere faucibus eu sed leo. Praesent quis risus eu nunc ultrices vehicula sed a sapien. Suspendisse nec dolor pellentesque, convallis est id, fermentum velit. Proin iaculis porta diam nec ornare. Vestibulum convallis vitae augue vitae molestie. Morbi augue velit, rutrum porta malesuada vitae, egestas id ex. Proin rhoncus ligula at magna fermentum varius. Sed ante magna, mattis lacinia erat nec, vestibulum semper felis. Donec at tempor libero, et porttitor mi. Sed quis lacus malesuada, gravida urna nec, fringilla mi. [[User:Newuser5|Newuser5]] ([[User talk:Newuser5|talk]]) 08:20, 25 October 2025 (UTC)&lt;/div&gt;'
+      </description>
+      <pubDate>Sat, 25 Oct 2025 08:20:29 GMT</pubDate>
+      <dc:creator>NewUser5</dc:creator>
+      <comments>https://my.local.wiki/wiki/Page_5</comments>
+    </item>
   </channel>
+  <item>
+      <title>Page 6</title>
+      <link>https://my.local.wiki/wiki/Page_6?diff=8&amp;oldid=0</link>
+      <guid isPermaLink="false">https://my.local.wiki/wiki/Page_6?diff=8&amp;oldid=0</guid>
+      <description>
+        &lt;p&gt;&lt;span class=&quot;autocomment&quot;&gt;I am a post added by an anonymous editor: &lt;/span&gt; new section&lt;/p&gt; &lt;p&gt;&lt;b&gt;New page&lt;/b&gt;&lt;/p&gt;&lt;div&gt;== I am a post added by an anonymous editor ==&lt;br /&gt; &lt;br /&gt; lorem ipsum dolor sit amet... is how the lore goes. [[Special:Contributions/127.0.0.1|127.0.0.1]] 06:59, 25 October 2025 (UTC)&lt;/div&gt;
+      </description>
+      <pubDate>Sat, 25 Oct 2025 06:59:15 GMT</pubDate>
+      <dc:creator>127.0.0.1</dc:creator>
+      <comments>https://my.local.wiki/wiki/Page_6</comments>
+    </item>
+    <item>
+      <title>Page 7</title>
+      <link>https://my.local.wiki/wiki/Page_7?diff=9&amp;oldid=0</link>
+      <guid isPermaLink="false">https://my.local.wiki/wiki/Page_7?diff=9&amp;oldid=0</guid>
+      <description>
+        &lt;p&gt;&lt;span class=&quot;autocomment&quot;&gt;I am a comment with certain special characters [ &amp;amp; &amp;gt; &amp;lt; &amp;#039; &amp;quot; ]: &lt;/span&gt; new section&lt;/p&gt; &lt;p&gt;&lt;b&gt;New page&lt;/b&gt;&lt;/p&gt;&lt;div&gt;== I am a comment with certain special characters [ &amp;amp; &gt; &amp;lt; &#039; &quot; ] ==&lt;br /&gt; &lt;br /&gt; I contain several characters that should be encoded when sending this message in XML format. [ &amp;amp; &gt; &amp;lt; &#039; &quot; ]. [[User:Newuser6|Newuser6]] ([[User talk:Newuser6|talk]]) 03:10, 25 October 2025 (UTC)&lt;/div&gt;
+      </description>
+      <pubDate>Sat, 25 Oct 2025 03:10:55 GMT</pubDate>
+      <dc:creator>NewUser6</dc:creator>
+      <comments>https://my.local.wiki/wiki/Page_7</comments>
+    </item>
+    <item>
+      <title>Page 1</title>
+      <link>https://my.local.wiki/wiki/Page_1?diff=10&amp;oldid=2</link>
+      <guid isPermaLink="false">https://my.local.wiki/wiki/Page_1?diff=10&amp;oldid=2</guid>
+      <description>
+        &lt;p&gt;&lt;span class=&quot;autocomment&quot;&gt;I am a comment with certain special characters [ &amp;amp; &amp;gt; &amp;lt; &amp;#039; &amp;quot; ]: &lt;/span&gt; new section&lt;/p&gt;
+        &lt;table style=&quot;background-color: #fff; color: #202122;&quot; data-mw=&quot;interface&quot;&gt;
+          &lt;col class=&quot;diff-marker&quot; /&gt;
+          &lt;col class=&quot;diff-content&quot; /&gt;
+          &lt;col class=&quot;diff-marker&quot; /&gt;
+          &lt;col class=&quot;diff-content&quot; /&gt;
+          &lt;tr class=&quot;diff-title&quot; lang=&quot;en&quot;&gt;
+            &lt;td colspan=&quot;2&quot; style=&quot;background-color: #fff; color: #202122; text-align: center;&quot;&gt;
+              ← Older revision
+            &lt;/td&gt;
+            &lt;td colspan=&quot;2&quot; style=&quot;background-color: #fff; color: #202122; text-align: center;&quot;&gt;
+              Revision as of 15:26, 25 October 2025
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-lineno&quot;&gt;
+              Line 1:
+            &lt;/td&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-lineno&quot;&gt;
+              Line 1:
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;br /&gt;
+            &lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;br /&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                lorem ipsum dolor sit amet
+              &lt;/div&gt;
+            &lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;background-color: #f8f9fa; color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #eaecf0; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                lorem ipsum dolor sit amet
+              &lt;/div&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;br /&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                == I am a comment with certain special characters [ &amp;amp; &gt; &amp;lt; &#039; &quot; ] ==
+              &lt;/div&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;br /&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td colspan=&quot;2&quot; class=&quot;diff-empty diff-side-deleted&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;diff-marker&quot; data-marker=&quot;+&quot;&gt;&lt;/td&gt;
+            &lt;td style=&quot;color: #202122; font-size: 88%; border-style: solid; border-width: 1px 1px 1px 4px; border-radius: 0.33em; border-color: #a3d3ff; vertical-align: top; white-space: pre-wrap;&quot;&gt;
+              &lt;div&gt;
+                I contain several characters that should be encoded when sending this message in XML format. [ &amp;amp; &gt; &amp;lt; &#039; &quot; ]. [[User:Newuser6|Newuser6]] ([[User talk:Newuser6|talk]]) 03:09, 25 October 2025 (UTC)
+              &lt;/div&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/table&gt;
+      </description>
+      <pubDate>Sat, 25 Oct 2025 03:09:49 GMT</pubDate>
+      <dc:creator>NewUser6</dc:creator>
+      <comments>https://my.local.wiki/wiki/Page_8</comments>
+    </item>
 </rss>

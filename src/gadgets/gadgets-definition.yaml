@@ -80,7 +80,7 @@ gadgets:
     rc-discussion:
       code:
         - rc-discussion.ts
-        - rc-discussion.css
+        - rc-discussion.less
       resourceLoader:
         default: true
         dependencies:
