@@ -228,7 +228,7 @@ export const expectedParsedApiRcs: IParsedApiQueryRc[] = [
   {
     pageId: 7,
     pageTitle: 'Page 7',
-    heading: 'I am a comment with certain special characters [&<>\'"]',
+    heading: 'I am a comment with certain special characters [ & > < \' " ]',
     username: 'NewUser6',
     isAnon: false,
     timestamp: Date.parse('2025-10-25T03:10:55Z'),
@@ -241,7 +241,7 @@ export const expectedParsedApiRcs: IParsedApiQueryRc[] = [
   {
     pageId: 1,
     pageTitle: 'Page 1',
-    heading: 'I am a comment with certain special characters [&<>\'"]',
+    heading: 'I am a comment with certain special characters [ & > < \' " ]',
     username: 'NewUser6',
     isAnon: false,
     timestamp: Date.parse('2025-10-25T03:09:49Z'),
@@ -344,7 +344,7 @@ export const expectedCombinedOutput: IParsedApiQueryRc[] = [
   {
     pageId: 7,
     pageTitle: 'Page 7',
-    heading: 'I am a comment with certain special characters [&<>\'"]',
+    heading: 'I am a comment with certain special characters [ & > < \' " ]',
     username: 'NewUser6',
     isAnon: false,
     timestamp: Date.parse('2025-10-25T03:10:55Z'),
@@ -357,7 +357,7 @@ export const expectedCombinedOutput: IParsedApiQueryRc[] = [
   {
     pageId: 1,
     pageTitle: 'Page 1',
-    heading: 'I am a comment with certain special characters [&<>\'"]',
+    heading: 'I am a comment with certain special characters [ & > < \' " ]',
     username: 'NewUser6',
     isAnon: false,
     timestamp: Date.parse('2025-10-25T03:09:49Z'),
