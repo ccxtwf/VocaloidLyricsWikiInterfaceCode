@@ -53,6 +53,7 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
       )
     ],
     build: {
+      target: 'es6',
       minify: false,
       cssMinify: false,
       rollupOptions: {
