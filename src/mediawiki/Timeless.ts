@@ -5,7 +5,9 @@
 $('#site-navigation > .sidebar-inner > .mw-portlet > .mw-portlet-body').addClass('collapse');
 $('#p-navigation > .mw-portlet-body, #p-special-pages > .mw-portlet-body').addClass('show');
 $('#site-navigation > .sidebar-inner > .mw-portlet[id^=\'p-^\'] > h3')
-  .text(function () { return $(this).text().replace(/^\^/, ''); });
+  .text(function () { 
+    return $(this).text().replace(/^\^/, ''); 
+  });
 $('#site-navigation > .sidebar-inner > .mw-portlet[id^=\'p-^\'] > .mw-portlet-body')
   .addClass('show');
 $('#site-navigation > .sidebar-inner > .mw-portlet > h3').append( $('<div>').addClass('menu-btn') );

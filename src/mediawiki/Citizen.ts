@@ -14,7 +14,9 @@ $( function() {
 $('#citizen-drawer__card .mw-portlet > .citizen-menu__content').addClass('collapse');
 $('#p-navigation > .citizen-menu__content, #p-special-pages > .citizen-menu__content').addClass('show');
 $('#citizen-drawer__card .mw-portlet[id^=\'p-^\'] > .citizen-menu__heading')
-  .text(function () { return $(this).text().replace(/^\s*\^/, ''); });
+  .text(function () { 
+    return $(this).text().replace(/^\s*\^/, ''); 
+  });
 $('#citizen-drawer__card .mw-portlet[id^=\'p-^\'] > .citizen-menu__content')
   .addClass('show');
 $('#citizen-drawer__card .mw-portlet > .citizen-menu__heading').append( $('<div>').addClass('menu-btn') );

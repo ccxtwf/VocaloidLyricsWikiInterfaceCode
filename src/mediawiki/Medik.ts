@@ -5,7 +5,9 @@
 $('#site-navigation > .mw-portlet > .mw-portlet-body').addClass('collapse');
 $('#site-navigation > #p-navigation > .mw-portlet-body, #site-navigation > #p-special-pages > .mw-portlet-body').addClass('show');
 $('#site-navigation > .mw-portlet[id^=\'p-^\'] > a.nav-link')
-  .text(function () { return $(this).text().replace(/^\^/, ''); });
+  .text(function () { 
+    return $(this).text().replace(/^\^/, ''); 
+  });
 $('#site-navigation > .mw-portlet[id^=\'p-^\'] > .mw-portlet-body')
   .addClass('show');
 $('#site-navigation > .mw-portlet > a.nav-link').append( $('<div>').addClass('menu-btn') );
@@ -22,33 +24,33 @@ $('#p-logo .mw-hamb').on('click', function () {
 });
 
 /*! Set scroll offset for mobile & desktop view */
-window.MedikScrollOffset = 120;
-var mq = window.matchMedia("(max-width: 768px)");
-function _onMqChangeMedik(mq) {
+(window as any).MedikScrollOffset = 120;
+const mq = window.matchMedia("(max-width: 768px)");
+function _onMqChangeMedik(mq: MediaQueryList) {
   if (mq.matches) {
     /*! mobile view */
-    window.MedikScrollOffset = 120;
+    (window as any).MedikScrollOffset = 120;
   } else {
     /*! Desktop view */
-    window.MedikScrollOffset = 60;
+    (window as any).MedikScrollOffset = 60;
   }
 }
 _onMqChangeMedik(mq);
 mq.addEventListener("change", function() { _onMqChangeMedik(mq); });
 
 /*! When an anchor link is clicked, the browser will offset the vertical scroll position by window.MedikScrollOffset */
-function _offsetScrollPosition(hash) {
+function _offsetScrollPosition(hash: string) {
   if (!hash) return;
   hash = $.escapeSelector(decodeURI(hash.substring(1)));
   if ($('#'+hash)) {
-    var anchorTag = $("span[id='" + hash + "']");
+    const anchorTag = $("span[id='" + hash + "']");
     $('html, div#content.mw-body').animate({
-      scrollTop : anchorTag.offset().top - window.MedikScrollOffset
+      scrollTop : (anchorTag.offset()?.top as number) - ((window as any).MedikScrollOffset as number)
     }, 250);
   }
 }
-$('div#bodyContent a').click(function (e) {
-  var hash = e.currentTarget.hash;
+$('div#bodyContent a').on('click', function (e: JQuery.ClickEvent<HTMLAnchorElement, undefined, HTMLAnchorElement, HTMLElement>) {
+  const hash = e.currentTarget?.hash;
   _offsetScrollPosition(hash);
 });
 

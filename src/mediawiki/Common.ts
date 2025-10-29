@@ -14,6 +14,7 @@
 			frameborder: "0",
 			sandbox: "allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
 		});
+		//@ts-ignore
 		$widgetElement.html($iframe);
 	})();
 	
@@ -21,7 +22,11 @@
 	mw.loader.using( 'mediawiki.util', function () {
     const addTopicButtonId = 'custom-btn-add-new-topic';
     if ($('#'+addTopicButtonId).length > 0) return;
-		if (mw.config.values.wgAction === 'view' && (mw.config.values.wgDiscussionToolsFeaturesEnabled || {}).newtopictool && (mw.config.values.wgDiscussionToolsFeaturesEnabled || {}).replytool) {
+		if (
+			mw.config.get('wgAction') === 'view' && 
+			((mw.config.get('wgDiscussionToolsFeaturesEnabled') || {}) as { newtopictool?: boolean })?.newtopictool && 
+			((mw.config.get('wgDiscussionToolsFeaturesEnabled') || {}) as { replytool?: boolean })?.replytool
+		) {
 			$('#contentSub').after(
         $('<div>', { id: addTopicButtonId })
           .append(
