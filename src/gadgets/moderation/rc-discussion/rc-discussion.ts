@@ -117,6 +117,8 @@ import {
 	};
 	mw.messages.set(messages);
 
+	const parser = new window.DOMParser();
+
 	// =================
 	//   UI
 	// =================
@@ -346,9 +348,9 @@ import {
 				if (b.status !== 'fulfilled') {
 					throw new Error('Failed to fetch data.' + b.reason);
 				}
-				const parsedFeeds = parseRcFeeds(a.value);
+				const parsedFeeds = parseRcFeeds(parser, a.value);
 				const parsedApiRcs = parseRcApiQuery(b.value as IExpectedApiQueryRcResponse);
-				const [comparedApiRcs, revToIdx] = compareParsedRcs(parsedFeeds, parsedApiRcs);
+				const [comparedApiRcs, revToIdx] = compareParsedRcs(parser, parsedFeeds, parsedApiRcs);
 				return fillIntermediaryRevs(comparedApiRcs, revToIdx);
 			})
 			.then(groupDiscussionsByDate)
@@ -404,7 +406,7 @@ import {
 				rvdiffto: 'prev'	
 			} as ApiQueryAllRevisionsParams)
 			.done((data: IExpectedApiQueryRvResponse) => {
-				parseRvApiQuery(data, parsedApiRcs, revToIdx);
+				parseRvApiQuery(parser, data, parsedApiRcs, revToIdx);
 				resolve(parsedApiRcs);
 			})
 			.fail(reject);

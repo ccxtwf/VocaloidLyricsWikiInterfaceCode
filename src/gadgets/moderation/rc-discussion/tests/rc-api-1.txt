@@ -152,6 +152,44 @@
           "discussiontools-source",
           "discussiontools-source-enhanced"
         ]
+      },
+      {
+        "type": "edit",
+        "ns": 0,
+        "title": "Page 1",
+        "pageid": 1,
+        "revid": 11,
+        "old_revid": 10,
+        "rcid": 9,
+        "user": "NewUser7",
+        "timestamp": "2025-10-25T03:07:49Z",
+        "comment": "/* I am a comment with a custom user signature 1 */ new section",
+        "tags": [
+          "discussiontools-added-comment",
+          "discussiontools",
+          "discussiontools-newtopic",
+          "discussiontools-source",
+          "discussiontools-source-enhanced"
+        ]
+      },
+      {
+        "type": "edit",
+        "ns": 0,
+        "title": "Page 1",
+        "pageid": 1,
+        "revid": 12,
+        "old_revid": 11,
+        "rcid": 10,
+        "user": "NewUser7",
+        "timestamp": "2025-10-25T03:06:49Z",
+        "comment": "/* I am a comment with a custom user signature 2 */ new section",
+        "tags": [
+          "discussiontools-added-comment",
+          "discussiontools",
+          "discussiontools-newtopic",
+          "discussiontools-source",
+          "discussiontools-source-enhanced"
+        ]
       }
     ]
   }

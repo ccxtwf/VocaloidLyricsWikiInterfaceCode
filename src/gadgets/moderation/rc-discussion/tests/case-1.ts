@@ -144,6 +144,40 @@ export const expectedParsedRss: IParsedRssRcFeed[] = [
     toRev: 10,
     isNewPage: false,
     hasMultipleRevs: false
+  },
+  {
+    author: 'NewUser7',
+    pageTitle: 'Page 1',
+    heading: 'I am a comment with a custom user signature 1',
+    textAdditions: [
+      '',
+      '== I am a comment with a custom user signature 1 ==',
+      '',
+      'This indeed be a comment. <span>[[User:NewUser7|<span style="color:#7c56d6">☆NewUser7☆</span>]] ([[User talk:NewUser7|talk]])</span> 07:49, 25 October 2025 (UTC)'
+    ],
+    timestamp: Date.parse('2025-10-25T03:07:49Z'),
+    isReply: false,
+    fromRev: 10, 
+    toRev: 11,
+    isNewPage: false,
+    hasMultipleRevs: false
+  },
+  {
+    author: 'NewUser7',
+    pageTitle: 'Page 1',
+    heading: 'I am a comment with a custom user signature 2',
+    textAdditions: [
+      '',
+      '== I am a comment with a custom user signature 2 ==',
+      '',
+      'This indeed be a comment. <span>[[User:NewUser7|<span style="color:#7c56d6">☆NewUser7☆</span>]] ([[User talk:NewUser7|hello talk]])</span> 06:49, 25 October 2025 (UTC)'
+    ],
+    timestamp: Date.parse('2025-10-25T03:06:49Z'),
+    isReply: false,
+    fromRev: 11, 
+    toRev: 12,
+    isNewPage: false,
+    hasMultipleRevs: false
   }
 ];
 export const expectedParsedApiRcs: IParsedApiQueryRc[] = [
@@ -249,6 +283,32 @@ export const expectedParsedApiRcs: IParsedApiQueryRc[] = [
     isNewTopic: true,
     fromRev: 2,
     toRev: 10,
+    contents: null
+  },
+  {
+    pageId: 1,
+    pageTitle: 'Page 1',
+    heading: 'I am a comment with a custom user signature 1',
+    username: 'NewUser7',
+    isAnon: false,
+    timestamp: Date.parse('2025-10-25T03:07:49Z'),
+    isReply: false,
+    isNewTopic: true,
+    fromRev: 10,
+    toRev: 11,
+    contents: null
+  },
+  {
+    pageId: 1,
+    pageTitle: 'Page 1',
+    heading: 'I am a comment with a custom user signature 2',
+    username: 'NewUser7',
+    isAnon: false,
+    timestamp: Date.parse('2025-10-25T03:06:49Z'),
+    isReply: false,
+    isNewTopic: true,
+    fromRev: 11,
+    toRev: 12,
     contents: null
   }
 ];
@@ -366,5 +426,31 @@ export const expectedCombinedOutput: IParsedApiQueryRc[] = [
     fromRev: 2,
     toRev: 10,
     contents: `I contain several characters that should be encoded when sending this message in XML format. [ & > < \' " ].`
+  },
+  {
+    pageId: 1,
+    pageTitle: 'Page 1',
+    heading: 'I am a comment with a custom user signature 1',
+    username: 'NewUser7',
+    isAnon: false,
+    timestamp: Date.parse('2025-10-25T03:07:49Z'),
+    isReply: false,
+    isNewTopic: true,
+    fromRev: 10,
+    toRev: 11,
+    contents: 'This indeed be a comment.'
+  },
+  {
+    pageId: 1,
+    pageTitle: 'Page 1',
+    heading: 'I am a comment with a custom user signature 2',
+    username: 'NewUser7',
+    isAnon: false,
+    timestamp: Date.parse('2025-10-25T03:06:49Z'),
+    isReply: false,
+    isNewTopic: true,
+    fromRev: 11,
+    toRev: 12,
+    contents: 'This indeed be a comment. ☆NewUser7☆ (hello talk) 06:49, 25 October 2025 (UTC)'
   }
 ];

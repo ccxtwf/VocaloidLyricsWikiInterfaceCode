@@ -29,11 +29,11 @@ function getParamValue(param: string, url: string): string | null {
  * topic addition or reply addition) from the results of `feedrecentchanges`. We'd 
  * like to defer to MediaWiki's query API in such cases (see `parseRvApiQuery()`).  
  * 
+ * @param parser 
  * @param rss 
  * @returns 
  */
-export function parseRcFeeds(rss: string): IParsedRssRcFeed[] {
-  const parser = new window.DOMParser();
+export function parseRcFeeds(parser: DOMParser, rss: string): IParsedRssRcFeed[] {
   const data = parser.parseFromString(rss, "application/xml");
   const items = Array.from(data.querySelectorAll("item"));
 
@@ -149,11 +149,12 @@ export function parseRcApiQuery(res: IExpectedApiQueryRcResponse): IParsedApiQue
  * to get the (separated) contents of. In such cases, a third API request to the 
  * wiki will be made and the fetched API response will be passed onto `parseRvApiQuery`. 
  * 
+ * @param parser 
  * @param parsedFeeds
  * @param parsedApiQuery 
  * @returns 
  */
-export function compareParsedRcs(parsedFeeds: IParsedRssRcFeed[], parsedApiQuery: IParsedApiQueryRc[]): [IParsedApiQueryRc[], Map<number, number>] {
+export function compareParsedRcs(parser: DOMParser, parsedFeeds: IParsedRssRcFeed[], parsedApiQuery: IParsedApiQueryRc[]): [IParsedApiQueryRc[], Map<number, number>] {
   let idxApiQuery = 0;
   let idxFeeds = 0;
   const atIndexes: number[] = [];
@@ -175,6 +176,7 @@ export function compareParsedRcs(parsedFeeds: IParsedRssRcFeed[], parsedApiQuery
     ) {
       // Matching single edit
       parsedApiQuery[idxApiQuery].contents = buildStringFromDiffs(
+        parser,
         parsedFeeds[idxFeeds].textAdditions || [], 
         parsedFeeds[idxFeeds].heading, 
         parsedFeeds[idxFeeds].isReply
@@ -214,12 +216,12 @@ export function compareParsedRcs(parsedFeeds: IParsedRssRcFeed[], parsedApiQuery
  * diffs of each intermediary edit. This function then processes the returned 
  * API response and modifies the output of `compareParsedRcs` directly.
  * 
+ * @param parser 
  * @param res           API Response
  * @param parsedApiRcs  Output from `compareParsedRcs`
  * @param revToIdx      Map of MW Revision ID -> Position index on parsedApiRcs  
  */
-export function parseRvApiQuery(res: IExpectedApiQueryRvResponse, parsedApiRcs: IParsedApiQueryRc[], revToIdx: Map<number, number>): void {
-  const parser = new window.DOMParser();
+export function parseRvApiQuery(parser: DOMParser, res: IExpectedApiQueryRvResponse, parsedApiRcs: IParsedApiQueryRc[], revToIdx: Map<number, number>): void {
   const objs = Object.values(res.query.pages || {});
   for (const obj of objs) {
     const revs = obj.revisions || [];
@@ -232,6 +234,7 @@ export function parseRvApiQuery(res: IExpectedApiQueryRvResponse, parsedApiRcs: 
           const d = parser.parseFromString(`<html><table>${diffs}</table></html>`, 'application/xml');
           const arrd = parseNewAdditionDiffs(d);
           const comment = buildStringFromDiffs(
+            parser,
             arrd, 
             parsedApiRcs[atIndex].heading, 
             parsedApiRcs[atIndex].isReply
@@ -279,7 +282,7 @@ export function groupDiscussionsByDate(items: IParsedApiQueryRc[]): IGroupedPars
  * @param text 
  * @returns 
  */
-export function decodeXmlContents(text: string | null | undefined): string {
+function decodeXmlContents(text: string | null | undefined): string {
   if (!text) return '';
   return text.replace(/&(lt|gt|amp|#039|quot|apos);/g, (_: string, t: string): string => {
     switch (t) {
@@ -304,7 +307,7 @@ export function decodeXmlContents(text: string | null | undefined): string {
  * @param string 
  * @returns 
  */
-export function escapeRegExp(string: string): string {
+function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
 
@@ -314,7 +317,7 @@ export function escapeRegExp(string: string): string {
  * @param text 
  * @returns 
  */
-export function stripLinks(text: string): string {
+function stripLinks(text: string): string {
   text = text.replace(/\[\[([^\|\]]+)\]\]/g, '$1');
   text = text.replace(/\[\[([^\|\]]+)\|([^\|\]]*)\]\]/g, '$2');
   text = text.replace(/\[(https?:\/\/[^ \]]+)\s*([^\]]*)\]/g, '$2');
@@ -327,7 +330,7 @@ export function stripLinks(text: string): string {
  * @param text 
  * @returns 
  */
-export function stripTags(text: string): string {
+function stripTags(text: string): string {
   text = text.replace(/<(nowiki|includeonly|noinclude|mobileonly|nomobile|code|blockquote)>(.*?)<\/\1>/g, "$2");
   return text;
 }
@@ -338,7 +341,7 @@ export function stripTags(text: string): string {
  * @param doc 
  * @returns 
  */
-export function parseNewAdditionDiffs(doc: Document): string[] {
+function parseNewAdditionDiffs(doc: Document): string[] {
   const diffRows = Array.from(doc.querySelectorAll('table > tr:not(.diff-title)'));
   const diffs = diffRows
     .filter((tr: Element) => {
@@ -359,15 +362,22 @@ export function parseNewAdditionDiffs(doc: Document): string[] {
  * 
  * Does a few other things like removing formatting.
  * 
+ * @param parser 
  * @param diffs 
  * @param filterHeading 
  * @param isReply 
  * @returns 
  */
-export function buildStringFromDiffs(diffs: string[], filterHeading: string | null, isReply: boolean): string {
+function buildStringFromDiffs(parser: DOMParser, diffs: string[], filterHeading: string | null, isReply: boolean): string {
   const rxTaggedSignature = /\s*(?:\[\[User:[^\]]+?\]\]\s+\(\[\[User[ _]talk:[^\]\|]+?\|talk\]\]\)|\[\[Special:Contributions\/[^\]]+?\]\])\s+\d{1,2}:\d{1,2},\s+\d{1,2}\s+[a-zA-Z]+\s+\d{4}\s+\(UTC\)\s*$/;
   const rxHeadingWikitext = new RegExp("(?<=^|\\n|<br\\s?\\/?>)={2}\\s*" + escapeRegExp(filterHeading || '').replace(/[ _]/g, '[ _]') + "\\s*={2}(?=\\n|<br\\s?\/?>|$)");
   
+  // Get pure text content
+  diffs = diffs
+    .map(txt => (
+      parser.parseFromString(
+        `<div>${stripTags(txt)}</div>`, 'text/html')?.firstChild?.textContent || ''
+      ));
   // Clear heading
   diffs = diffs
     .map(txt => filterHeading !== null ? txt.replace(rxHeadingWikitext, '') : txt)
@@ -376,9 +386,11 @@ export function buildStringFromDiffs(diffs: string[], filterHeading: string | nu
   if (isReply) { diffs = diffs.map(s => s.replace(/^:+\s*/, '')); }
   // Remove tagged signature
   diffs = diffs.map(s => s.replace(rxTaggedSignature, ''));
+  // Clear links
+  diffs = diffs.map(s => stripLinks(s));
   // Trim unneeded whitespace
   while (diffs.length > 0 && diffs[0] === '') { diffs.shift(); }
   while (diffs.length > 0 && diffs[diffs.length-1] === '') { diffs.pop(); }
   // Build string
-  return stripTags(stripLinks(diffs.join(' ').trim()));
+  return diffs.join(' ');
 }

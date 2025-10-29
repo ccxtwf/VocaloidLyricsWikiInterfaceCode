@@ -20,10 +20,10 @@ import {
 import { expectedParsedRss, expectedParsedApiRcs, expectedCombinedOutput } from "./case-1.js";
 import { beforeGrouping, expectedGroupingResults } from "./groups.js";
 
-describe('Successfully parse the Recent Changes RSS Feed', () => {
+describe('RecentDiscussions: Successfully parse the Recent Changes RSS Feed', () => {
   const gotResults = (() => {
     const rssBody = readFileSync(resolve(__dirname, "./rss-1.txt"), { encoding: 'utf-8' });
-    return parseRcFeeds(rssBody);
+    return parseRcFeeds(new DOMParser(), rssBody);
   })();
   
   test('simple case - a new comment made on an existing page', () => {
@@ -50,9 +50,15 @@ describe('Successfully parse the Recent Changes RSS Feed', () => {
   test('simple case - a comment (existing page) that contains special characters', () => {
     expect(gotResults[7]).toEqual(expectedParsedRss[7]);
   });
+  test('simple case - a comment with a custom user signature 1', () => {
+    expect(gotResults[8]).toEqual(expectedParsedRss[8]);
+  });
+  test('simple case - a comment with a custom user signature 2', () => {
+    expect(gotResults[9]).toEqual(expectedParsedRss[9]);
+  });
 })
 
-describe('Successfully parse the Recent Changes Query API', () => {
+describe('RecentDiscussions: Successfully parse the Recent Changes Query API', () => {
   const gotResults = (() => {
     const rcApiRes: IExpectedApiQueryRcResponse = JSON.parse(
       readFileSync(resolve(__dirname, "./rc-api-1.txt"), { encoding: 'utf-8' })
@@ -84,17 +90,23 @@ describe('Successfully parse the Recent Changes Query API', () => {
   test('simple case - a comment (existing page) that contains special characters', () => {
     expect(gotResults[7]).toEqual(expectedParsedApiRcs[7]);
   });
+  test('simple case - a comment with a custom user signature 1', () => {
+    expect(gotResults[8]).toEqual(expectedParsedApiRcs[8]);
+  });
+  test('simple case - a comment with a custom user signature 2', () => {
+    expect(gotResults[9]).toEqual(expectedParsedApiRcs[9]);
+  });
 });
 
-describe('Compare both feedrecentchanges & query API outputs', () => {
+describe('RecentDiscussions: Compare both feedrecentchanges & query API outputs', () => {
   test('simple case', () => {
-    const [gotCombined, gotMap] = compareParsedRcs([...expectedParsedRss], [...expectedParsedApiRcs]);
+    const [gotCombined, gotMap] = compareParsedRcs(new DOMParser(), [...expectedParsedRss], [...expectedParsedApiRcs]);
     expect(gotMap.size).toBe(0);
     expect(gotCombined).toEqual(expectedCombinedOutput);
   });
 });
 
-describe('Successfully group discussions by date', () => {
+describe('RecentDiscussions: Successfully group discussions by date', () => {
   test('group results by date', () => {
     // Expect timezone to be UTC+7 (this should have been alr have been taken care of
     // in jest.config (globalSetup))
