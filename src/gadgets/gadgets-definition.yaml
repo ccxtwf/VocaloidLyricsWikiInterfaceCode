@@ -108,7 +108,7 @@ gadgets:
     preload-templates:
       code:
         - preload-templates.js
-        - preload-templates.css
+        - preload-templates.less
       resourceLoader:
         default: true
         actions: 
