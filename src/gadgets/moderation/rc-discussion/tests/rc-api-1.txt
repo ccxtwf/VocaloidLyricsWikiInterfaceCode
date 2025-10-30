@@ -49,6 +49,7 @@
         "old_revid": 0,
         "rcid": 3,
         "user": "NewUser3",
+        "new": 0,
         "timestamp": "2025-10-25T08:24:15Z",
         "comment": "/* I am a new page made using DiscussionTools */ new section",
         "tags": [
@@ -68,6 +69,7 @@
         "old_revid": 0,
         "rcid": 4,
         "user": "NewUser4",
+        "new": 0,
         "timestamp": "2025-10-25T08:23:01Z",
         "comment": "Created page with \"I am a comment without a topic sad emoji ~~~~\"",
         "tags": [
@@ -85,6 +87,7 @@
         "old_revid": 0,
         "rcid": 5,
         "user": "NewUser5",
+        "new": 0,
         "timestamp": "2025-10-25T08:20:29Z",
         "comment": "/* I am a long comment */ new section",
         "tags": [
@@ -105,6 +108,7 @@
         "rcid": 6,
         "user": "127.0.0.1",
         "anon": "",
+        "new": 0,
         "timestamp": "2025-10-25T06:59:15Z",
         "comment": "/* I am a post added by an anonymous editor */ new section",
         "tags": [
@@ -124,6 +128,7 @@
         "old_revid": 0,
         "rcid": 7,
         "user": "NewUser6",
+        "new": 0,
         "timestamp": "2025-10-25T03:10:55Z",
         "comment": "/* I am a comment with certain special characters [ & > < ' \" ] */ new section",
         "tags": [

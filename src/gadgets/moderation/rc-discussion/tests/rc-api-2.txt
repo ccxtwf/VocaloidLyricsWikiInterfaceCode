@@ -1,0 +1,203 @@
+{
+  "batchcomplete": "",
+  "continue": {
+    "rccontinue": "20251028162209|7",
+    "continue": "-||"
+  },
+  "query": {
+    "recentchanges": [
+      {
+        "type": "edit",
+        "ns": 1,
+        "title": "Page 2",
+        "pageid": 788,
+        "revid": 804,
+        "old_revid": 801,
+        "rcid": 17,
+        "user": "ExampleUser",
+        "timestamp": "2025-10-30T08:03:04Z",
+        "comment": "/* Comment 6 */ Reply",
+        "tags": [
+          "discussiontools",
+          "discussiontools-source",
+          "discussiontools-source-enhanced",
+          "discussiontools-added-comment",
+          "discussiontools-reply"
+        ]
+      },
+      {
+        "type": "new",
+        "ns": 1,
+        "title": "Page 3",
+        "pageid": 791,
+        "revid": 803,
+        "old_revid": 0,
+        "rcid": 16,
+        "user": "ExampleUser",
+        "new": "",
+        "timestamp": "2025-10-30T08:02:48Z",
+        "comment": "/* Comment 8 */ new section",
+        "tags": [
+          "discussiontools",
+          "discussiontools-source",
+          "discussiontools-source-enhanced",
+          "discussiontools-newtopic",
+          "discussiontools-added-comment"
+        ]
+      },
+      {
+        "type": "edit",
+        "ns": 1,
+        "title": "Page 1",
+        "pageid": 790,
+        "revid": 802,
+        "old_revid": 800,
+        "rcid": 15,
+        "user": "ExampleUser",
+        "timestamp": "2025-10-30T08:02:25Z",
+        "comment": "/* Comment 7 */ new section",
+        "tags": [
+          "discussiontools",
+          "discussiontools-source",
+          "discussiontools-source-enhanced",
+          "discussiontools-newtopic",
+          "discussiontools-added-comment"
+        ]
+      },
+      {
+        "type": "edit",
+        "ns": 1,
+        "title": "Page 2",
+        "pageid": 788,
+        "revid": 801,
+        "old_revid": 799,
+        "rcid": 14,
+        "user": "ExampleUser",
+        "timestamp": "2025-10-30T07:49:49Z",
+        "comment": "/* Comment 6 */ new section",
+        "tags": [
+          "discussiontools",
+          "discussiontools-source",
+          "discussiontools-source-enhanced",
+          "discussiontools-newtopic",
+          "discussiontools-added-comment"
+        ]
+      },
+      {
+        "type": "edit",
+        "ns": 1,
+        "title": "Page 1",
+        "pageid": 790,
+        "revid": 800,
+        "old_revid": 797,
+        "rcid": 13,
+        "user": "ExampleUser",
+        "timestamp": "2025-10-30T07:49:28Z",
+        "comment": "/* Comment 5 */ new section",
+        "tags": [
+          "discussiontools",
+          "discussiontools-source",
+          "discussiontools-source-enhanced",
+          "discussiontools-newtopic",
+          "discussiontools-added-comment"
+        ]
+      },
+      {
+        "type": "edit",
+        "ns": 1,
+        "title": "Page 2",
+        "pageid": 788,
+        "revid": 799,
+        "old_revid": 798,
+        "rcid": 12,
+        "user": "ExampleUser",
+        "timestamp": "2025-10-30T07:49:17Z",
+        "comment": "/* Comment 4 */ Reply",
+        "tags": [
+          "discussiontools",
+          "discussiontools-source",
+          "discussiontools-source-enhanced",
+          "discussiontools-added-comment",
+          "discussiontools-reply"
+        ]
+      },
+      {
+        "type": "edit",
+        "ns": 1,
+        "title": "Page 2",
+        "pageid": 788,
+        "revid": 798,
+        "old_revid": 792,
+        "rcid": 11,
+        "user": "ExampleUser",
+        "timestamp": "2025-10-30T07:49:03Z",
+        "comment": "/* Comment 4 */ new section",
+        "tags": [
+          "discussiontools",
+          "discussiontools-source",
+          "discussiontools-source-enhanced",
+          "discussiontools-newtopic",
+          "discussiontools-added-comment"
+        ]
+      },
+      {
+        "type": "edit",
+        "ns": 1,
+        "title": "Page 1",
+        "pageid": 790,
+        "revid": 797,
+        "old_revid": 796,
+        "rcid": 10,
+        "user": "ExampleUser",
+        "timestamp": "2025-10-30T07:45:21Z",
+        "comment": "/* Comment 3 */ new section",
+        "tags": [
+          "discussiontools",
+          "discussiontools-source",
+          "discussiontools-source-enhanced",
+          "discussiontools-newtopic",
+          "discussiontools-added-comment"
+        ]
+      },
+      {
+        "type": "edit",
+        "ns": 1,
+        "title": "Page 1",
+        "pageid": 790,
+        "revid": 796,
+        "old_revid": 795,
+        "rcid": 9,
+        "user": "ExampleUser",
+        "timestamp": "2025-10-30T07:44:22Z",
+        "comment": "/* Comment 2 */ new section",
+        "tags": [
+          "discussiontools",
+          "discussiontools-source",
+          "discussiontools-source-enhanced",
+          "discussiontools-newtopic",
+          "discussiontools-added-comment"
+        ]
+      },
+      {
+        "type": "new",
+        "ns": 1,
+        "title": "Page 1",
+        "pageid": 790,
+        "revid": 795,
+        "old_revid": 0,
+        "rcid": 8,
+        "user": "ExampleUser",
+        "new": "",
+        "timestamp": "2025-10-30T07:44:07Z",
+        "comment": "/* Comment 1 */ new section",
+        "tags": [
+          "discussiontools",
+          "discussiontools-source",
+          "discussiontools-source-enhanced",
+          "discussiontools-newtopic",
+          "discussiontools-added-comment"
+        ]
+      }
+    ]
+  }
+}

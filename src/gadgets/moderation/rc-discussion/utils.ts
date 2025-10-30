@@ -60,7 +60,7 @@ export function parseRcFeeds(parser: DOMParser, rss: string): IParsedRssRcFeed[]
     let isReply = false;
     if (commentHeadingNode !== null) {
       commentHeading = ((commentHeadingNode as Element).textContent).replace(/\s*:\s*$/, '');
-      commentType = (summaryNode?.innerHTML || '').replace((commentHeadingNode as Element).outerHTML, '').trim();
+      commentType = (summaryNode?.textContent || '').replace((commentHeadingNode as Element).textContent, '').trim();
       if (commentType === 'Reply') { isReply = true; }
     }
     

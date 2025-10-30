@@ -3,7 +3,7 @@ import type {
   IParsedApiQueryRc,
 } from "../types.js";
 
-export const expectedParsedRss: IParsedRssRcFeed[] = [
+export const expectedParsedRss1: IParsedRssRcFeed[] = [
   {
     author: 'NewUser1',
     pageTitle: 'Page 1',
@@ -180,7 +180,7 @@ export const expectedParsedRss: IParsedRssRcFeed[] = [
     hasMultipleRevs: false
   }
 ];
-export const expectedParsedApiRcs: IParsedApiQueryRc[] = [
+export const expectedParsedApiRcs1: IParsedApiQueryRc[] = [
   {
     pageId: 1,
     pageTitle: 'Page 1',
@@ -312,7 +312,7 @@ export const expectedParsedApiRcs: IParsedApiQueryRc[] = [
     contents: null
   }
 ];
-export const expectedCombinedOutput: IParsedApiQueryRc[] = [
+export const expectedCombinedOutput1: IParsedApiQueryRc[] = [
   {
     pageId: 1,
     pageTitle: 'Page 1',
