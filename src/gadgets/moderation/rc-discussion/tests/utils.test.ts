@@ -18,7 +18,7 @@ import {
 } from "../utils.js";
 
 import { expectedParsedRss1, expectedParsedApiRcs1, expectedCombinedOutput1 } from "./case-1.js";
-import { expectedParsedRss2, expectedParsedApiRcs2 } from "./case-2.js";
+import { expectedParsedRss2, expectedParsedApiRcs2, expectedCombinedOutput2 } from "./case-2.js";
 import { beforeGrouping, expectedGroupingResults } from "./groups.js";
 
 describe('RecentDiscussions: Successfully parse the Recent Changes RSS Feed', () => {
@@ -124,6 +124,18 @@ describe('RecentDiscussions: Compare both feedrecentchanges & query API outputs'
     const [gotCombined, gotMap] = compareParsedRcs(new DOMParser(), [...expectedParsedRss1], [...expectedParsedApiRcs1]);
     expect(gotMap.size).toBe(0);
     expect(gotCombined).toEqual(expectedCombinedOutput1);
+  });
+
+  test('with consecutive edits on a page', () => {
+    const [gotCombined, gotMap] = compareParsedRcs(new DOMParser(), [...expectedParsedRss2], [...expectedParsedApiRcs2]);
+    const expectedMap = new Map<number, number>();
+    expectedMap.set(799, 5);
+    expectedMap.set(798, 6);
+    expectedMap.set(797, 7);
+    expectedMap.set(796, 8);
+    
+    expect(gotMap).toEqual(expectedMap);
+    expect(gotCombined).toEqual(expectedCombinedOutput2);
   });
 });
 

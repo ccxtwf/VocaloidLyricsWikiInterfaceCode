@@ -259,3 +259,135 @@ export const expectedParsedApiRcs2: IParsedApiQueryRc[] = [
     contents: null
   }
 ];
+export const expectedCombinedOutput2: IParsedApiQueryRc[] = [
+  {
+    pageId: 788,
+    pageTitle: 'Page 2',
+    heading: 'Comment 6',
+    username: 'ExampleUser',
+    isAnon: false,
+    timestamp: Date.parse('2025-10-30T08:03:04Z'),
+    isReply: true,
+    isNewTopic: false,
+    fromRev: 801,
+    toRev: 804,
+    contents: 'I\'m replying to this comment.'
+  },
+  {
+    pageId: 791,
+    pageTitle: 'Page 3',
+    heading: 'Comment 8',
+    username: 'ExampleUser',
+    isAnon: false,
+    timestamp: Date.parse('2025-10-30T08:02:48Z'),
+    isReply: false,
+    isNewTopic: true,
+    fromRev: 0,
+    toRev: 803,
+    contents: 'abc'
+  },
+  {
+    pageId: 790,
+    pageTitle: 'Page 1',
+    heading: 'Comment 7',
+    username: 'ExampleUser',
+    isAnon: false,
+    timestamp: Date.parse('2025-10-30T08:02:25Z'),
+    isReply: false,
+    isNewTopic: true,
+    fromRev: 800,
+    toRev: 802,
+    contents: 'one, two, three'
+  },
+  {
+    pageId: 788,
+    pageTitle: 'Page 2',
+    heading: 'Comment 6',
+    username: 'ExampleUser',
+    isAnon: false,
+    timestamp: Date.parse('2025-10-30T07:49:49Z'),
+    isReply: false,
+    isNewTopic: true,
+    fromRev: 799,
+    toRev: 801,
+    contents: 'Back where I started.'
+  },
+  {
+    pageId: 790,
+    pageTitle: 'Page 1',
+    heading: 'Comment 5',
+    username: 'ExampleUser',
+    isAnon: false,
+    timestamp: Date.parse('2025-10-30T07:49:28Z'),
+    isReply: false,
+    isNewTopic: true,
+    fromRev: 797,
+    toRev: 800,
+    contents: 'Still I rise.'
+  },
+  {
+    pageId: 788,
+    pageTitle: 'Page 2',
+    heading: 'Comment 4',
+    username: 'ExampleUser',
+    isAnon: false,
+    timestamp: Date.parse('2025-10-30T07:49:17Z'),
+    isReply: true,
+    isNewTopic: false,
+    fromRev: 798,
+    toRev: 799,
+    contents: null
+  },
+  {
+    pageId: 788,
+    pageTitle: 'Page 2',
+    heading: 'Comment 4',
+    username: 'ExampleUser',
+    isAnon: false,
+    timestamp: Date.parse('2025-10-30T07:49:03Z'),
+    isReply: false,
+    isNewTopic: true,
+    fromRev: 792,
+    toRev: 798,
+    contents: null
+  },
+  {
+    pageId: 790,
+    pageTitle: 'Page 1',
+    heading: 'Comment 3',
+    username: 'ExampleUser',
+    isAnon: false,
+    timestamp: Date.parse('2025-10-30T07:45:21Z'),
+    isReply: false,
+    isNewTopic: true,
+    fromRev: 796,
+    toRev: 797,
+    contents: null
+  },
+  {
+    pageId: 790,
+    pageTitle: 'Page 1',
+    heading: 'Comment 2',
+    username: 'ExampleUser',
+    isAnon: false,
+    timestamp: Date.parse('2025-10-30T07:44:22Z'),
+    isReply: false,
+    isNewTopic: true,
+    fromRev: 795,
+    toRev: 796,
+    contents: null
+  },
+  {
+    pageId: 790,
+    pageTitle: 'Page 1',
+    heading: 'Comment 1',
+    username: 'ExampleUser',
+    isAnon: false,
+    timestamp: Date.parse('2025-10-30T07:44:07Z'),
+    isReply: false,
+    isNewTopic: true,
+    fromRev: 0,
+    toRev: 795,
+    contents: 'I am comment 1 (NEW PAGE)'
+  }
+];
