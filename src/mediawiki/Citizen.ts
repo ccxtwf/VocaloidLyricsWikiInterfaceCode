@@ -4,10 +4,14 @@
 $( function() {  
   //! Add sidebar icon to "Create new page" menu option
   $( '#p-navigation ul.citizen-menu__content-list li#n-createpage > a:first-child() ' )
-    .prepend( '<span class="citizen-ui-icon mw-ui-icon-recentChanges mw-ui-icon-wikimedia-recentChanges"></span>' );
+    .prepend($('<span>', {
+      'class': "citizen-ui-icon mw-ui-icon-recentChanges mw-ui-icon-wikimedia-recentChanges"
+    }));
   //! Add icon to "Create Redirect" menu option on Related Tools
   $( '#p-tb ul.citizen-menu__content-list li#t-createredirect > a:first-child() ' )
-    .prepend( '<span class="citizen-ui-icon mw-ui-icon-recentChanges mw-ui-icon-wikimedia-recentChanges"></span>' );
+    .prepend($('<span>', {
+      'class': "citizen-ui-icon mw-ui-icon-recentChanges mw-ui-icon-wikimedia-recentChanges"
+    }));
 });
 
 /*! Configure collapsible submenus on sidebar */

@@ -10,7 +10,7 @@ $('#site-navigation > .mw-portlet[id^=\'p-^\'] > a.nav-link')
   });
 $('#site-navigation > .mw-portlet[id^=\'p-^\'] > .mw-portlet-body')
   .addClass('show');
-$('#site-navigation > .mw-portlet > a.nav-link').append( $('<div>').addClass('menu-btn') );
+$('#site-navigation > .mw-portlet > a.nav-link').append( $('<div>', { 'class': 'menu-btn' }) );
 $('#site-navigation > .mw-portlet > a.nav-link').on('click', function (event) {
   $(this).next().toggleClass('show');
   event.preventDefault();
