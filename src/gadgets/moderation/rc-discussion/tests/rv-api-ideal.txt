@@ -1,0 +1,77 @@
+{
+  "batchcomplete": "",
+  "warnings": {
+    "main": {
+      "*": "Subscribe to the mediawiki-api-announce mailing list at \u003Chttps://lists.wikimedia.org/postorius/lists/mediawiki-api-announce.lists.wikimedia.org/\u003E for notice of API deprecations and breaking changes."
+    },
+    "revisions": {
+      "*": "The parameter \"rvdiffto\" has been deprecated.\nBecause \"rvslots\" was not specified, a legacy format has been used for the output. This format is deprecated, and in the future the new format will always be used."
+    }
+  },
+  "query": {
+    "pages": {
+      "788": {
+        "pageid": 788,
+        "ns": 1,
+        "title": "Page 2",
+        "revisions": [
+          {
+            "revid": 798,
+            "parentid": 792,
+            "user": "ExampleUser",
+            "timestamp": "2025-10-30T07:49:03Z",
+            "diff": {
+              "from": 792,
+              "to": 798,
+              "*": "\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-lineno\" id=\"mw-diff-left-l10\"\u003ELine 10:\u003C/td\u003E\n\u003Ctd colspan=\"2\" class=\"diff-lineno\"\u003ELine 10:\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-deleted\"\u003E\u003Cbr/\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-added\"\u003E\u003Cbr/\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-deleted\"\u003E\u003Cdiv\u003E:I am a consecutive comment [[User:ExampleUser|ExampleUser]] ([[User talk:ExampleUser|talk]]) 13:26, 27 October 2025 (UTC)\u003C/div\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-added\"\u003E\u003Cdiv\u003E:I am a consecutive comment [[User:ExampleUser|ExampleUser]] ([[User talk:ExampleUser|talk]]) 13:26, 27 October 2025 (UTC)\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-side-deleted\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\" data-marker=\"+\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-addedline diff-side-added\"\u003E\u003Cdiv\u003E\u003Cins class=\"diffchange\"\u003E\u003C/ins\u003E\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-side-deleted\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\" data-marker=\"+\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-addedline diff-side-added\"\u003E\u003Cdiv\u003E\u003Cins class=\"diffchange\"\u003E== Comment 4 ==\u003C/ins\u003E\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-side-deleted\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\" data-marker=\"+\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-addedline diff-side-added\"\u003E\u003Cdiv\u003E\u003Cins class=\"diffchange\"\u003E\u003C/ins\u003E\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-empty diff-side-deleted\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\" data-marker=\"+\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-addedline diff-side-added\"\u003E\u003Cdiv\u003E\u003Cins class=\"diffchange\"\u003EOn a different page. [[User:ExampleUser|ExampleUser]] ([[User talk:ExampleUser|talk]]) 07:49, 30 October 2025 (UTC)\u003C/ins\u003E\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n"
+            },
+            "comment": "/* Comment 4 */ new section"
+          },
+          {
+            "revid": 799,
+            "parentid": 798,
+            "user": "ExampleUser",
+            "timestamp": "2025-10-30T07:49:17Z",
+            "diff": {
+              "from": 798,
+              "to": 799,
+              "*": "\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-lineno\" id=\"mw-diff-left-l14\"\u003ELine 14:\u003C/td\u003E\n\u003Ctd colspan=\"2\" class=\"diff-lineno\"\u003ELine 14:\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-deleted\"\u003E\u003Cbr/\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-added\"\u003E\u003Cbr/\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-deleted\"\u003E\u003Cdiv\u003EOn a different page. [[User:ExampleUser|ExampleUser]] ([[User talk:ExampleUser|talk]]) 07:49, 30 October 2025 (UTC)\u003C/div\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-added\"\u003E\u003Cdiv\u003EOn a different page. [[User:ExampleUser|ExampleUser]] ([[User talk:ExampleUser|talk]]) 07:49, 30 October 2025 (UTC)\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-side-deleted\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\" data-marker=\"+\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-addedline diff-side-added\"\u003E\u003Cdiv\u003E\u003Cins class=\"diffchange\"\u003E\u003C/ins\u003E\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-empty diff-side-deleted\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\" data-marker=\"+\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-addedline diff-side-added\"\u003E\u003Cdiv\u003E\u003Cins class=\"diffchange\"\u003E:Replying to the same comment. [[User:ExampleUser|ExampleUser]] ([[User talk:ExampleUser|talk]]) 07:49, 30 October 2025 (UTC)\u003C/ins\u003E\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n"
+            },
+            "comment": "/* Comment 4 */ Reply"
+          }
+        ]
+      },
+      "790": {
+        "pageid": 790,
+        "ns": 1,
+        "title": "Page 1",
+        "revisions": [
+          {
+            "revid": 796,
+            "parentid": 795,
+            "user": "ExampleUser",
+            "timestamp": "2025-10-30T07:44:22Z",
+            "diff": {
+              "from": 795,
+              "to": 796,
+              "*": "\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-lineno\" id=\"mw-diff-left-l2\"\u003ELine 2:\u003C/td\u003E\n\u003Ctd colspan=\"2\" class=\"diff-lineno\"\u003ELine 2:\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-deleted\"\u003E\u003Cbr/\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-added\"\u003E\u003Cbr/\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-deleted\"\u003E\u003Cdiv\u003EI am comment 1 (NEW PAGE) [[User:ExampleUser|ExampleUser]] ([[User talk:ExampleUser|talk]]) 07:44, 30 October 2025 (UTC)\u003C/div\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-added\"\u003E\u003Cdiv\u003EI am comment 1 (NEW PAGE) [[User:ExampleUser|ExampleUser]] ([[User talk:ExampleUser|talk]]) 07:44, 30 October 2025 (UTC)\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-side-deleted\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\" data-marker=\"+\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-addedline diff-side-added\"\u003E\u003Cdiv\u003E\u003Cins class=\"diffchange\"\u003E\u003C/ins\u003E\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-side-deleted\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\" data-marker=\"+\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-addedline diff-side-added\"\u003E\u003Cdiv\u003E\u003Cins class=\"diffchange\"\u003E== Comment 2 ==\u003C/ins\u003E\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-side-deleted\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\" data-marker=\"+\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-addedline diff-side-added\"\u003E\u003Cdiv\u003E\u003Cins class=\"diffchange\"\u003E\u003C/ins\u003E\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-empty diff-side-deleted\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\" data-marker=\"+\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-addedline diff-side-added\"\u003E\u003Cdiv\u003E\u003Cins class=\"diffchange\"\u003EI am comment 2 (EXISTING PAGE) [[User:ExampleUser|ExampleUser]] ([[User talk:ExampleUser|talk]]) 07:44, 30 October 2025 (UTC)\u003C/ins\u003E\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n"
+            },
+            "comment": "/* Comment 2 */ new section"
+          },
+          {
+            "revid": 797,
+            "parentid": 796,
+            "user": "ExampleUser",
+            "timestamp": "2025-10-30T07:45:21Z",
+            "diff": {
+              "from": 796,
+              "to": 797,
+              "*": "\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-lineno\" id=\"mw-diff-left-l6\"\u003ELine 6:\u003C/td\u003E\n\u003Ctd colspan=\"2\" class=\"diff-lineno\"\u003ELine 6:\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-deleted\"\u003E\u003Cbr/\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-added\"\u003E\u003Cbr/\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-deleted\"\u003E\u003Cdiv\u003EI am comment 2 (EXISTING PAGE) [[User:ExampleUser|ExampleUser]] ([[User talk:ExampleUser|talk]]) 07:44, 30 October 2025 (UTC)\u003C/div\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-context diff-side-added\"\u003E\u003Cdiv\u003EI am comment 2 (EXISTING PAGE) [[User:ExampleUser|ExampleUser]] ([[User talk:ExampleUser|talk]]) 07:44, 30 October 2025 (UTC)\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-side-deleted\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\" data-marker=\"+\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-addedline diff-side-added\"\u003E\u003Cdiv\u003E\u003Cins class=\"diffchange\"\u003E\u003C/ins\u003E\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-side-deleted\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\" data-marker=\"+\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-addedline diff-side-added\"\u003E\u003Cdiv\u003E\u003Cins class=\"diffchange\"\u003E== Comment 3 ==\u003C/ins\u003E\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-side-deleted\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\" data-marker=\"+\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-addedline diff-side-added\"\u003E\u003Cdiv\u003E\u003Cins class=\"diffchange\"\u003E\u003C/ins\u003E\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n\u003Ctr\u003E\u003Ctd colspan=\"2\" class=\"diff-empty diff-side-deleted\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-marker\" data-marker=\"+\"\u003E\u003C/td\u003E\u003Ctd class=\"diff-addedline diff-side-added\"\u003E\u003Cdiv\u003E\u003Cins class=\"diffchange\"\u003EI am comment 3 (HELLO) [[User:ExampleUser|ExampleUser]] ([[User talk:ExampleUser|talk]]) 07:45, 30 October 2025 (UTC)\u003C/ins\u003E\u003C/div\u003E\u003C/td\u003E\u003C/tr\u003E\n"
+            },
+            "comment": "/* Comment 3 */ new section"
+          }
+        ]
+      }
+    }
+  }
+}

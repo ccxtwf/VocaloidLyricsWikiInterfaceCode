@@ -7,19 +7,31 @@ import { readFileSync } from "fs";
 import { resolve } from "path";
 import type {
   IExpectedApiQueryRcResponse, 
-  // IExpectedApiQueryRvResponse 
+  IExpectedApiQueryRvResponse 
 } from "../types.js";
 import {
 	parseRcFeeds, 
 	parseRcApiQuery,
-	// parseRvApiQuery,
+	parseRvApiQuery,
 	compareParsedRcs,
 	groupDiscussionsByDate,
 } from "../utils.js";
 
-import { expectedParsedRss1, expectedParsedApiRcs1, expectedCombinedOutput1 } from "./case-1.js";
-import { expectedParsedRss2, expectedParsedApiRcs2, expectedCombinedOutput2 } from "./case-2.js";
+import { 
+  expectedParsedRss1, 
+  expectedParsedApiRcs1, 
+  expectedCombinedOutput1 
+} from "./case-1.js";
+import { 
+  expectedParsedRss2, 
+  expectedParsedApiRcs2, 
+  expectedCombinedOutput2, 
+  expectedFinalOutputUncached,
+  expectedFinalOutput,
+} from "./case-2.js";
 import { beforeGrouping, expectedGroupingResults } from "./groups.js";
+
+const structuredClone = (val: unknown) => JSON.parse(JSON.stringify(val));
 
 describe('RecentDiscussions: Successfully parse the Recent Changes RSS Feed', () => {
   const gotResults1 = (() => {
@@ -121,23 +133,53 @@ describe('RecentDiscussions: Successfully parse the Recent Changes Query API', (
 
 describe('RecentDiscussions: Compare both feedrecentchanges & query API outputs', () => {
   test('simple case', () => {
-    const [gotCombined, gotMap] = compareParsedRcs(new DOMParser(), [...expectedParsedRss1], [...expectedParsedApiRcs1]);
+    const [gotCombined, gotMap] = compareParsedRcs(new DOMParser(), structuredClone(expectedParsedRss1), structuredClone(expectedParsedApiRcs1));
     expect(gotMap.size).toBe(0);
     expect(gotCombined).toEqual(expectedCombinedOutput1);
   });
 
   test('with consecutive edits on a page', () => {
-    const [gotCombined, gotMap] = compareParsedRcs(new DOMParser(), [...expectedParsedRss2], [...expectedParsedApiRcs2]);
-    const expectedMap = new Map<number, number>();
-    expectedMap.set(799, 5);
-    expectedMap.set(798, 6);
-    expectedMap.set(797, 7);
-    expectedMap.set(796, 8);
-    
+    const [gotCombined, gotMap] = compareParsedRcs(new DOMParser(), structuredClone(expectedParsedRss2), structuredClone(expectedParsedApiRcs2));
+    const expectedMap = new Map<number, number>([
+      [799, 5], [798, 6], [797, 7], [796, 8]
+    ]);
+
     expect(gotMap).toEqual(expectedMap);
     expect(gotCombined).toEqual(expectedCombinedOutput2);
   });
 });
+
+describe('RecentDiscussions: Fill intermediary revs', () => {
+
+  test('in an ideal world', () => {
+    const rvApiRes: IExpectedApiQueryRvResponse = JSON.parse(
+      readFileSync(resolve(__dirname, "./rv-api-ideal.txt"), { encoding: 'utf-8' })
+    );
+    const parsedApiRcs = structuredClone(expectedCombinedOutput2);
+    const revToIdx = new Map<number, number>([
+      [799, 5], [798, 6], [797, 7], [796, 8]
+    ]);
+    // Modify parsedApiRcs in-place
+    parseRvApiQuery(new DOMParser(), rvApiRes, parsedApiRcs, revToIdx);
+
+    expect(parsedApiRcs).toEqual(expectedFinalOutput); 
+  });
+
+  test('what is more likely to happen', () => {
+    const rvApiRes: IExpectedApiQueryRvResponse = JSON.parse(
+      readFileSync(resolve(__dirname, "./rv-api-uncached.txt"), { encoding: 'utf-8' })
+    );
+    const parsedApiRcs = structuredClone(expectedCombinedOutput2);
+    const revToIdx = new Map<number, number>([
+      [799, 5], [798, 6], [797, 7], [796, 8]
+    ]);
+    // Modify parsedApiRcs in-place
+    parseRvApiQuery(new DOMParser(), rvApiRes, parsedApiRcs, revToIdx);
+
+    expect(parsedApiRcs).toEqual(expectedFinalOutputUncached); 
+  });
+
+})
 
 describe('RecentDiscussions: Successfully group discussions by date', () => {
   test('group results by date', () => {

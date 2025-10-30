@@ -74,11 +74,13 @@ export interface IExpectedApiQueryRvResponse extends IApiResponse {
 					revid: number
 					parentid: number
 					user: string
+					anon?: string
 					timestamp: string
 					diff: {
-						from: number
-						to: number
-						'*': string
+						notcached?: string
+						from?: number
+						to?: number
+						'*'?: string
 					}
 					comment: string
 				}[]
