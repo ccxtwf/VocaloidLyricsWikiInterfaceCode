@@ -30,7 +30,7 @@ gadgets:
         type: "styles"
     vlw-tl-queue-display:
       code:
-        - vlw-tl-queue-display.js
+        - vlw-tl-queue-display.ts
         - vlw-tl-queue-display.less
       resourceLoader:
         default: true
