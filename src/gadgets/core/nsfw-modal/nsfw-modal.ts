@@ -5,30 +5,39 @@
 (function (mw, $) {
 	"use strict";
 
-	var config = mw.config.get([
+	const config = mw.config.get([
 		'wgArticleId',
 		'wgNamespaceNumber',
 		'wgCategories'
 	]);
-	var lc_key = 'skip_nsfw_notice_article_ids_';
-	var user_pref = 'userjs-suppress-nsfw-modal';
-	var ptLc = 10000;
-	var skipIds = [];
-	var $modal;
+	const LOCALSTORAGE_KEY = 'skip_nsfw_notice_article_ids_';
+	const USER_PREFERENCE_PREFIX = 'userjs-suppress-nsfw-modal';
+	const ptLc = 10000;
+	let skipIds: string[] = [];
+	let $modal: JQuery<HTMLElement>;
 	
+	const messages = {
+		'vlw-nsfw-modal--cw-heading': 'The following content is not safe for work.',
+		'vlw-nsfw-modal--cw-subheading': 'To continue, you must confirm that you are over the age of 18.',
+		'vlw-nsfw-modal--cw-confirm': 'Yes, I am over the age of 18',
+		'vlw-nsfw-modal--cw-back': 'No, let me go back',
+		'vlw-nsfw-modal--do-not-show': 'Don\'t show me any more of these warnings.'
+	};
+	mw.messages.set(messages);
+
 	// Skip if namespace is not main or the category is not detected
 	if (config.wgNamespaceNumber !== 0 || config.wgCategories.indexOf("Songs with NSFW content") < 0) {
 		return;
 	}
 	
 	// Skip if user has given their consent to not show any NSFW modals
-	if (localStorage.getItem(user_pref) === 'true' || mw.user.options.get([user_pref])[user_pref] === 'true') {
+	if (localStorage.getItem(USER_PREFERENCE_PREFIX) === 'true' || mw.user.options.get([USER_PREFERENCE_PREFIX])[USER_PREFERENCE_PREFIX] === 'true') {
 		return;
 	}
 	
 	// Skip if user has already given consent for a single page
-	var idx_lc = Math.ceil(config.wgArticleId / ptLc);
-	var lc = localStorage.getItem( lc_key + idx_lc );
+	const idx_lc = Math.ceil(config.wgArticleId / ptLc);
+	const lc = localStorage.getItem( LOCALSTORAGE_KEY + idx_lc );
 	if (!!lc) {
 		skipIds = (lc || '').split(',');
 	}
@@ -36,24 +45,26 @@
 		return;
 	}
 	
-	function onClickConfirm() {
+	function onClickConfirm(): void {
 		$('#cw-modal').hide();
 		
 		// Save user consent to local storage 
-		skipIds.push(config.wgArticleId);
-		localStorage.setItem( lc_key + idx_lc, skipIds.join(',') );
+		skipIds.push(''+config.wgArticleId);
+		localStorage.setItem( LOCALSTORAGE_KEY + idx_lc, skipIds.join(',') );
 		
 		// Save option to user preferences
 		if ($('#cw-suppress-nsfw-notifs').prop('checked') === true) {
-			localStorage.setItem(user_pref, true);
+			//@ts-ignore
+			localStorage.setItem(USER_PREFERENCE_PREFIX, true);
 			if (mw.user.getId() != 0) {
-				var api = new mw.Api();
-				api.saveOption(user_pref, true);
+				const api = new mw.Api();
+				//@ts-ignore
+				api.saveOption(USER_PREFERENCE_PREFIX, true);
 			}
 		}
 		
 		// Clear scroll locking
-		var scrollY = document.body.style.top;
+		const scrollY = document.body.style.top;
 		document.body.style.position = '';
 		document.body.style.top = '';
 		window.scrollTo(0, parseInt(scrollY || '0') * -1);
@@ -81,21 +92,25 @@
 						$('<div>', { id: 'cw-modal-content' })
 							.append(
 								$('<div>', { id: 'cw-heading' })
-									.text('The following content is not safe for work.')
+									.text(
+										mw.message('vlw-nsfw-modal--cw-heading').text()
+									)
 							)
 							.append(
 								$('<div>', { id: 'cw-subheading' })
-									.text('To continue, you must confirm that you are over the age of 18.')
+									.text(
+										mw.message('vlw-nsfw-modal--cw-subheading').text()
+									)
 							)
 							.append(
 								$('<div>', { id: 'cw-action-buttons' })
 									.append(
 										$('<button>', { id: 'cw-confirm', type: 'button', 'class': 'cw-action-button' })
-											.text('Yes, I am over the age of 18')
+											.text(mw.message('vlw-nsfw-modal--cw-confirm').text())
 									)
 									.append(
 										$('<button>', { id: 'cw-back', type: 'button', 'class': 'cw-action-button' })
-											.text('No, let me go back')
+											.text(mw.message('vlw-nsfw-modal--cw-back').text())
 									)
 							)
 							.append(
@@ -104,7 +119,9 @@
 										$('<label>')
 											.append($('<input>', { id: 'cw-suppress-nsfw-notifs', type: 'checkbox' }))
 											.append(
-												$('<span>').text('Don\'t show me any more of these warnings.')
+												$('<span>').text(
+													mw.message('vlw-nsfw-modal--do-not-show').text()
+												)
 											)
 									)
 							)

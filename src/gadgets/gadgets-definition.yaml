@@ -5,7 +5,7 @@ gadgets:
   core:
     nsfw-modal:
       code:
-        - nsfw-modal.js
+        - nsfw-modal.ts
         - nsfw-modal.less
       resourceLoader:
         default: true
