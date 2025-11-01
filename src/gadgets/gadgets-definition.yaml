@@ -38,7 +38,7 @@ gadgets:
           - view
     guideline-notification:
       code:
-        - guideline-notification.js
+        - guideline-notification.ts
       resourceLoader:
         default: true
         actions:

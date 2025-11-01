@@ -1,26 +1,26 @@
 ( function ( $, mw ) {
 	'use strict';
 	
-	var DELTA = 7.5 * 24 * 60 * 60 * 1000;	// 7 full days + 12 hour buffer
-	var NOTICE_HEADER = "VLW Guideline Notice";
-	var NOTICE_MESSAGE = "All translations posted within 7 days of a song\'s publication date must go through the checking process in Help talk:Translation Checking. The only exceptions are official translations by known reliable translators, made available prior to any other submissions for checking.";
+	const DELTA = 7.5 * 24 * 60 * 60 * 1000;	// 7 full days + 12 hour buffer
+	const NOTICE_HEADER = "VLW Guideline Notice";
+	const NOTICE_MESSAGE = "All translations posted within 7 days of a song\'s publication date must go through the checking process in Help talk:Translation Checking. The only exceptions are official translations by known reliable translators, made available prior to any other submissions for checking.";
 
-	var config = mw.config.get([
+	const config = mw.config.get([
 		'wgCategories'
 	]);
 
 	function isSongPageWithinThreshold() {
-		var dateEl = $('.vlw-infobox-song td.date');
+		const dateEl = $('.vlw-infobox-song td.date');
 		if (dateEl.length === 0) { return false; }
-		var dateStr = dateEl[0].innerHTML.replaceAll('&nbsp;', ' ');
-		var m = dateStr.match(/([Jj]an(?:uary|)|[Ff]eb(?:ruary|)|[Mm]ar(?:ch|)|[Aa]pr(?:il|)|[Mm]ay|[Jj]un(?:e|)|[Jj]ul(?:y|)|[Aa]ug(?:ust|)|[Ss]ep(?:tember|)|[Oo]ct(?:ober|)|[Nn]ov(?:ember|)|[Dd]ec(?:ember|))\s+(\d{1,2}),?\s+(\d{4})/);
+		const dateStr = dateEl[0].innerHTML.replaceAll('&nbsp;', ' ');
+		const m = dateStr.match(/([Jj]an(?:uary|)|[Ff]eb(?:ruary|)|[Mm]ar(?:ch|)|[Aa]pr(?:il|)|[Mm]ay|[Jj]un(?:e|)|[Jj]ul(?:y|)|[Aa]ug(?:ust|)|[Ss]ep(?:tember|)|[Oo]ct(?:ober|)|[Nn]ov(?:ember|)|[Dd]ec(?:ember|))\s+(\d{1,2}),?\s+(\d{4})/);
 		if (m === null) { return false; }
-		var dateNum = Date.parse(m[3]+'-'+convertMonthStrToInt(m[1])+'-'+m[2].padStart(2, '0'));
-		var threshold = Date.now() - DELTA;
+		const dateNum = Date.parse(m[3]+'-'+convertMonthStrToInt(m[1])+'-'+m[2].padStart(2, '0'));
+		const threshold = Date.now() - DELTA;
 		return (dateNum > threshold);
 	}
 
-	function convertMonthStrToInt(text) {
+	function convertMonthStrToInt(text: string) {
 		switch (true) {
 			case text.match(/^[Jj]an(?:uary|)$/) !== null:
 				return '01';
