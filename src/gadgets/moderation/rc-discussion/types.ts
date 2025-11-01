@@ -35,7 +35,7 @@ export interface IGroupedParsedApiQueryRc {
 	[d: string]: IParsedApiQueryRc[] 
 }
 
-interface IApiResponse {
+interface IMwQueryApiResponse {
 	batchcomplete: string
 	continue?: {
 		rccontinue?: string
@@ -44,7 +44,7 @@ interface IApiResponse {
 	query?: any
 }
 
-export interface IExpectedApiQueryRcResponse extends IApiResponse {
+export interface IExpectedApiQueryRcResponse extends IMwQueryApiResponse {
 	query: {
 		recentchanges?: {
 			type: string
@@ -63,7 +63,7 @@ export interface IExpectedApiQueryRcResponse extends IApiResponse {
 	}
 }
 
-export interface IExpectedApiQueryRvResponse extends IApiResponse {
+export interface IExpectedApiQueryRvResponse extends IMwQueryApiResponse {
 	query: {
 		pages?: {
 			[pageid: string]: {
@@ -87,6 +87,20 @@ export interface IExpectedApiQueryRvResponse extends IApiResponse {
 			}
 		}
 	}
+}
+
+export interface IExpectedApiQueryCompareResponse {
+  compare: {
+    fromid: number
+    fromrevid: number
+    fromns: number
+    fromtitle: string
+    toid: number
+    torevid: number
+    tons: number
+    totitle: string
+    "*": string
+  }
 }
 
 export interface IAppStore {

@@ -94,12 +94,11 @@ import {
 	const NUMBER_OF_POSTS = 50;
 	const MAX_DURATION_IN_DAYS = 7;
 
-	//! Set to the domain of another (live/prod) wiki for testing on a local (non-prod) MW mirror
-	const DEBUG_FOREIGN_WIKI = ''; 
+	// Set to the domain of another (live/prod) wiki for testing on a local (non-prod) MW mirror
+	const DEBUG_FOREIGN_WIKI: string = ''; 
 
 	const LOCAL_STORAGE_KEY = 'vlw_rc_discussions_items';
-	const LOCAL_STORAGE_EXPIRATION_KEY = 'vlw_rc_discussions_expiration';
-	const LOCAL_STORAGE_MAX_AGE = 5 * 60 * 1000; // 5 minutes
+	const LOCAL_STORAGE_MAX_AGE = 5 * 60; // 5 minutes
 
 	const DEBUGGING_ID = 'gadget-recent-discussions';
 
@@ -142,186 +141,200 @@ import {
 	let store: Reactive<IAppStore> | undefined;
 
 	function loadApp(): void {
+		document.getElementById('firstHeading')!.textContent = mw.message('rc-discussion--title', config.wgSiteName).text();
 		mw.loader.using( ['vue', '@wikimedia/codex'] ).then(require => {
 			const Vue = require('vue');
-			const { CdxButton, CdxIcon, CdxComboBox, CdxField } = require('@wikimedia/codex');
+			const { CdxButton, CdxIcon, CdxCombobox, CdxField, CdxProgressIndicator } = require('@wikimedia/codex');
 			
 			//@ts-ignore
 			store = Vue.reactive({
 				option: 0,
-				data: null,
+				data: {},
 				isLoading: false,
 			});
+			loadDiscussions(store!.option, false);
+
 			//@ts-ignore
 			const App = Vue.createMwApp({
 				template: `
-				<div id="rc-discussion-feeds">
-					<div>
-						{{ $i18n( 'rc-discussion--app-overview', siteName, maxPosts, maxDuration ).text() }}
-					</div>
-					<div id="rc-discussion-dropdown">
-						<cdx-field>
-							<cdx-combobox 
-								v-model:selected="store.option"
-								:menu-items="dropdownConfig.items"
-								:menu-config="dropdownConfig.config"
-							/>
-							<template #label>
-								{{ $i18n( 'rc-discussion--prompt-filter' ).text() }}
-							</template>
-						</cdx-field>
-					</div>
-					<div id="rc-discussion-actions">
-						<cdx-button @click="onClickedRefresh">
-							<cdx-icon :icon="cdxIconReload" />
-							{{ $i18n( 'rc-discussion--prompt-refresh' ).text() }}
-						</cdx-button>
-					</div>
-					<div id="rc-discussion-feeds-articles-container">
-						<div id="rc-discussion-feeds-articles">
-							<rc-discussion-cards 
-								v-for="(dateGroup, index) in dateGroups" 
-								:key="index" 
-								date="dateGroup"
-								posts="data[dateGroup]"
-							/>
+					<div id="rc-discussion-feeds">
+						<div>
+							{{ $i18n( 'rc-discussion--app-overview', siteName, maxPosts, maxDuration ).text() }}
+						</div>
+						<div id="rc-discussion-dropdown">
+							<cdx-field>
+								<cdx-combobox 
+									v-model:selected="store.option"
+									v-model:modelValue="selectedLabel"
+									:menu-items="dropdownMenuItems"
+									:menu-config="dropdownMenuConfig"
+									@update:selected="onChangeDropdown"
+								/>
+								<template #label>
+									{{ $i18n( 'rc-discussion--prompt-filter' ).text() }}
+								</template>
+							</cdx-field>
+						</div>
+						<div id="rc-discussion-actions">
+							<cdx-button @click="onClickedRefresh">
+								{{ $i18n( 'rc-discussion--prompt-refresh' ).text() }}
+							</cdx-button>
+						</div>
+						<div id="rc-discussion-feeds-articles-container">
+							<div id="rc-discussion-feeds-articles">
+								<cdx-progress-indicator show-label v-if="store.isLoading">
+									Loading...
+								</cdx-progress-indicator>
+								<rc-discussion-cards-grouped-by-date 
+									v-else
+									v-for="(dateGroup, index) in dateGroups" 
+									:key="index" 
+									:date="dateGroup"
+									:posts="store.data[dateGroup]"
+								/>
+							</div>
 						</div>
 					</div>
-				</div>
-				`,
-				components: { CdxButton, CdxIcon, CdxComboBox, CdxField },
-				setup: () => ({
-					siteName: config.wgSiteName,
-					maxPosts: NUMBER_OF_POSTS,
-					maxDuration: MAX_DURATION_IN_DAYS,
-					data: store?.data,
-					dropdownConfig: {
-						items: MENU_OPTIONS.map((option, idx) => ({
+					`,
+				components: { CdxButton, CdxIcon, CdxCombobox, CdxField, CdxProgressIndicator },
+				setup: () => {
+					return {
+						siteName: config.wgSiteName,
+						maxPosts: NUMBER_OF_POSTS,
+						maxDuration: MAX_DURATION_IN_DAYS,
+						dropdownMenuItems: MENU_OPTIONS.map((option, idx) => ({
 							label: option.label,
 							value: idx
 						})),
-						config: {
+						dropdownMenuConfig: {
 							visibleItemLimit: 5
-						}
+						},
+						store
 					}
-				}),
+				},
 				computed: {
-					dateGroups(): string[] {
-						return Object.keys(this.data);
+					dateGroups() {
+						return Object.keys(store!.data);
+					},
+					selectedLabel() {
+						return isNaN(store!.option) ? '' : (MENU_OPTIONS[+store!.option].label || '');
 					}
 				},
 				methods: {
 					onClickedRefresh() {
 						loadDiscussions(store!.option, true);
+					},
+					onChangeDropdown() {
+						loadDiscussions(store!.option, true);
 					}
 				}
 			});
-
-			App.component('rc-discussion-cards', {
+			App.component("rc-discussion-cards-grouped-by-date", {
 				template: `
-				<div class="rc-discussion-date-group">
-					<div class="rc-discussion-date">
-						{{ date }}
+					<div class="rc-discussion-date-group">
+						<div class="rc-discussion-date">
+							{{ renderedDate }}
+						</div>
+						<rc-discussion-card 
+							v-for="(post, index) in posts" 
+							:key="index" 
+							:post="post" 
+						/>
 					</div>
-					<rc-discussion-card 
-						v-for="(post, index) in posts" 
-						:key="index" 
-						post="post" 
-					/>
-				</div>
-				`,
-				props: ['date', 'posts'],
-				setup: ({ date, posts }: { date: string, posts: IParsedApiQueryRc[] }) => ({ date, posts })
+					`,
+				props: ["date", "posts"],
+				setup: ({ date, posts }: { date: string, posts: IParsedApiQueryRc[] }) => ({ date, posts }),
+				computed: {
+					renderedDate() {
+						return new Date(this.date).toLocaleString("en", {
+							"year": "numeric",
+							"month": "long",
+							"day": "numeric"
+						});
+					}
+				}
 			});
-
-			App.component('rc-discussion-card', {
+			App.component("rc-discussion-card", {
 				template: `
-				<article>
-
-					<div class="rc-discussion-feed-comment-summary">
-						<span class="rc-discussion-feed-post-author">
-							{{ username }}
-						</span>
-						<span class="rc-discussion-feed-user-info">
-							&nbsp;(
-							<a v-bind:href="userTalkPage" rel="nofollow noindex">
-								talk
-							</a>
-							&nbsp;|&nbsp;
-							<a v-bind:href="userContribs" rel="nofollow noindex">
-								contribs
-							</a>
-							) {{ summaryAction }} on
+					<article>
+				
+						<div class="rc-discussion-feed-comment-summary">
+							<span class="rc-discussion-feed-post-author">
+								{{ username }}
+							</span>
+							<span class="rc-discussion-feed-user-info">
+								(<a v-bind:href="userTalkPage" rel="nofollow noindex">talk</a>
+								|
+								<a v-bind:href="userContribs" rel="nofollow noindex">contribs</a>)
+							</span> {{ summaryAction }} on
 							<a v-bind:href="pageUrl" rel="nofollow noindex" class="rc-discussion-feed-post-title">
 								{{ pageTitle }}
 							</a>
-						</span>
-					</div>
-					
-					<div class="rc-discussion-feed-comment-heading">
-						<a v-bind:href="postUrl" rel="nofollow noindex">
-							{{ heading }}
-						</a>
-					</div>
-
-					<div class="rc-discussion-feed-added-comment">
-						<span v-if="contents === null" class="rc-discussion-error">
-							{{ $i18n( 'rc-discussion--failed-to-load' ).text() }}
-						</span>
-						<span v-else>
-							{{ contents }}
-						</span>
-					</div>
-
-					<div class="rc-discussion-feed-timestamp">
-						{{ renderedDate }}
-					</div>
-
-				</article>
-				`,
-				props: ['post'],
+						</div>
+						
+						<div class="rc-discussion-feed-comment-heading">
+							<a v-bind:href="postUrl" rel="nofollow noindex">
+								{{ heading }}
+							</a>
+						</div>
+				
+						<div class="rc-discussion-feed-added-comment">
+							<span v-if="contents === null" class="rc-discussion-error">
+								{{ $i18n( 'rc-discussion--failed-to-load' ).text() }}
+							</span>
+							<span v-else>
+								{{ contents }}
+							</span>
+						</div>
+				
+						<div class="rc-discussion-feed-timestamp">
+							{{ renderedDate }}
+						</div>
+				
+					</article>
+					`,
+				props: ["post"],
 				setup: ({ post }: { post: IParsedApiQueryRc }) => {
 					const { username, heading, contents, timestamp, pageTitle, isNewTopic, isReply, isAnon } = post;
 					return { username, heading, contents, timestamp, pageTitle, isNewTopic, isReply, isAnon };
 				},
 				computed: {
 					userTalkPage() {
-						return mw.util.getUrl(`User talk:${this.username}`)
+						return mw.util.getUrl(`User talk:${this.username}`);
 					},
 					userContribs() {
-						return mw.util.getUrl(`Special:Contributions/${this.username}`)
+						return mw.util.getUrl(`Special:Contributions/${this.username}`);
 					},
 					summaryAction() {
 						if (this.isNewTopic) {
-							return mw.message('rc-discussion--action-new-topic').plain();
+							return mw.message("rc-discussion--action-new-topic").plain();
 						} else if (this.isReply) {
-							return mw.message('rc-discussion--action-new-reply').plain();
+							return mw.message("rc-discussion--action-new-reply").plain();
 						}
-						return '';
+						return "";
 					},
 					pageUrl() {
 						return `${DEBUG_FOREIGN_WIKI}${mw.util.getUrl(this.pageTitle)}`;
 					},
 					postUrl() {
-						return `${this.pageUrl()}#${this.heading.replace(/[\{\}]/g, '').replace(/\s+/g, '_')}`;
+						return `${this.pageUrl}#${this.heading.replace(/[\{\}]/g, "").replace(/\s+/g, "_")}`;
 					},
 					renderedDate() {
 						const d = new Date(this.timestamp);
-						const timestamp = d.toLocaleString(navigator.language || 'en', { 
-							'year': 'numeric', 
-							'month': 'long', 
-							'day': 'numeric'
-						}) + ', ' + d.toLocaleString(navigator.language || 'en', { 
-							'hour': 'numeric', 
-							'minute': 'numeric', 
-							'timeZoneName': 'shortOffset'
+						const timestamp = d.toLocaleString(navigator.language || "en", {
+							"year": "numeric",
+							"month": "long",
+							"day": "numeric"
+						}) + ", " + d.toLocaleString(navigator.language || "en", {
+							"hour": "numeric",
+							"minute": "numeric",
+							"timeZoneName": "shortOffset"
 						});
 						return timestamp;
 					}
 				}
 			});
-
-			loadDiscussions(store!.option, false);
+			App.mount("#mw-content-text");
 		});
 	}
 
@@ -417,14 +430,9 @@ import {
 	//   Caching
 	// =================
 	function fetchFromCache(): IGroupedParsedApiQueryRc | null {
-		try { 
-			const cacheExpiredTime = localStorage.getItem(LOCAL_STORAGE_EXPIRATION_KEY);
-			if (cacheExpiredTime === null || isNaN(+cacheExpiredTime) || Date.now() > +cacheExpiredTime) {
-				clearCache();
-			}
-			let raw = localStorage.getItem(LOCAL_STORAGE_KEY);
-			if (raw === null) return null;
-			return JSON.parse(raw);
+		try {
+			const o = mw.storage.getObject(LOCAL_STORAGE_KEY);
+			return o; 
 		} catch(error) {
 			clearCache(); 
 			return null;
@@ -432,14 +440,11 @@ import {
 	}
 
 	function saveToCache(res: IGroupedParsedApiQueryRc): void {
-		localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(res));
-		const expirationTime = new Date(Date.now() + LOCAL_STORAGE_MAX_AGE).getTime();
-		localStorage.setItem(LOCAL_STORAGE_EXPIRATION_KEY, expirationTime.toString());
+		mw.storage.setObject(LOCAL_STORAGE_KEY, res, LOCAL_STORAGE_MAX_AGE);
 	}
 
 	function clearCache(): void {
-		localStorage.removeItem(LOCAL_STORAGE_KEY);
-		localStorage.removeItem(LOCAL_STORAGE_EXPIRATION_KEY);
+		mw.storage.remove(LOCAL_STORAGE_KEY);
 	}
 
 	// =================

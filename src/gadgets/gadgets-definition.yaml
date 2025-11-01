@@ -85,6 +85,9 @@ gadgets:
         default: true
         dependencies:
           - mediawiki.util
+          - mediawiki.api
+          - mediawiki.ForeignApi
+          - mediawiki.storage
           - vue
           - '@wikimedia/codex'
         actions:

@@ -79,4 +79,30 @@
     border-top: solid 1px #d1d1d1;
     margin-top: 8px;
   }
+  .cdx-progress-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  #rc-discussion-dropdown {
+    .cdx-field {
+      display: flex;
+    }
+    .cdx-label {
+      display: inline-block;
+      width: 300px;
+      flex-shrink: 1;
+    }
+    .cdx-field__control {
+      display: inline-block;
+      flex-grow: 2;
+      .cdx-combobox {
+        width: 100%;
+      }
+    }
+  }
 }
