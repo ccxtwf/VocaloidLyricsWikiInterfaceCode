@@ -94,7 +94,7 @@ gadgets:
           - view
     tl-checking-utils:
       code:
-        - tl-checking-utils.js
+        - tl-checking-utils.ts
         - tl-checking-utils.css
       resourceLoader:
         default: true

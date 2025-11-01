@@ -1,7 +1,17 @@
 (function (mw, $) {
   "use strict";
+
+  interface LevelOneTocHeadings { 
+    [k: string]: { 
+      c: number, 
+      el: { 
+        n: JQuery<HTMLElement>, 
+        l: string 
+      }[] 
+    } 
+  }
   
-  var config = mw.config.get([
+  const config = mw.config.get([
     'wgPageName',
     'wgCategories',
     'skin',
@@ -10,9 +20,9 @@
   // =================
   //   Config
   // =================
-  var tlCheckingPage = 'Help_talk:Translation_Checking';	// Underscore is important
+  const tlCheckingPage = 'Help_talk:Translation_Checking';	// Underscore is important
   // Badge element to show for songs with multiple translations on queue
-  var badgeElementHtml = $('<span>')
+  const badgeElementHtml = $('<span>')
     .addClass('chip-multi-tl')
     .attr('title', 'There are multiple translation checking requests for this song on the queue')
     .text('MULTI');
@@ -20,9 +30,9 @@
   // =================
   //   Functions
   // =================
-  function selectLevelOneTocHeadings() {
-    var s = {};
-    var parentSelector, linkSelector, textSelector;
+  function selectLevelOneTocHeadings(): LevelOneTocHeadings {
+    const s: LevelOneTocHeadings = {};
+    let parentSelector: string, linkSelector: string, textSelector: string;
     switch (config.skin) {
       case 'citizen':
         parentSelector = '#mw-panel-toc li.citizen-toc-level-1';
@@ -40,9 +50,9 @@
         textSelector = '.toctext';
     }
     $(parentSelector).each(function() {
-      var t = $(this).find(textSelector).text();
-      var href = ($(this).find(linkSelector).attr('href') || '').replace(/^#/, '');
-      var m = t.match(/^.+?(?=\s*\|)/);
+      let t = $(this).find(textSelector).text();
+      const href = ($(this).find(linkSelector).attr('href') || '').replace(/^#/, '');
+      const m = t.match(/^.+?(?=\s*\|)/);
       if (m !== null) { t = m[0]; }
       if (!(t in s)) { s[t] = {c:0, el:[]}; }
       s[t].c++;
@@ -54,13 +64,13 @@
     return s;
   }
   
-  function markSongsWithMultipleTranslations() {
+  function markSongsWithMultipleTranslations(): void {
     $('.chip-multi-tl').remove();
-    var headings = selectLevelOneTocHeadings();
-    var setOfMultipleTranslations = Object.values(headings)
-      .filter(function (elements) { return elements.c > 1; });
-    setOfMultipleTranslations.forEach(function (elements) { 
-      elements.el.forEach(function (element) { 
+    const headings = selectLevelOneTocHeadings();
+    const setOfMultipleTranslations = Object.values(headings)
+      .filter((elements) => elements.c > 1);
+    setOfMultipleTranslations.forEach((elements) => { 
+      elements.el.forEach((element) => { 
         element.n.append(badgeElementHtml.clone());
         $('#'+$.escapeSelector(element.l)).append(badgeElementHtml.clone());
       });
