@@ -144,7 +144,7 @@ export function setViteServerOrigin(_origin: string): void {
  */
 export async function readGadgetsDefinition(): Promise<GadgetsDefinition> {
   const contents = await readFile(resolve(gadgetsDir, 'gadgets-definition.yaml'), { encoding: 'utf8' });
-  const gadgetsDefinition = parse(contents);
+  const gadgetsDefinition: GadgetsDefinition = parse(contents);
   return gadgetsDefinition;
 }
 
@@ -169,14 +169,15 @@ export function getGadgetsToBuild(gadgetsDefinition: GadgetsDefinition): GadgetD
   let gadgetsToBuild: GadgetDefinition[] = [];
   for (const [gadgetSectionName, gadgetSectionDefinition] of Object.entries(gadgetsDefinition?.gadgets || {})) {
     for (const [gadgetName, gadgetDefinition] of Object.entries(gadgetSectionDefinition || {})) {
+      const gadgetId = `${gadgetSectionName}/${gadgetName}`;
       // Always return early (i.e. do not build the gadget) if 
       // "gadgets.<GADGET-NAME>.disabled" is set on the gadget definition 
       if (gadgetDefinition?.disabled === true) { continue; } 
       // Otherwise defer to "workspace.enable_all", "workspace.enable", "workspace.disable" 
-      if (enableAll ? !disabledGadgets.has(gadgetName) : enabledGadgets.has(gadgetName)) {
+      if (enableAll ? !disabledGadgets.has(gadgetId) : enabledGadgets.has(gadgetId)) {
         gadgetsToBuild.push({
           ...gadgetDefinition,
-          subdir: `${gadgetSectionName}/${gadgetName}`
+          subdir: gadgetId
         });
       }
     }

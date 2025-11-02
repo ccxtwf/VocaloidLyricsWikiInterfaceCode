@@ -1,0 +1,177 @@
+## About
+Inspired by [Miraheze Dev Scripts](https://github.com/lihaohong6/MirahezeDevScripts/tree/master) and [MoegirlPediaInterfaceCodes](https://github.com/MoegirlPediaInterfaceAdmins/MoegirlPediaInterfaceCodes), this is a repository that aims to enable development of wiki userscripts and styles on [Vocaloid Lyrics Wiki](https://vocaloidlyrics.miraheze.org). 
+
+One main goal of this repository is to facilitate faster & easier feature development, between development of code on an IDE and loading/debugging on a MediaWiki instance.
+
+## License
+The code & configuration for setting up the Vite environment (i.e. everything excluding code listed in the `src/` directory) is hereby licensed under [the BSD 3-Clause License](LICENSE.md). 
+
+Code listed in the `src/` directory consists of userscripts and stylesheets that are used on the Vocaloid Lyrics Wiki and are licensed under the [Creative Commons Attribution-ShareAlike 4.0 (CC-BY-SA 4.0) license](src/LICENSE.md).
+
+## How to use
+
+### Installation
+
+Use Node.js 20.19+ or 22.12+ (Node.js v24 is recommended).
+
+Run `npm install` in the directory to install the npm packages. 
+
+### Development
+
+This repository allows you to write your MediaWiki userscripts in TypeScript and LESS, in addition to standard JS and CSS.
+
+Running `npm run watch` will start up Vite in Build Mode. Vite will not terminate after the build process is finished. Instead, Vite will watch for any changes made to the code, rebuilding each time it detects such changes.
+
+While `npm run watch` is running, run `npm run preview` on another process to get Vite to serve your userscripts on localhost. When your scripts are ready, Vite will automatically open the page `https://localhost:4173/load.js` on your web browser. This is the entrypoint from which you can run your userscripts on your MediaWiki instance. To use this `load.js` file, add the following line of code in your User:&lt;Username&gt;/common.js on your local MediaWiki instance:
+
+```js
+mw.loader.load('https://localhost:4173/load.js');
+```
+
+You can check if your gadgets have been loaded onto MediaWiki instance by running `console.log(mw.loader.getState("ext.gadget.<Name of gadget>"));` on the Developer Console.
+
+### Unit Tests - Jest 
+
+To run unit tests (Jest), execute:
+```sh
+npm run tests
+```
+
+### Build & deploy
+
+Running `npm run build` will start up Vite in Build mode and terminate after build is finished. Files are saved onto the `dist/` folder after the build process is finished. 
+
+Transpiling of userscripts written in Typescript into Javascript is configured in `vite.config.ts` (`build` options). This repository targets **Javascript ES6**.
+
+## Code Definition
+
+### Interface Code
+The source code to the wiki's interface code (i.e. MediaWiki:Common.js, MediaWiki:Vector-2022.js, etc.) is stored in `src/mediawiki`.
+
+### Gadgets
+The source code to the wiki's gadgets is stored in `src/gadgets`. The directory is further divided into several gadget sections.
+
+The file `src/gadgets/gadgets-definition.yaml` defines the gadgets to be built & loaded on a MediaWiki instance. The format of `src/gadgets/gadgets-definition.yaml` is as follows:
+```yaml
+workspace:
+  # Set as true if you want to load all the gadgets defined in gadgets-definition.yaml
+  enable_all: true
+  # This setting excludes the following gadgets from being loaded when enable_all = true
+  disable: ["foo", "bar"]
+
+  # Alternatively, these options enable only the specified gadgets
+  # enable_all: false
+  # enable: ["foo", "bar"]
+
+gadgets:
+  # This informs the name of the gadget section under which the gadget will be registered 
+  # in MediaWiki:Gadgets-definition, as well as the name of the subdirectory of the gadget. 
+  GadgetSectionName:
+
+    # This tells the repository to look for code files from the directory 
+    # /gadgets/GadgetSectionName/HelloWorld
+    # The name that the gadget will be registered under is also the same as the subdirectory 
+    HelloWorld:
+      description: "A simple gadget configuration"
+      code:
+        - index.js    # .ts files are also supported
+        - style.css   # LESS files are also supported
+  
+    # gadgets-definition.yaml also enables userscripts to be loaded conditionally, like userscripts 
+    # that are defined using Extension:Gadgets
+    LoadMeConditionally:
+      description: "A gadget that is loaded only on Main article pages, on action=view"
+      scripts:
+        - index.js
+      resourceLoader:
+        actions:
+          - view
+        namespaces: "0"
+```
+
+The full schema of a gadget object on `gadgets-definition.yaml` is as follows:
+```yaml
+gadgets:
+  # The name of the gadget section and the key of the gadget object is the
+  # same as the name of the gadget, which is also the same as the gadget 
+  # subdirectory.
+  # In other words, the repository will look for code files in the folder
+  # gadgets/GadgetSectionName/GadgetName
+  GadgetSectionName:
+    GadgetName:     # Can also be in camelCase, kebab-case, or snake_case
+      
+      # The following are optional metadata properties
+      description: "Some description"
+      authors:
+        - John Doe
+      links: 
+        - https://some/link/to/the/userscripts/homepage
+      version: "1.0.0"
+
+      # The "requires" property is optional
+      # This property tells the repository to load the gadgets only after 
+      # the userscripts listed under it have been registered first
+      # Only applicable when loading the scripts from load.js
+      requires:
+        - Dependency1
+        - Dependency2
+
+      # The files to be loaded
+      code:
+        - index.js
+        - code.ts     # TypeScript is supported
+        - index.css
+        - style.less  # LESS is supported
+      i18n:
+        - i18n.json
+
+      # You can disable the gadget using this property
+      # disabled: true
+    
+      # This property sets the conditions that must be met to load & register the module
+      # Used to write MediaWiki:Gadgets-definition on the live wiki
+      resourceLoader:
+        # Optional property. 
+        # Setting this to true will load the gadget as a default gadget to all users.
+        default:
+
+        # Optional property.
+        # Setting this to true will hide the gadget from Special:Preferences.
+        hidden:
+
+        # Optional parameter. Set to "styles" for CSS stylesheets, or 
+        # "general" for scripts
+        type:
+
+        # For each of the properties below, you can add them in one of the following ways:
+        # In list form:
+        #   dependencies:
+        #    - ooui-js
+        #    - mediawiki.util
+        # In array form:
+        #   dependencies: ["ooui-js", "mediawiki.util"]
+        # Or in string form:
+        #   dependencies: "ooui-js,mediawiki.util"
+
+        # Loads the modules listed under it before loading the gadget.
+        # Under the hood, this implements mw.loader.using
+        dependencies:
+
+        # Only users with the specified user rights may load the gadget.
+        rights:
+
+        # Only load the gadget on specific skins
+        skins:
+
+        # Only load the gadget on specific page actions, e.g. action=edit
+        actions:
+
+        # Only load the gadget on specified categories, e.g. "Archived"
+        categories:
+
+        # Only load the gadget on specified namespaces, e.g. "0,1" -> Main & Talk
+        namespaces:
+
+        # Only load the gadget on specific content models, e.g. wikitext
+        contentModels:
+``` 

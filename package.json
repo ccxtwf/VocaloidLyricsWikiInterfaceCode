@@ -8,7 +8,8 @@
     "build": "vite build",
     "watch": "vite build --mode watch-build",
     "preview": "vite preview",
-    "build-show": "vite build && vite preview"
+    "build-show": "vite build && vite preview",
+    "tests": "jest"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
