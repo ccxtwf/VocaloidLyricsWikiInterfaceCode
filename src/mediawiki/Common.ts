@@ -1,8 +1,8 @@
-/*! JavaScript placed here will be applied to all skins */
+/* JavaScript placed here will be applied to all skins */
 (function (mw, $) {
   'use strict';
 
-	/*! Discord Widget */
+	/* Discord Widget */
 	(function () {
 		const $widgetElement = $("#discord-widget");
 		const src = `https://discord.com/widget?id=${$widgetElement.data("id")}&theme=${$widgetElement.data("theme")}`;
@@ -18,7 +18,7 @@
 		$widgetElement.html($iframe);
 	})();
 	
-	/*! Add custom Add New Topic for Discussion Tools */
+	/* Add custom Add New Topic for Discussion Tools */
 	mw.loader.using( 'mediawiki.util', function () {
     const addTopicButtonId = 'custom-btn-add-new-topic';
     if ($('#'+addTopicButtonId).length > 0) return;

@@ -1,7 +1,3 @@
-/*
-* Authored by [[User:CoolMikeHatsune22]]
-* Adds a list showing queued translation checking requests on the wiki.
-*/
 import type { Reactive } from "vue";
 
 interface TLQueueItem {

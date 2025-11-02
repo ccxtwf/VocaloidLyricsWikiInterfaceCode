@@ -1,7 +1,3 @@
-/* 
- * A simple modal-based notification script that triggers when a certain category (hidden or not) is detected.
- * Authored by [[User:CoolMikeHatsune22]]
- */
 (function (mw, $) {
 	"use strict";
 

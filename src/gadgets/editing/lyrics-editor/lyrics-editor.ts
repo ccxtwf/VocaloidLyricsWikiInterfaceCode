@@ -1,10 +1,3 @@
-/*
- * Gadget-lyrics-editor.js
- * Authored by [[User:CoolMikeHatsune22]] for Vocaloid Lyrics Wiki on Miraheze
- * Using dependencies from [https://handsontable.com Handsontable] v15.3.0 (12 May 2025)
- *
- * This is a gadget/user script focused upon the editing of lyrics tables (wikitable format) throughout the wiki.
- */
 import { 
   getWikipageTables,
   parseLyrics,

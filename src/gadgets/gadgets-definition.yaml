@@ -4,6 +4,9 @@ workspace:
 gadgets:
   core:
     nsfw-modal:
+      description: "Automatically displays a popup warning for NSFW content on pages hosted throughout the Vocaloid Lyrics Wiki."
+      authors:
+        - CoolMikeHatsune22
       code:
         - nsfw-modal.ts
         - nsfw-modal.less
@@ -14,6 +17,10 @@ gadgets:
         actions:
           - view
     lyrics-options:
+      description: "This gadget configures the button toggles for toggling the visibility of the lyrics tables' columns."
+      authors:
+        - ChaoticShadow (original code from SEKAIPedia)
+        - CoolMikeHatsune22 (modifications)
       code:
         - lyrics-options.ts
         - lyrics-options.less
@@ -23,12 +30,18 @@ gadgets:
           - oojs-ui-core
           - oojs-ui-widgets
     mobile-collapsible-lyrics:
+      description: "When this gadget is turned on, the lyrics rows will collapse responsively on mobile, making the original lyrics, romanized lyrics, and English translated lyrics easier to read. If turned off, then the lyrics will simply display as a normal grid."
+      authors: 
+        - CoolMikeHatsune22
       code:
         - mobile-collapsible-lyrics.css
       resourceLoader:
         default: true
         type: "styles"
     vlw-tl-queue-display:
+      description: "Adds a list to the sidebar/footer of the wiki that shows the translations on queue for checking/verification on the wiki."
+      authors: 
+        - CoolMikeHatsune22
       code:
         - vlw-tl-queue-display.ts
         - vlw-tl-queue-display.less
@@ -39,6 +52,9 @@ gadgets:
       dependencies:
         - mediawiki.storage
     guideline-notification:
+      description: "Utility gadget used to display bubble notifications, used to notify the end user regarding various guidelines throughout the Vocaloid Lyrics Wiki."
+      authors:
+        - CoolMikeHatsune22
       code:
         - guideline-notification.ts
       resourceLoader:
@@ -50,16 +66,25 @@ gadgets:
   
   browser:
     songs-browser-utils-category:
+      description: "Utility module for songs-browser"
+      authors:
+        - CoolMikeHatsune22
       code:
         - songs-browser-utils-category.ts
       resourceLoader:
         hidden: true
     songs-browser-utils-album:
+      description: "Utility module for songs-browser"
+      authors:
+        - CoolMikeHatsune22
       code:
         - songs-browser-utils-album.ts
       resourceLoader:
         hidden: true
     songs-browser:
+      description: "This gadget adds a menu on categories, producer pages, and album pages. This menu can then be used to mark songs that have an available English translation, songs that need an English translation, and songs that are suspected or verified to have used Generative AI."
+      authors:
+        - CoolMikeHatsune22
       code:
         - songs-browser.ts
         - songs-browser.less
@@ -75,6 +100,9 @@ gadgets:
   
   moderation:
     real-time-recent-changes:
+      description: "This gadget improves patrolling by monitoring the recent changes feed in real-time, with various filtering and automation capabilities to help scale quality control efforts."
+      authors:
+        - Krinkle
       code: 
         - real-time-recent-changes.js
       resourceLoader:
@@ -82,6 +110,9 @@ gadgets:
         actions: 
           - view
     rc-discussion:
+      description: "Reads from the Recent Changes feed to generate a list of recent posts & replies made using DiscussionTools."
+      authors:
+        - CoolMikeHatsune22
       code:
         - rc-discussion.ts
         - rc-discussion.less
@@ -97,6 +128,9 @@ gadgets:
         actions:
           - view
     tl-checking-utils:
+      description: "Utility script for wiki administrators, to use on Help talk:Translation Checking."
+      authors:
+        - CoolMikeHatsune22
       code:
         - tl-checking-utils.ts
         - tl-checking-utils.css
@@ -107,12 +141,25 @@ gadgets:
   
   editing:
     in-page-edit:
+      description: "A powerful frontend JavaScript Plugin for MediaWiki. Adds a small menu at the bottom of the screen for quick editing of pages, e.g. quick addition of redirects, quick page renames, quick deletion."
+      authors:
+        - 机智的小鱼君/Dragon Fish (original code)
+        - PetraMagna (fork)
+      links:
+        - https://github.com/lihaohong6/inpageedit-v2
       code:
         - in-page-edit.js
       resourceLoader:
         rights:
           - edit
     preload-templates:
+      description: "This gadget adds a dropdown box at the bottom of WikiEditor (AKA Source Editor) that allows the preloading of various templates. Adapted from FANDOM Developers Wiki."
+      authors: 
+        - Grunny (original code)
+        - leviathan_89 (modifications)
+        - CoolMikeHatsune22 (porting to Miraheze)
+      links:
+        - https://dev.fandom.com/wiki/PreloadTemplates
       code:
         - preload-templates.js
         - preload-templates.less
@@ -122,6 +169,9 @@ gadgets:
           - edit
         namespaces: "0,1,2,3,6,12,13,14,500,501"
     lyrics-editor:
+      description: "This gadget adds an \"Edit Lyrics Table\" action button on WikiEditor (AKA Source Editor) that allows easier editing of lyrics tables throughout the VOCALOID Lyrics Wiki."
+      authors:
+        - CoolMikeHatsune22
       code:
         - lyrics-editor.ts
         - lyrics-editor.less
@@ -135,6 +185,12 @@ gadgets:
         actions:
           - edit
     view-source:
+      description: "This gadget adds a 'View Source' toggle option that lets you peek at the raw wiki source code. Useful for editors. Adapted from FANDOM Developers Wiki."
+      authors: 
+        - Pecoes (original code)
+        - CoolMikeHatsune22 (porting to Miraheze)
+      links:
+        - https://dev.fandom.com/wiki/View_Source
       code:
         - view-source-definitions.js
         - view-source.js
@@ -143,6 +199,11 @@ gadgets:
         actions:
           - view
     hotcat:
+      description: "Easily add / remove / change a category on a page, with name suggestions."
+      links:
+        - https://en.wikipedia.org/wiki/Wikipedia:HotCat
+      authors:
+        - Wikimedia Foundation
       code:
         - hotcat.js
         - hotcat-check.js
@@ -152,11 +213,23 @@ gadgets:
   
   module:
     countdown:
+      description: "This script creates a countdown clock where specified. Adapted from FANDOM Developers Wiki."
+      authors:
+        - Pecoes & Asaba (original code)
+        - Splarka & Eladkse (modifications)
+        - CoolMikeHatsune22 (porting to Miraheze)
+      links: 
+        - https://dev.fandom.com/wiki/Countdown
       code:
         - countdown.js
       resourceLoader:
         default: true
     ReferenceTooltips:
+      description: "Hover over inline citations to see reference information without moving away from the article text."
+      authors: 
+        - Wikimedia Foundation
+      links:
+        - https://en.wikipedia.org/wiki/MediaWiki:Gadget-ReferenceTooltips.js
       code:
         - ReferenceTooltips.js
         - ReferenceTooltips.css
@@ -165,6 +238,9 @@ gadgets:
           - mediawiki.cookie
           - jquery.client
     user-group-badges:
+      description: "Show staff profiles on user badges."
+      authors:
+        - CoolMikeHatsune22
       code:
         - user-group-badges.js
         - user-group-badges.less
@@ -177,6 +253,9 @@ gadgets:
 
   styles:
     vlw-notification-templates:
+      description: "CSS stylesheet for custom notification templates used throughout the Vocaloid Lyrics Wiki."
+      authors:
+        - CoolMikeHatsune22
       code:
         - vlw-notification-templates.less
       resourceLoader:
@@ -184,6 +263,9 @@ gadgets:
         hidden: true
         type: "styles"
     vlw-iconlinks:
+      description: "CSS stylesheet for iconlink templates used throughout the Vocaloid Lyrics Wiki."
+      authors:
+        - CoolMikeHatsune22
       code:
         - vlw-iconlinks.css
       resourceLoader:
@@ -191,6 +273,9 @@ gadgets:
         hidden: true
         type: "styles"
     dark-mode-shared:
+      description: "CSS stylesheet to set shared dark mode CSS variables throughout all used skins."
+      authors:
+        - CoolMikeHatsune22
       code:
         - dark-mode-shared.less
       resourceLoader:
@@ -198,6 +283,9 @@ gadgets:
         hidden: true
         type: "styles"
     dark-mode-vector-citizen:
+      description: "Shared CSS stylesheet for Dark Mode on Vector 2022 & Citizen."
+      authors:
+        - CoolMikeHatsune22
       code:
         - dark-mode-vector-citizen.less
       resourceLoader:
@@ -208,6 +296,9 @@ gadgets:
           - vector-2022
           - citizen
     dark-mode-other-skins:
+      description: "Shared CSS stylesheet for Dark Mode on skins that don't support a built-in dark mode."
+      authors:
+        - CoolMikeHatsune22
       code:
         - dark-mode-other-skins.less
       resourceLoader:
@@ -219,6 +310,9 @@ gadgets:
           - medik
           - monobook
     dark-mode-medik:
+      description: "CSS stylesheet for Dark Mode on Medik."
+      authors:
+        - CoolMikeHatsune22
       code:
         - dark-mode-medik.less
       resourceLoader:
@@ -228,6 +322,9 @@ gadgets:
         skins:
           - medik
     dark-mode-timeless:
+      description: "CSS stylesheet for Dark Mode on Timeless."
+      authors:
+        - CoolMikeHatsune22
       code:
         - dark-mode-timeless.less
       resourceLoader:
@@ -237,6 +334,9 @@ gadgets:
         skins:
           - timeless
     recent-changes-on-mobile:
+      description: "CSS stylesheet for Special:RecentChanges."
+      authors:
+        - CoolMikeHatsune22
       code:
         - recent-changes-on-mobile.less
       resourceLoader:

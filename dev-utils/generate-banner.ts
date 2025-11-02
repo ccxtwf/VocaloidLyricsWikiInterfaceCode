@@ -1,23 +1,10 @@
 import { relative } from 'path';
 import { normalizePath } from 'vite';
+import wrap from 'word-wrap'; 
+import { GadgetDefinition } from './types.js';
+import { determineFileType } from './utils.js';
 
-export function determineFileType(id: string): "script" | "style" | "other" {
-  let extension: RegExpMatchArray | null | string = id.match(/\.[a-zA-Z0-9]+$/);
-  if (extension !== null) {
-    extension = extension[0].toLowerCase();
-    switch (extension) {
-      case '.js':
-      case '.ts':
-        return "script";
-      case '.css':
-      case '.less':
-        return "style";
-    }
-  }
-  return "other";
-}
-
-export function createBanner(ghUrl: string, ghBranch: string, id: string): string {
+export function createBanner(ghUrl: string, ghBranch: string, id: string, gadgetDefinition?: GadgetDefinition): string {
   const fileType = determineFileType(id);
   let tag = '';
   switch (fileType) {
@@ -28,6 +15,26 @@ export function createBanner(ghUrl: string, ghBranch: string, id: string): strin
       tag = '[[Category:Stylesheets]]';
       break;
   }
+
+  const url = `${ghUrl}/blob/${ghBranch}/${normalizePath(relative(process.cwd(), id))}`;
+
+  const { description = '', authors = [], links = [] } = gadgetDefinition || { description: '', authors: [], links: [] };
   
-  return `/*!\n ${'*'.padEnd(80, '*')}\n *\n * This file has been synced with the shared repository on GitHub.\n * Please do not edit this page directly.\n * \n * Source code:\n * ${ghUrl}/blob/${ghBranch}/${normalizePath(relative(process.cwd(), id))}\n *\n * ${tag}\n ${'*'.padEnd(78, '*')}*/\n\n`;
+  return (
+`
+/*!
+ ${'*'.padEnd(80, '*')}
+ *\n${wrap(description, { width: 78, indent: ' * ' })}${authors.length > 0 ? `\n * Authors: \n${authors.map(s => ` * - ${s}`).join('\n')}` : ''}${links.length > 0 ? `\n * Links:\n${links.map(s => ` * - ${s}`).join('\n')}` : ''}
+ * 
+ * This file has been synced with the shared repository on GitHub.
+ * Code Repository on GitHub: ${ghUrl}
+ * Please do not edit this page directly.
+ * 
+ * Source code:
+ * ${url}
+ * 
+ * ${tag}
+ * 
+ * ${'*'.padEnd(78, '*')}*/`
+  ).trim() + '\n\n';
 }

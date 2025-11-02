@@ -1,7 +1,7 @@
-/*! All JavaScript here will be loaded for users of the Vector 2022 skin */
+/* All JavaScript here will be loaded for users of the Vector 2022 skin */
 'use strict';
 
-/*! Configure collapsible submenus on sidebar */
+/* Configure collapsible submenus on sidebar */
 $('#vector-main-menu .mw-portlet > .vector-menu-content').addClass('collapse');
 $('#p-navigation > .vector-menu-content, #p-special-pages > .vector-menu-content').addClass('show');
 $('#vector-main-menu .mw-portlet[id^=\'p-^\'] > .vector-menu-heading')

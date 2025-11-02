@@ -1,7 +1,3 @@
-/*
- * Adds a special page to browse through recent posts and replies made using the DiscussionTools extension.
- * Authored by [[User:CoolMikeHatsune22]]
- */
 import type { ApiQueryRecentChangesParams, ApiQueryAllRevisionsParams } from "types-mediawiki-api";
 import type { ApiResponse } from "types-mediawiki/mw/Api.js";
 import type { 

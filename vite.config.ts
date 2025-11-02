@@ -10,6 +10,7 @@ import {
   setViteServerOrigin
 } from './dev-utils/build-orchestration.js';
 import { createBanner } from './dev-utils/generate-banner.js';
+import { getGadgetKeysFromChunkName, determineFileType } from './dev-utils/utils.js';
 import { 
   ConfigEnv, 
   defineConfig, 
@@ -49,7 +50,8 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
       // On Vite Build, automatically add banner to each CSS file
       generateCssBanner(
         env.VITE_GITHUB_REPOSITORY_URL, 
-        env.VITE_GITHUB_REPOSITORY_BRANCH
+        env.VITE_GITHUB_REPOSITORY_BRANCH,
+        gadgetsDefinition
       )
     ],
     build: {
@@ -71,11 +73,20 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
             return 'assets/[name][extname]';
           },
           banner: (chunk): string => {
+            if (determineFileType(chunk.name) === 'style') {
+              return '';
+            }
+            const id = chunk.facadeModuleId || chunk.moduleIds[0]!;
+            const m = getGadgetKeysFromChunkName(chunk.name);
+            const gadgetDefinition = (
+              m !== null ? gadgetsDefinition.gadgets[m[0]][m[1]] : undefined
+            );
             return createBanner(
               env.VITE_GITHUB_REPOSITORY_URL, 
               env.VITE_GITHUB_REPOSITORY_BRANCH,
-              chunk.facadeModuleId || chunk.moduleIds[0]!
-            )
+              id,
+              gadgetDefinition
+            );
           }
         },
       },

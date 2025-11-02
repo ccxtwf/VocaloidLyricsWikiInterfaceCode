@@ -1,7 +1,7 @@
-/*! All JavaScript here will be loaded for users of the Medik skin */
+/* All JavaScript here will be loaded for users of the Medik skin */
 'use strict';
 
-/*! Configure collapsible sidebar menu */
+/* Configure collapsible sidebar menu */
 $('#site-navigation > .mw-portlet > .mw-portlet-body').addClass('collapse');
 $('#site-navigation > #p-navigation > .mw-portlet-body, #site-navigation > #p-special-pages > .mw-portlet-body').addClass('show');
 $('#site-navigation > .mw-portlet[id^=\'p-^\'] > a.nav-link')
@@ -17,13 +17,13 @@ $('#site-navigation > .mw-portlet > a.nav-link').on('click', function (event) {
   event.stopPropagation();
 });
 
-/*! On mobile: automatically scroll the page up if the hamburger menu on the persistent navbar is clicked */
+/* On mobile: automatically scroll the page up if the hamburger menu on the persistent navbar is clicked */
 $('#p-logo .mw-hamb').on('click', function () {
   document.body.scrollTop = 0;
   document.documentElement.scrollTop = 0;
 });
 
-/*! Set scroll offset for mobile & desktop view */
+/* Set scroll offset for mobile & desktop view */
 (window as any).MedikScrollOffset = 120;
 const mq = window.matchMedia("(max-width: 768px)");
 function _onMqChangeMedik(mq: MediaQueryList) {
