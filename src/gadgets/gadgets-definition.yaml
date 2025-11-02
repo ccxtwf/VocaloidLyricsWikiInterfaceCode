@@ -49,17 +49,17 @@ gadgets:
   browser:
     songs-browser-utils-category:
       code:
-        - songs-browser-utils-category.js
+        - songs-browser-utils-category.ts
       resourceLoader:
         hidden: true
     songs-browser-utils-album:
       code:
-        - songs-browser-utils-album.js
+        - songs-browser-utils-album.ts
       resourceLoader:
         hidden: true
     songs-browser:
       code:
-        - songs-browser.js
+        - songs-browser.ts
         - songs-browser.less
       requires:
         - browser/songs-browser-utils-album
@@ -68,6 +68,8 @@ gadgets:
         namespaces: "0,14"
         actions:
           - view
+        dependencies:
+          - mediawiki.storage
   
   moderation:
     real-time-recent-changes:
