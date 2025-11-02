@@ -15,7 +15,7 @@ gadgets:
           - view
     lyrics-options:
       code:
-        - lyrics-options.js
+        - lyrics-options.ts
         - lyrics-options.less
       resourceLoader:
         default: true
@@ -36,6 +36,8 @@ gadgets:
         default: true
         actions:
           - view
+      dependencies:
+        - mediawiki.storage
     guideline-notification:
       code:
         - guideline-notification.ts
@@ -121,7 +123,7 @@ gadgets:
         namespaces: "0,1,2,3,6,12,13,14,500,501"
     lyrics-editor:
       code:
-        - lyrics-editor.js
+        - lyrics-editor.ts
         - lyrics-editor.less
       resourceLoader:
         default: true
@@ -170,6 +172,7 @@ gadgets:
         namespaces: "2"
         actions: 
           - view
+      disabled: true
 
   styles:
     vlw-notification-templates:
