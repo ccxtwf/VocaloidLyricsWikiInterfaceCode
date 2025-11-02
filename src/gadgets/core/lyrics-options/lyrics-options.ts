@@ -1,5 +1,12 @@
 ( function ( $, mw ) {
 	'use strict';
+
+	const messages = {
+		'vlw-lyrics-options--show-hide-prompt': 'Show/hide columns',
+		'vlw-lyrics-options--fieldset-legend': 'Lyrics display options',
+		'vlw-lyrics-options--visible-columns-legend': 'Visible columns',
+	};
+	mw.messages.set(messages);
 	
 	function langSelect ( id: string, buttons: (OO.ui.ButtonOptionWidget | OO.ui.CheckboxMultioptionWidget)[] ) { 
 		return function ( item: OO.ui.ButtonSelectWidget | OO.ui.CheckboxMultiselectWidget, selected: boolean ) {
@@ -85,7 +92,7 @@
 		const multiselect = new OO.ui.CheckboxMultiselectWidget( { items: options, } );
 		const langSelector = new OO.ui.PopupButtonWidget( {
 			icon: 'menu',
-			label: 'Show/hide columns',
+			label: mw.msg('vlw-lyrics-options--show-hide-prompt'),
 			popup: {
 				$content: multiselect.$element,
 				padded: true,
@@ -136,7 +143,7 @@
 			const preferences = mediaWiki.user.options.get('userjs-lyrics-option-type') || 'buttons';
 			
 			const fieldset = new OO.ui.FieldsetLayout( {
-				label: 'Lyrics display options'
+				label: mw.msg('vlw-lyrics-options--fieldset-legend')
 			} );
 			
 			let langSelector;
@@ -155,7 +162,10 @@
 					fieldset.addItems( [
 				    	new OO.ui.FieldLayout( 
 				        	langSelector,
-				        	{ label: 'Visible columns', align: 'inline' } 
+				        	{ 
+										label: mw.msg('vlw-lyrics-options--visible-columns-legend'), 
+										align: 'inline' 
+									} 
 				    	)
 				    ] );
 			}

@@ -24,6 +24,23 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
   
   // Only load once
   if ($('#ca-edit-lyrics').length > 0) { return; }
+
+  const DEBUGGING_ID = "vlw-lyrics-editor";
+
+  const messages = {
+    'vlw-lyrics-editor--menu-prompt': 'Edit Lyrics Table',
+    'vlw-lyrics-editor--menu-tooltip': 'Use a script to edit the lyrics more easily.',
+    'vlw-lyrics-editor--now-loading': 'Now loading...',
+    'vlw-lyrics-editor--found-n-tables': 'Found $1 table(s)',
+    'vlw-lyrics-editor--no-table-found': 'Found $1 table(s)',
+    'vlw-lyrics-editor--ith-table': 'Table #$1',
+    'vlw-lyrics-editor--confirm-button-text': 'Replace Lyrics Table',
+    'vlw-lyrics-editor--confirm-buttom-tooltip': 'Replace the lyrics table wikicode',
+    'vlw-lyrics-editor--success': 'Successfully replaced lyrics!',
+    'vlw-lyrics-editor--failed-to-paste': "Unable to paste! Please use keyboard command (Ctrl/Cmd + V)!",
+    'vlw-lyrics-editor--report-message': 'You can report any bugs to [[MediaWiki talk:Gadget-lyrics-editor]] or to [[User talk:CoolMikeHatsune22|the script developer\'s user talk page.]]'
+  };
+  mw.messages.set(messages);
   
   // =================
   //   Configuration
@@ -127,8 +144,9 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
             
         (this as Core).setDataAtCell(changes);
       })
-      .catch(function () {
-        window.alert("Unable to paste! Please use keyboard command (Ctrl/Cmd + V)!");
+      .catch(function (error) {
+        console.error(error, DEBUGGING_ID);
+        window.alert(mw.msg('vlw-lyrics-editor--failed-to-paste'));
       });
   }
   
@@ -355,14 +373,14 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
     resetColumnHeaders(numColumns);
     $('#lyrics-editor-jstable-container').css('overflow-x', 'hidden');
     const confirmButton = new OO.ui.ButtonWidget( {
-      label: 'Replace Lyrics Table',
+      label: mw.msg('vlw-lyrics-editor--confirm-button-text'),
       icon: 'check',
-      title: 'Replace the lyrics table wikicode'
+      title: mw.msg('vlw-lyrics-editor--confirm-buttom-tooltip')
     } );
     confirmButton.on('click', function () {
       replaceLyricsTable(tableRegexResults);
       closeModal();
-      mw.notify( 'Successfully replaced lyrics!' );
+      mw.notify( mw.msg('vlw-lyrics-editor--success') );
     });
     $('#lyrics-editor-jstable-container-wrapper').append(
       $('<div>', { id: "lyrics-editor-actions" }).append(confirmButton.$element)
@@ -376,20 +394,24 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
     if (tables.length) {
       $modalContent.find('#lyrics-editor-table-selector')
         .html(
-          $('<p>').text(`Found ${tables.length} table(s)`).html()
+          $('<p>').text(
+            mw.msg('vlw-lyrics-editor--found-n-tables', tables.length)
+          ).html()
         );
       const dropdown = new OO.ui.DropdownInputWidget( {
         options: tables.map(function (_, index) {
           return {
             data: index,
-            label: 'Table #' + (index+1)
+            label: mw.msg('vlw-lyrics-editor--ith-table', index+1)
           };
         }),
       } );
       //@ts-ignore
       dropdown.setValue(0);
       loadLyricsData(tables[0]);
-      if (tables.length <= 1) { dropdown.setDisabled(true); }
+      if (tables.length <= 1) { 
+        dropdown.setDisabled(true); 
+      }
       dropdown.on('change', (idx: string) => {
         clearHotTable();
         loadLyricsData(tables[+idx]);
@@ -397,7 +419,7 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
       $modalContent.find('#lyrics-editor-table-selector').append(dropdown.$element);
     } else {
       $modalContent.find('#lyrics-editor-table-selector').html(
-        $('<p>').text('No table found').html()
+        $('<p>').text(mw.msg('vlw-lyrics-editor--no-table-found')).html()
       );
     }
   }
@@ -426,19 +448,12 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
               )
               .append(
                 $('<div>', { id: 'lyrics-editor-loader' })
-                  .text('Now loading...')
+                  .text(mw.msg('vlw-lyrics-editor--now-loading'))
               )
               .append(
                 $('<div>', { id: 'lyrics-editor-bug-report' })
-                  .append("You can report any bugs to ")
                   .append(
-                    $('<a>', { href: '/wiki/MediaWiki_talk:Gadget-lyrics-editor', target: '_blank' })
-                      .text('MediaWiki talk:Gadget-lyrics-editor')
-                  )
-                  .append(" or to ")
-                  .append(
-                    $('<a>', { href: '/wiki/User_talk:CoolMikeHatsune22', target: '_blank' })
-                      .text('the script developer\'s user talk page.')
+                    mw.message('vlw-lyrics-editor--report-message').parseDom()
                   )
               )
           )
@@ -484,8 +499,8 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
       tag = '<span>';
     }
     $a = $(tag, {
-      text: "Edit Lyrics Table",
-      title: "Use a script to edit the lyrics more easily."
+      text: mw.msg('vlw-lyrics-editor--menu-prompt'),
+      title: mw.msg('vlw-lyrics-editor--menu-tooltip'),
     }).data('source', false).on('click', function () {
       $modal.show();
       loadModalUtilities();
@@ -554,7 +569,7 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
         init(config.skin);
       });
     }, function () {
-      console.error("Failed to load Handsontable JS dependency for Gadget-lyrics-editor.js");
+      console.error("Failed to load Handsontable JS dependency for Gadget-lyrics-editor.js", DEBUGGING_ID);
     });
     
 }(mediaWiki, jQuery));

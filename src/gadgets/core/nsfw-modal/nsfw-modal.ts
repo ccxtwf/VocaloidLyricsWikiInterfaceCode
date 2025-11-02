@@ -93,24 +93,24 @@
 							.append(
 								$('<div>', { id: 'cw-heading' })
 									.text(
-										mw.message('vlw-nsfw-modal--cw-heading').text()
+										mw.msg('vlw-nsfw-modal--cw-heading')
 									)
 							)
 							.append(
 								$('<div>', { id: 'cw-subheading' })
 									.text(
-										mw.message('vlw-nsfw-modal--cw-subheading').text()
+										mw.msg('vlw-nsfw-modal--cw-subheading')
 									)
 							)
 							.append(
 								$('<div>', { id: 'cw-action-buttons' })
 									.append(
 										$('<button>', { id: 'cw-confirm', type: 'button', 'class': 'cw-action-button' })
-											.text(mw.message('vlw-nsfw-modal--cw-confirm').text())
+											.text(mw.msg('vlw-nsfw-modal--cw-confirm'))
 									)
 									.append(
 										$('<button>', { id: 'cw-back', type: 'button', 'class': 'cw-action-button' })
-											.text(mw.message('vlw-nsfw-modal--cw-back').text())
+											.text(mw.msg('vlw-nsfw-modal--cw-back'))
 									)
 							)
 							.append(
@@ -120,7 +120,7 @@
 											.append($('<input>', { id: 'cw-suppress-nsfw-notifs', type: 'checkbox' }))
 											.append(
 												$('<span>').text(
-													mw.message('vlw-nsfw-modal--do-not-show').text()
+													mw.msg('vlw-nsfw-modal--do-not-show')
 												)
 											)
 									)

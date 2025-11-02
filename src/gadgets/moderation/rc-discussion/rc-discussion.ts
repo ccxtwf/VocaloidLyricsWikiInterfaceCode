@@ -141,7 +141,7 @@ import {
 	let store: Reactive<IAppStore> | undefined;
 
 	function loadApp(): void {
-		document.getElementById('firstHeading')!.textContent = mw.message('rc-discussion--title', config.wgSiteName).text();
+		document.getElementById('firstHeading')!.textContent = mw.msg('rc-discussion--title', config.wgSiteName);
 		mw.loader.using( ['vue', '@wikimedia/codex'] ).then(require => {
 			const Vue = require('vue');
 			const { CdxButton, CdxIcon, CdxCombobox, CdxField, CdxProgressIndicator } = require('@wikimedia/codex');
@@ -307,9 +307,9 @@ import {
 					},
 					summaryAction() {
 						if (this.isNewTopic) {
-							return mw.message("rc-discussion--action-new-topic").plain();
+							return mw.msg("rc-discussion--action-new-topic");
 						} else if (this.isReply) {
-							return mw.message("rc-discussion--action-new-reply").plain();
+							return mw.msg("rc-discussion--action-new-reply");
 						}
 						return "";
 					},
@@ -372,7 +372,7 @@ import {
 				store!.data = data;
 			})
 			.catch((err) => {
-				mw.notify(mw.message('rc-discussion--unexpected-error').text(), { type: 'error' });
+				mw.notify(mw.msg('rc-discussion--unexpected-error'), { type: 'error' });
 				console.error( err, DEBUGGING_ID );
 			})
 			.finally(function () {
@@ -451,8 +451,8 @@ import {
 	//   Misc
 	// =================
 	function installPortletLink(): void {
-		const label = mw.message( 'rc-discussion--menu-label' ).text();
-		const tooltipText = mw.message( 'rc-discussion--menu-tooltip', config.wgSiteName ).text();
+		const label = mw.msg( 'rc-discussion--menu-label' );
+		const tooltipText = mw.msg( 'rc-discussion--menu-tooltip', config.wgSiteName );
 		if (!$('#t-rc-discussion').length) {
 			mw.util.addPortletLink(
 				'p-tb',

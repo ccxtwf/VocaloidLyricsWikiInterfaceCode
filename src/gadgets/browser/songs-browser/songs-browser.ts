@@ -27,7 +27,7 @@ import { ISongBrowserDropdownOption, IAlbumFetchUtils, ICategoryFetchUtils } fro
 	}
 	mw.messages.set(messages);
 
-	const dropdownToggleText = mw.message('songs-browser--dropdown-text').text();
+	const dropdownToggleText = mw.msg('songs-browser--dropdown-text');
 
 	const DROPDOWN_OPTIONS: ISongBrowserDropdownOption[] = [
 		createSongBrowserDropdownOption({
@@ -224,7 +224,7 @@ import { ISongBrowserDropdownOption, IAlbumFetchUtils, ICategoryFetchUtils } fro
 	function createSongBrowserDropdownOption(
 		{ menuLabelId, ids, categoryTitles }: { menuLabelId: string, ids: string[], categoryTitles: string[] }
 	): ISongBrowserDropdownOption {
-		const menuLabel = mw.message(`songs-browser--${menuLabelId}-menu-label`).text();
+		const menuLabel = mw.msg(`songs-browser--${menuLabelId}-menu-label`);
 
 		const cats: { title: string, event: string }[] = [];
 		const hooks: { event: string, hook: (pages: JQuery<HTMLElement>) => void }[] = [];
@@ -237,8 +237,8 @@ import { ISongBrowserDropdownOption, IAlbumFetchUtils, ICategoryFetchUtils } fro
 			const chipCssClass = `chip ${id}`;
 			const chipSelector = '.'+chipCssClass.replace(/ /g, '.');
 			
-			const tooltip = mw.message(`songs-browser--${id}-tooltip`).text();
-			const chipText = mw.message(`songs-browser--${id}-chip-tooltip`).text();
+			const tooltip = mw.msg(`songs-browser--${id}-tooltip`);
+			const chipText = mw.msg(`songs-browser--${id}-chip-tooltip`);
 
 			cats.push({ title: categoryTitles[i], event });
 			hooks.push({

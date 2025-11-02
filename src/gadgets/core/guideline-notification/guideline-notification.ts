@@ -2,8 +2,12 @@
 	'use strict';
 	
 	const DELTA = 7.5 * 24 * 60 * 60 * 1000;	// 7 full days + 12 hour buffer
-	const NOTICE_HEADER = "VLW Guideline Notice";
-	const NOTICE_MESSAGE = "All translations posted within 7 days of a song\'s publication date must go through the checking process in Help talk:Translation Checking. The only exceptions are official translations by known reliable translators, made available prior to any other submissions for checking.";
+
+	const messages = {
+		'vlw-guideline-notification--header': "VLW Guideline Notice",
+		'vlw-guideline-notification--message': "All translations posted within 7 days of a song\'s publication date must go through the checking process in Help talk:Translation Checking. The only exceptions are official translations by known reliable translators, made available prior to any other submissions for checking."
+	};
+	mw.messages.set(messages);
 
 	const config = mw.config.get([
 		'wgCategories'
@@ -59,7 +63,7 @@
 			return;
 		}
 		if (isSongPageWithinThreshold()) {
-			mw.notify( NOTICE_MESSAGE , { autoHide: false, type: 'warn', title: NOTICE_HEADER } );
+			mw.notify( mw.msg('vlw-guideline-notification--header') , { autoHide: false, type: 'warn', title: mw.msg('vlw-guideline-notification--message') } );
 		}
 	}
 	showNotice();
