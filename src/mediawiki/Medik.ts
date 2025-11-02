@@ -28,17 +28,17 @@ $('#p-logo .mw-hamb').on('click', function () {
 const mq = window.matchMedia("(max-width: 768px)");
 function _onMqChangeMedik(mq: MediaQueryList) {
   if (mq.matches) {
-    /*! mobile view */
+    /* mobile view */
     (window as any).MedikScrollOffset = 120;
   } else {
-    /*! Desktop view */
+    /* Desktop view */
     (window as any).MedikScrollOffset = 60;
   }
 }
 _onMqChangeMedik(mq);
 mq.addEventListener("change", function() { _onMqChangeMedik(mq); });
 
-/*! When an anchor link is clicked, the browser will offset the vertical scroll position by window.MedikScrollOffset */
+/* When an anchor link is clicked, the browser will offset the vertical scroll position by window.MedikScrollOffset */
 function _offsetScrollPosition(hash: string) {
   if (!hash) return;
   hash = $.escapeSelector(decodeURI(hash.substring(1)));
@@ -54,7 +54,7 @@ $('div#bodyContent a').on('click', function (e: JQuery.ClickEvent<HTMLAnchorElem
   _offsetScrollPosition(hash);
 });
 
-/*! If the page is loaded with a hash (e.g. when loaded from RC or when opening a DiscussionTools post/reply), then offset the scroll position */
+/* If the page is loaded with a hash (e.g. when loaded from RC or when opening a DiscussionTools post/reply), then offset the scroll position */
 if (window.location.hash || '' !== '') {
   _offsetScrollPosition(window.location.hash);
 }
