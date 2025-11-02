@@ -30,6 +30,8 @@ mw.loader.load('https://localhost:4173/load.js');
 
 You can check if your gadgets have been loaded onto MediaWiki instance by running `console.log(mw.loader.getState("ext.gadget.<Name of gadget>"));` on the Developer Console.
 
+Once set up, you will only need to reload the webpage on your MediaWiki instance to instantly see the changes made on your code in the IDE, no extra steps required.  
+
 ### Unit Tests - Jest 
 
 To run unit tests (Jest), execute:
