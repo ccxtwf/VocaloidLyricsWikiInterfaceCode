@@ -7,10 +7,10 @@ import {
   getGadgetsToBuild,
   getMediaWikiInterfaceCodeToBuild,
   mapWikicodeSourceFiles, 
-  setViteServerOrigin
+  setViteServerOrigin,
+  setGadgetNamespace,
 } from './dev-utils/build-orchestration.js';
-import { createBanner } from './dev-utils/generate-banner.js';
-import { getGadgetKeysFromChunkName, determineFileType } from './dev-utils/utils.js';
+import { generateScriptBanner } from './dev-utils/generate-banner.js';
 import { 
   ConfigEnv, 
   defineConfig, 
@@ -20,13 +20,24 @@ import {
 
 export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => {
   const env = loadEnv(mode, process.cwd(), '');
+  const { 
+    GADGET_NAMESPACE: gadgetNamespace = 'ext.gadget',
+    GITHUB_REPOSITORY_URL: ghUrl = '', 
+    GITHUB_REPOSITORY_BRANCH: ghBranch = 'development',
+    SERVER_DEV_ORIGIN: serverDevOrigin = 'http://localhost:5173',
+    SERVER_PREVIEW_ORIGIN: serverPreviewOrigin = 'http://localhost:4173',
+  } = env;
+  
   const isDev = mode === 'development';
   const isOnBuildWatch = mode === 'watch-build';
+  
   if (isDev) { 
-    setViteServerOrigin(env.VITE_SERVER_DEV_ORIGIN || 'http://localhost:5173'); 
+    setViteServerOrigin(serverDevOrigin); 
   } else {
-    setViteServerOrigin(env.VITE_SERVER_PREVIEW_ORIGIN || 'http://localhost:4173');
+    setViteServerOrigin(serverPreviewOrigin);
   }
+  setGadgetNamespace(gadgetNamespace);
+  
   const gadgetsDefinition = await readGadgetsDefinition();
   const gadgetsToBuild = getGadgetsToBuild(gadgetsDefinition);
   const mwInterfaceCodeToBuild = await getMediaWikiInterfaceCodeToBuild();
@@ -72,22 +83,7 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
             }
             return 'assets/[name][extname]';
           },
-          banner: (chunk): string => {
-            if (determineFileType(chunk.name) === 'style') {
-              return '';
-            }
-            const id = chunk.facadeModuleId || chunk.moduleIds[0]!;
-            const m = getGadgetKeysFromChunkName(chunk.name);
-            const gadgetDefinition = (
-              m !== null ? gadgetsDefinition.gadgets[m[0]][m[1]] : undefined
-            );
-            return createBanner(
-              env.VITE_GITHUB_REPOSITORY_URL, 
-              env.VITE_GITHUB_REPOSITORY_BRANCH,
-              id,
-              gadgetDefinition
-            );
-          }
+          banner: generateScriptBanner({ ghUrl, ghBranch, gadgetsDefinition })
         },
       },
       outDir: 'dist',

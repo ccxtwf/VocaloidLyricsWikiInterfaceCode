@@ -32,7 +32,8 @@ export interface GadgetDefinition {
   i18n?: string[]
 
   // The gadget subdirectory is automatically set as the key in the gadgets definition  
-  subdir?: string
+  section: string
+  name: string
 
   // If set to true on the gadgets definition, then Vite will exclude this file
   // from the list of gadgets that will be served/distributed 

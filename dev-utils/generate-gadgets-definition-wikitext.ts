@@ -1,16 +1,24 @@
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { writeFileSync } from 'fs';
 import { normalizePath } from 'vite';
 import { resolve } from 'path';
 import type { GadgetDefinition, GadgetsDefinition, ResourceLoaderConditions } from './types.js';
+import { resolveDistPath, resolveFileExtension } from './utils.js';
 
-function resolveGadgetsDefinitionWikitextFile() {
-  const distFolder = resolve(__dirname, '../dist');
-  if (!existsSync(distFolder)) { mkdirSync(distFolder); }
-  const gadgetsFolder = resolve(distFolder, 'gadgets');
-  if (!existsSync(gadgetsFolder)) { mkdirSync(gadgetsFolder); }
+/**
+ * Resolve the path to dist/gadgets/gadgets-definition.wikitext
+ * 
+ * @returns 
+ */
+function resolveGadgetsDefinitionWikitextFile(): string {
+  const gadgetsFolder = resolveDistPath("./gadgets");
   return normalizePath(resolve(gadgetsFolder, 'gadgets-definition.wikitext'));
 }
 
+/**
+ * Generate the contents of MediaWiki:Gadgets-definition
+ * 
+ * @param gadgetsDefinition 
+ */
 export function writeWikitextFile(gadgetsDefinition: GadgetsDefinition): void {
   try {
     const gadgetsDefinitionWikitextFile = resolveGadgetsDefinitionWikitextFile();
@@ -38,12 +46,19 @@ export function writeWikitextFile(gadgetsDefinition: GadgetsDefinition): void {
   }
 }
 
+/**
+ * Create one gadget definition item in MediaWiki:Gadgets-definition
+ * 
+ * @param gadgetName 
+ * @param gadgetDefinition 
+ * @returns 
+ */
 function createSingleGadgetDefinitionWikitext(gadgetName: string, gadgetDefinition: GadgetDefinition): string | null {
   if (gadgetDefinition.disabled) return null;
   let { code: gadgetCodeFiles = [], resourceLoader = {} } = gadgetDefinition;
   
   gadgetCodeFiles = gadgetCodeFiles
-    .map((filename) => filename.replace(/\.ts$/, '.js').replace(/\.less$/, '.css'));
+    .map((filename) => resolveFileExtension(filename));
   
   let resourceLoaderConditions = compileResourceLoaderConditions(resourceLoader);
   if (resourceLoaderConditions !== null) {
@@ -53,6 +68,12 @@ function createSingleGadgetDefinitionWikitext(gadgetName: string, gadgetDefiniti
   return `* ${gadgetName}[ResourceLoader${resourceLoaderConditions}]|${gadgetCodeFiles.join('|')}`;
 }
 
+/**
+ * Helper function for `createSingleGadgetDefinitionWikitext()`
+ * 
+ * @param resourceLoader 
+ * @returns 
+ */
 function compileResourceLoaderConditions(resourceLoader: ResourceLoaderConditions): string | null {
   const conditions = [];
   
