@@ -17,20 +17,19 @@ export function parseLyrics(tableBody: string, maxColumns: number): [string[][],
   const lyrics: string[][] = [];
   let numColumns = 0; 
   const tableRows = Array.from(tableBody.matchAll(rxLyricsTableRow))
-  .map(function (tableRow) {
-    const contents = tableRow[0];
-    let customStyle: RegExpMatchArray | string | null = tableRow[1].match(rxInlineCssStyle);
-    customStyle = customStyle === null ? '' : customStyle[1]+';';
-    const lines = "\n" + tableRow[2];
-    const arrResults = lines.matchAll(rxSplitTableRow);
-    const splitLyrics = Array.from(arrResults).map((res) => res[0]);
-    numColumns = Math.max(numColumns, splitLyrics.length);
-    return { contents, customStyle, splitLyrics };
-  });
+    .map((tableRow) => {
+      const contents = tableRow[0];
+      let customStyle: RegExpMatchArray | string | null = tableRow[1].match(rxInlineCssStyle);
+      customStyle = customStyle === null ? '' : customStyle[1]+';';
+      const lines = "\n" + tableRow[2];
+      const arrResults = lines.matchAll(rxSplitTableRow);
+      const splitLyrics = Array.from(arrResults).map((res) => res[0]);
+      numColumns = Math.max(numColumns, splitLyrics.length);
+      return { contents, customStyle, splitLyrics };
+    });
   numColumns = Math.min(maxColumns, numColumns);
   for (const tableRow of tableRows) {
-    const customStyle = tableRow.customStyle;
-    const splitLyrics = tableRow.splitLyrics;
+    const { customStyle, splitLyrics } = tableRow;
     let lyricRow: string[];
     if (splitLyrics.length === 1) {
       let sharedRow = splitLyrics[0];
