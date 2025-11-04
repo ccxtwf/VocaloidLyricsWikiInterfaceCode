@@ -210,7 +210,10 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
       for (let i = fromRow!; i <= toRow!; i++) {
       	data[i][0] = (data[i][0] || '').replace(rowInlineCss, "");
         for (let j = 1; j < data[i].length; j++) {
-          data[i][j] = (data[i][j] || '').replace(cellWikitextMarkup, '$2');
+          const m = ((data[i][j] || '') as string).match(cellWikitextMarkup);
+          if (m !== null) {
+            data[i][j] = m.groups!['text']!;
+          }
         }
       }
       (this as Core).loadData(data);
@@ -333,7 +336,7 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
   // =================
   function replaceLyricsTable(tableRegexResults: RegExpMatchArray): void {
   	const oldTable = tableRegexResults[0];
-    const newTable = buildLyricsTable(tableRegexResults[1], $hotTable.getData());
+    const newTable = buildLyricsTable(tableRegexResults.groups!['header']!, $hotTable.getData());
     const oldWikitext = (''+$(EDITOR_TEXTAREA_SELECTOR).val() || '');
     const newWikitext = oldWikitext.replace(oldTable, newTable);
     $(EDITOR_TEXTAREA_SELECTOR).val(newWikitext);
@@ -348,7 +351,7 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
   }
   
   function loadLyricsData(tableRegexResults: RegExpMatchArray): void {
-  	const [lyrics, numColumns] = parseLyrics(tableRegexResults[2], MAX_HOTTABLE_COLUMNS);
+  	const [lyrics, numColumns] = parseLyrics(tableRegexResults.groups!['body']!, MAX_HOTTABLE_COLUMNS-1);
     const gridSettings: GridSettings = {
       data: lyrics,
       rowHeaders: true,

@@ -1,29 +1,39 @@
-export const rxMatchBolded = /^\s*('{3})(.*)\1\s*$/;
+export const rxMatchBolded = /^\s*('{3}|<b>)(?<text>.*)('{3}|<\/b>)\s*$/;
 export const rxMatchBoldedCss = /font-weight\s*:\s*bold\b\s*;*/;
-export const rxMatchItalicised = /^\s*('{2})((?<=\1)(?:(?!')|'{3}(?!')).*(?:(?<!')|(?<!')'{3})(?=\1))\1\s*$/;
+export const rxMatchItalicised = /^\s*('{2}|<i>)(?='{3,}|\s*\b)(?<text>.*)(?<='{3,}|\b\s*)('{2}|<\/i>)\s*$/;
 export const rxMatchItalicisedCss = /font-style\s*:\s*italic\b\s*;*/;
-export const rxLyricsTableWikitext = /(\{\|\s*\{\{(?:[Tt]emplate:|)[Ll]yrics[ _]table[ _]class\}\}\s*\n\|-\s*class\s*=\s*["'][^\n]*\blyrics-table-header\b[^\n]*["']\s*\n!\s*\{\{(?:[Tt]emplate:|)[Ll]yrics[ _]header\}\})\s*\n([^]*?\|\})/g;
-export const rxLyricsTableRow = /\|-(.*?)\n([^]*?)\n(?=\|-|\|\})/g;
-export const rxInlineCssStyle = /style\s*=\s*["']\s*([^\n]*?)\s*;*\s*["']/;
-export const rxCheckSharedColumn = /^\s*(\{\{(?:[Tt]emplate:|)shared[^\}]*\}\}|colspan=\s*(?:["']|)\s*\d+\s*(?:["']|)\s*\|)/gi;
-export const rxSplitTableRow = /(?<=\n\|).*?(?=\n\||$)/g;
-export const rxIsWholeStringNewline = /^\s*<br\s*\/?\s*>\s*$/;
+const rxLyricsTableWikitext = /(?<header>\{\|\s*\{\{(?:[Tt]emplate:|)[Ll]yrics[ _]table[ _]class\}\}\s*\n\|-\s*class\s*=\s*["'][^\n]*\blyrics-table-header\b[^\n]*["']\s*\n!\s*\{\{(?:[Tt]emplate:|)[Ll]yrics[ _]header\}\})\s*\n(?<body>[^]*?\|\})/g;
+const rxLyricsTableRow = /\|-(?<rowStyle>.*?)(?<contents>\n[^]*?)\n(?=\|-|\|\})/g;
+const rxInlineCssStyle = /style\s*=\s*["']\s*([^\n]*?)[\s;]*["']/;
+const rxCheckSharedColumn = /^\s*(\{\{(?:[Tt]emplate:|)[Ss]hared[^\}]*\}\}|[^\n]*?colspan=\s*(?:["']|)\s*\d+\s*(?:["']|)[^\n]*?\|)/g;
+const rxSplitTableRow = /(?<=\n\|).*?(?=\n\||$)/g;
+const rxIsWholeStringNewline = /^\s*<br\s*\/?\s*>\s*$/;
 
+/**
+ * 
+ * @param wikipageContents 
+ * @returns 
+ */
 export function getWikipageTables(wikipageContents: string): RegExpExecArray[] {
   return Array.from(wikipageContents.matchAll(rxLyricsTableWikitext));
 }
 
+/**
+ * 
+ * @param tableBody 
+ * @param maxColumns 
+ * @returns [lyrics: string[][], numColumns: number]
+ */
 export function parseLyrics(tableBody: string, maxColumns: number): [string[][], number] {
   const lyrics: string[][] = [];
   let numColumns = 0; 
   const tableRows = Array.from(tableBody.matchAll(rxLyricsTableRow))
     .map((tableRow) => {
       const contents = tableRow[0];
-      let customStyle: RegExpMatchArray | string | null = tableRow[1].match(rxInlineCssStyle);
+      let customStyle: RegExpMatchArray | string | null = tableRow.groups!['rowStyle']!.match(rxInlineCssStyle);
       customStyle = customStyle === null ? '' : customStyle[1]+';';
-      const lines = "\n" + tableRow[2];
-      const arrResults = lines.matchAll(rxSplitTableRow);
-      const splitLyrics = Array.from(arrResults).map((res) => res[0]);
+      const lines = tableRow.groups!['contents']!;
+      const splitLyrics = Array.from(lines.matchAll(rxSplitTableRow)).map(([row]) => row);
       numColumns = Math.max(numColumns, splitLyrics.length);
       return { contents, customStyle, splitLyrics };
     });
@@ -65,6 +75,12 @@ export function parseLyrics(tableBody: string, maxColumns: number): [string[][],
   return [lyrics, numColumns];
 }
 
+/**
+ * 
+ * @param tableHeaders 
+ * @param lyricsData 
+ * @returns 
+ */
 export function buildLyricsTable(tableHeaders: string, lyricsData: string[][]): string {
   let sb: string[] = [tableHeaders + "\n"];
   for (const lyricsRow of lyricsData) {
