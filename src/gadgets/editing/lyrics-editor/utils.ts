@@ -107,7 +107,7 @@ export function buildLyricsTable(tableHeaders: string, lyricsData: string[][]): 
         sb.push("|" + 
           (lyricsRow[j] || '')
             .replace(/^-/, "<nowiki>-</nowiki>")
-            .replace(/(?<!<nowiki>)(~{4,})(?!<\/nowiki>)/g, '<nowiki>$1</nowiki>') + "\n"
+            .replace(/(?<!<nowiki>)(~{3,})(?!<\/nowiki>)/g, '<nowiki>$1</nowiki>') + "\n"
         );
       }
     }
