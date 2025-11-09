@@ -3,7 +3,6 @@ import { normalizePath } from 'vite';
 import wrap from 'word-wrap'; 
 import { GadgetDefinition, GadgetsDefinition } from './types.js';
 import { getFileType } from './utils.js';
-/// <reference path="node_modules/rollup/dist/roolup.d.ts" />
 import { RenderedChunk } from "rollup";
 
 /**
@@ -40,7 +39,7 @@ function generateBanner({ ghUrl, ghBranch = 'development', id, gadgetDefinition 
  *\n${wrap(description, { width: 78, indent: ' * ' })}${authors.length > 0 ? `\n * Authors: \n${authors.map(s => ` * - ${s}`).join('\n')}` : ''}${links.length > 0 ? `\n * Links:\n${links.map(s => ` * - ${s}`).join('\n')}` : ''}
  * 
  * This file has been synced with the shared repository on GitHub.
- * Code Repository on GitHub: ${ghUrl}
+ * GitHub Repository: ${ghUrl}
  * Please do not edit this page directly.
  * 
  * Source code:

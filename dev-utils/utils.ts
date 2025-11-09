@@ -60,6 +60,19 @@ export function removeFileExtension(filepath: string): string {
 }
 
 /**
+ * Used to resolve the bundle input key for compiled JS/CSS
+ * @param filepath 
+ * @returns 
+ */
+export function resolveFilepathForBundleInputKey(filepath: string): string {
+  const sm = filepath.match(/^(.*)\.(?:ts|js)$/i);
+  if (sm !== null) {
+    return sm[1];
+  }
+  return resolveFileExtension(filepath);
+}
+
+/**
  * Resolves the path of the src/ directory in the project
  * 
  * @returns 

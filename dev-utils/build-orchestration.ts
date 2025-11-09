@@ -13,6 +13,7 @@ import {
   resolveEntrypointFilepath,
   checkGadgetExists,
   getGadgetId,
+  resolveFilepathForBundleInputKey,
 } from './utils.js';
 
 const { gadgetsDir, mediawikiInterfaceDir } = resolveCodeDirectory();
@@ -435,17 +436,9 @@ export function mapWikicodeSourceFiles(gadgetsToBuild: GadgetDefinition[], mwInt
   const entries: { [Key: string]: string } = {};
   const assets: Target[] = [];
 
-  const normalizeBuildOutputFileExtension = (filepath: string) => {
-    filepath = resolveFileExtension(filepath);
-    if (getFileType(filepath) === 'script') {
-      filepath = removeFileExtension(filepath);
-    }
-    return filepath;
-  }
-
   mwInterfaceCodeToBuild.forEach((definition) => {
     const loadFile = (filepath: string) => {
-      const key = `mediawiki/${normalizeBuildOutputFileExtension(filepath)}`;
+      const key = `mediawiki/${resolveFilepathForBundleInputKey(filepath)}`;
       entries[key] = resolveSrcMediawikiGadgetsPath(filepath);
     }
     getStylesheetsToLoadFromGadgetDefinition(definition).forEach(loadFile);
@@ -455,7 +448,7 @@ export function mapWikicodeSourceFiles(gadgetsToBuild: GadgetDefinition[], mwInt
   gadgetsToBuild.forEach((definition) => {
     const { section, name } = definition;
     const loadFile = (filepath: string) => {
-      const key = `gadgets/${section}/${name}/${normalizeBuildOutputFileExtension(filepath)}`;
+      const key = `gadgets/${section}/${name}/${resolveFilepathForBundleInputKey(filepath)}`;
       entries[key] = resolveSrcGadgetsPath(section, name, filepath);
     }
     getStylesheetsToLoadFromGadgetDefinition(definition).forEach(loadFile);
