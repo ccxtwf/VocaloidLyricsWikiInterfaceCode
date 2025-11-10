@@ -14,6 +14,8 @@ Code listed in the `src/` directory consists of userscripts and stylesheets that
 
 Use Node.js 20.19+ or 22.12+ (Node.js v24 is recommended).
 
+Create your own `.env` file by following the format shown on `.env.example`.
+
 Run `npm install` in the directory to install the npm packages. 
 
 ### Development
@@ -22,7 +24,7 @@ This repository allows you to write your MediaWiki userscripts in TypeScript and
 
 Running `npm run watch` will start up Vite in Build Mode. Vite will not terminate after the build process is finished. Instead, Vite will watch for any changes made to the code, rebuilding each time it detects such changes.
 
-While `npm run watch` is running, run `npm run preview` on another process to get Vite to serve your userscripts on localhost. When your scripts are ready, Vite will automatically open the page `https://localhost:4173/load.js` on your web browser. This is the entrypoint from which you can run your userscripts on your MediaWiki instance. To use this `load.js` file, add the following line of code in your User:&lt;Username&gt;/common.js on your local MediaWiki instance:
+While `npm run watch` is running, run `npm run preview` on another process to get Vite to serve your userscripts on localhost. When your scripts are ready, Vite will automatically open the page `https://localhost:4173/load.js` on your web browser. This is the entrypoint from which you can run your userscripts on your MediaWiki instance. To use this `load.js` file, add the following line of code in your User:&lt;Username&gt;/common.js on your local (non-prod) MediaWiki instance:
 
 ```js
 mw.loader.load('https://localhost:4173/load.js');
@@ -30,7 +32,7 @@ mw.loader.load('https://localhost:4173/load.js');
 
 You can check if your gadgets have been loaded onto MediaWiki instance by running `console.log(mw.loader.getState("ext.gadget.<Name of gadget>"));` on the Developer Console.
 
-Once set up, you will only need to reload the webpage on your MediaWiki instance to instantly see the changes made on your code in the IDE, no extra steps required.  
+Once set up, you will only need to reload the webpage on your MediaWiki instance to instantly see the changes made on your code in the IDE, no extra steps required.
 
 ### Unit Tests - Jest 
 
@@ -43,12 +45,14 @@ npm run tests
 
 Running `npm run build` will start up Vite in Build mode and terminate after build is finished. Files are saved onto the `dist/` folder after the build process is finished. 
 
+To sync the latest state of the project with the code running on the wiki, run `npm run sync`. This will start a bot run (powered by [Mwn](https://github.com/siddharthvp/mwn)), with edit logs saved onto the folder `logs/` on the project directory. 
+
 Transpiling of userscripts written in Typescript into Javascript is configured in `vite.config.ts` (`build` options). This repository targets **Javascript ES6**.
 
 ## Code Definition
 
 ### Interface Code
-The source code to the wiki's interface code (i.e. MediaWiki:Common.js, MediaWiki:Vector-2022.js, etc.) is stored in `src/mediawiki`.
+The source code to the wiki's interface code (i.e. MediaWiki:Common.css, MediaWiki:Common.js, MediaWiki:Vector-2022.css, etc.) is stored in `src/mediawiki`.
 
 ### Gadgets
 The source code to the wiki's gadgets is stored in `src/gadgets`. The directory is further divided into several gadget sections.

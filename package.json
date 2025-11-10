@@ -4,13 +4,12 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
     "build": "vite build",
     "watch": "vite build --mode watch-build",
     "preview": "vite preview",
     "build-show": "vite build && vite preview",
     "tests": "jest",
-    "sync": "node dev-sync/test.ts"
+    "sync": "vite build && node dev-sync/test.ts"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",

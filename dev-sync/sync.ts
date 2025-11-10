@@ -143,6 +143,7 @@ function getFilesInGadgetDistFolder(gadgetId: string): string[] {
 }
 
 function log(message: string) {
+  console.log(message);
   Mwn.log(`[I] ${new Date(Date.now()).toISOString()} ${message}`);
 }
 
