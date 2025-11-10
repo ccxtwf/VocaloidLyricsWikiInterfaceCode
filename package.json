@@ -9,7 +9,8 @@
     "watch": "vite build --mode watch-build",
     "preview": "vite preview",
     "build-show": "vite build && vite preview",
-    "tests": "jest"
+    "tests": "jest",
+    "sync": "node dev-sync/test.ts"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
@@ -18,6 +19,7 @@
     "handsontable": "^16.1.1",
     "jest-environment-jsdom": "^30.2.0",
     "less": "^4.4.1",
+    "mwn": "^3.0.1",
     "ts-jest": "^29.4.5",
     "types-mediawiki": "^2.0.0",
     "types-mediawiki-api": "^2.0.0",

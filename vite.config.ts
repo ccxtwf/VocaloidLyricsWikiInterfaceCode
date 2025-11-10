@@ -59,11 +59,7 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
       }),
 
       // On Vite Build, automatically add banner to each CSS file
-      generateCssBanner(
-        env.VITE_GITHUB_REPOSITORY_URL, 
-        env.VITE_GITHUB_REPOSITORY_BRANCH,
-        gadgetsDefinition
-      )
+      generateCssBanner(ghUrl, ghBranch, gadgetsDefinition)
     ],
     build: {
       target: 'es6',

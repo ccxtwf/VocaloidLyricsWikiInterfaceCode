@@ -29,5 +29,5 @@
     "strictNullChecks": true,
     "strict": false
   },
-  "include": ["dev-utils/**/*", "plugins/**/*", "src/**/*"]
+  "include": ["dev-utils/**/*", "dev-sync/**/*", "plugins/**/*", "src/**/*"]
 }
