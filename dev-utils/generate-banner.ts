@@ -4,6 +4,7 @@ import wrap from 'word-wrap';
 import { GadgetDefinition, GadgetsDefinition } from './types.js';
 import { getFileType } from './utils.js';
 import { RenderedChunk } from "rollup";
+import { resolveSrcPath } from './utils.js';
 
 /**
  * Creates a piece of text to be added to bundled JS & CSS files
@@ -76,7 +77,7 @@ function getGadgetKeysFromChunkName(id: string): [string, string] | null {
  */
 export function generateScriptBanner({ ghUrl, ghBranch, gadgetsDefinition }: { ghUrl: string, ghBranch: string, gadgetsDefinition: GadgetsDefinition }) {
   return (chunk: RenderedChunk): string => {
-    if (getFileType(chunk.name) !== 'script') {
+    if (getFileType(chunk.name) === 'style') {
       return '';
     }
     const id = chunk.facadeModuleId || chunk.moduleIds[0]!;
@@ -98,7 +99,7 @@ export function generateScriptBanner({ ghUrl, ghBranch, gadgetsDefinition }: { g
  * @returns 
  */
 export function generateStylesheetBanner({ ghUrl, ghBranch, gadgetsDefinition }: { ghUrl: string, ghBranch: string, gadgetsDefinition: GadgetsDefinition }) {
-  const rootDir = resolve(__dirname, "../src/");
+  const rootDir = resolveSrcPath();
   return (id: string, src: string) => {
     id = normalizePath(relative(rootDir, id));
     const m = getGadgetKeysFromChunkName(id);
