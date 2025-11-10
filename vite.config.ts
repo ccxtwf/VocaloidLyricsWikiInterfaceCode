@@ -62,7 +62,7 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
       generateCssBanner(ghUrl, ghBranch, gadgetsDefinition)
     ],
     build: {
-      target: 'es6',
+      target: 'es2018',
       minify: false,
       cssMinify: false,
       rollupOptions: {

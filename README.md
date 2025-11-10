@@ -47,7 +47,7 @@ Running `npm run build` will start up Vite in Build mode and terminate after bui
 
 To sync the latest state of the project with the code running on the wiki, run `npm run sync`. This will start a bot run (powered by [Mwn](https://github.com/siddharthvp/mwn)), with edit logs saved onto the folder `logs/` on the project directory. 
 
-Transpiling of userscripts written in Typescript into Javascript is configured in `vite.config.ts` (`build` options). This repository targets **Javascript ES6**.
+Transpiling of userscripts written in Typescript into Javascript is configured in `vite.config.ts` (`build` options). This repository targets **Javascript ES2018**.
 
 ## Code Definition
 
