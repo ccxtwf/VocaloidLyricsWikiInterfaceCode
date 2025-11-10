@@ -14,9 +14,9 @@
     each syntax is loaded by default from the "/preload" subpage of the
     template.
 */
-
+//!<nowiki>
 (function() {
-    'use strict';
+  'use strict';
 	
 	// =================
 	//   Configuration
@@ -48,21 +48,21 @@
 	//   Run
 	// =================
 	var i18n, $main, $help;
-    var mwc = mw.config.get([
-        'wgAction',
-        'wgFormattedNamespaces',
-    ]),
+	var mwc = mw.config.get([
+		'wgAction',
+		'wgFormattedNamespaces',
+	]),
     $module = $('div#wpSummaryLabel'), // UCP source editors
     $moduleOld = $('div.module_content:first'); // Old Non-UCP Source Editor
-    var visualEditorSelector = 'div.ve-ui-toolbar.ve-ui-positionedTargetToolbar'; // Visual Editor
+	var visualEditorSelector = 'div.ve-ui-toolbar.ve-ui-positionedTargetToolbar'; // Visual Editor
 
 	var LC_PREFIX_PRIMARY_PLTEMPLATES = 'wiki_preload_templates_list_primary',
 		LC_PREFIX_SECONDARY_PLTEMPLATES = 'wiki_preload_templates_list_secondary',
 		LC_PREFIX_EXPIRATION_PLTEMPLATES = 'wiki_preload_templates_expiration';
 
-    if (mwc.wgAction !== 'edit') {
-    	return;
-    }
+	if (mwc.wgAction !== 'edit') {
+		return;
+	}
 
 	// =============
 	//   Functions  
@@ -74,41 +74,41 @@
 	}
 
 	// Error alert
-    function notFound(page){
-        alert("Page not found: " + '"' + page + '"');
-    }
+	function notFound(page){
+		alert("Page not found: " + '"' + page + '"');
+	}
     
-    // Save list of templates to local cache
-    function saveListOfTemplatesToCache(primaryList, secondaryList) {
-    	localStorage.setItem(LC_PREFIX_PRIMARY_PLTEMPLATES, primaryList);
-    	localStorage.setItem(LC_PREFIX_SECONDARY_PLTEMPLATES, secondaryList);
-    	if (config.storageCacheAge > 0) {
-    		localStorage.setItem(
-    			LC_PREFIX_EXPIRATION_PLTEMPLATES, 
-    			new Date(Date.now() + config.storageCacheAge).getTime()
-    		);
-    	}
-    }
+	// Save list of templates to local cache
+	function saveListOfTemplatesToCache(primaryList, secondaryList) {
+		localStorage.setItem(LC_PREFIX_PRIMARY_PLTEMPLATES, primaryList);
+		localStorage.setItem(LC_PREFIX_SECONDARY_PLTEMPLATES, secondaryList);
+		if (config.storageCacheAge > 0) {
+			localStorage.setItem(
+				LC_PREFIX_EXPIRATION_PLTEMPLATES, 
+				new Date(Date.now() + config.storageCacheAge).getTime()
+			);
+		}
+	}
     
-    // Clear list of templates from cache
-    function clearListOfTemplatesCache() {
-    	localStorage.removeItem(LC_PREFIX_PRIMARY_PLTEMPLATES);
-    	localStorage.removeItem(LC_PREFIX_SECONDARY_PLTEMPLATES);
-    	localStorage.removeItem(LC_PREFIX_EXPIRATION_PLTEMPLATES);
-    }
+	// Clear list of templates from cache
+	function clearListOfTemplatesCache() {
+		localStorage.removeItem(LC_PREFIX_PRIMARY_PLTEMPLATES);
+		localStorage.removeItem(LC_PREFIX_SECONDARY_PLTEMPLATES);
+		localStorage.removeItem(LC_PREFIX_EXPIRATION_PLTEMPLATES);
+	}
     
-    // Fetch list of templates to local cache
-    function getListOfTemplatesFromCache() {
-    	var cacheExpiredTime = localStorage.getItem(LC_PREFIX_EXPIRATION_PLTEMPLATES);
+	// Fetch list of templates to local cache
+	function getListOfTemplatesFromCache() {
+		var cacheExpiredTime = localStorage.getItem(LC_PREFIX_EXPIRATION_PLTEMPLATES);
 		if (cacheExpiredTime === null || isNaN(+cacheExpiredTime) || Date.now() > +cacheExpiredTime) {
 			clearListOfTemplatesCache();
 			return null;
 		}
 		return [
 			localStorage.getItem(LC_PREFIX_PRIMARY_PLTEMPLATES),
-    		localStorage.getItem(LC_PREFIX_SECONDARY_PLTEMPLATES)
+			localStorage.getItem(LC_PREFIX_SECONDARY_PLTEMPLATES)
 		];
-    }
+	}
 
 	// Inserts text at the cursor's current position - originally from Wookieepedia
 	function insertAtCursor(myField, myValue) {
@@ -197,8 +197,7 @@
 					mw.hook('ext.CodeMirror.ready').remove(cm6Edit);
 				};
 				mw.hook('ext.CodeMirror.ready').add(cm6Edit);
-			}
-			else if(textbox) {
+			} else if(textbox) {
 				insertAtCursor(textbox, preloadDataParsed);
 			} else {
 				console.warn('[PreloadTemplates] Could not find textbox to bind to');
@@ -226,14 +225,14 @@
 		//i18n = i18nData;
 		$main = $('<div>', { id: 'preload-templates' });
 		$main.append($('<span>', {
-            text: "Preload template:"
-        }));
+			text: "Preload template:"
+		}));
 		$help = $('<div>', {
 			id: 'pt-help'
 		}).append($('<a>', {
 			target: '_blank',
-			href: 'https://dev.fandom.com/wiki/PreloadTemplates',
-			title: "Check the documentation on Fandom Dev Wiki",
+			href: 'https://dev.miraheze.org/wiki/PreloadTemplates',
+			title: "Check the documentation on Miraheze Dev Wiki",
 			text: '?'
 		}));
 		appendModule();
@@ -377,13 +376,14 @@
 	}
 	
 	mw.loader.using('mediawiki.util', function() {
-        preInit();
-        // Doesn't work for Visual Editor, disabled
-        //mw.hook('ve.activationComplete').add(function () { // Visual Editor
-			//appendModule(true);
+		preInit();
+		// Doesn't work for Visual Editor, disabled
+		//mw.hook('ve.activationComplete').add(function () { // Visual Editor
+		//  appendModule(true);
 		//});
-        if (mwc.wgAction === 'edit') {
-        	mw.hook( 'wikipage.content' ).add(init);
+		if (mwc.wgAction === 'edit') {
+			mw.hook( 'wikipage.content' ).add(init);
 		}
 	});
 })();
+//!</nowiki>

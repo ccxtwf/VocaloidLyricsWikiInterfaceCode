@@ -1,4 +1,4 @@
-// __NOWYSIWYG__
+//! __NOWYSIWYG__
 /**
  * Countdown
  *

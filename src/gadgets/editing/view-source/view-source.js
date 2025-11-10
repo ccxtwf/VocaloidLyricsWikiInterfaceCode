@@ -1,4 +1,3 @@
-/* <nowiki> */
 /**
 * View Source
 *
@@ -11,7 +10,7 @@
 
 /*jshint jquery:true, browser:true, es5:true, devel:true, camelcase:true, curly:false, undef:true, unused:true, bitwise:true, eqeqeq:true, forin:true, immed:true, latedef:true, newcap:true, noarg:true, regexp:false, strict:true, trailing:true, maxcomplexity:10 */
 /*global mediaWiki, importArticle */
-
+//!<nowiki>
 (function (module, mw, $) {
   
   'use strict';
@@ -267,4 +266,4 @@
   }
     
 }((window.dev = window.dev || {}).viewSource = window.dev.viewSource || {}, mediaWiki, jQuery));
-  /* </nowiki> */
+//!</nowiki>
