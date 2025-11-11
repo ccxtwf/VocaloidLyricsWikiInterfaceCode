@@ -108,7 +108,8 @@
 	}
 	function createColumnToggle(): void {
 		$( '.lyrics-options' ).each( function () {
-			const id = $( this ).data( 'id' ).replace(/</g, '&lt;');
+			let id = $( this ).data( 'id' );
+			if (typeof id === 'string') id = id.replace(/</g, '&lt;'); // Anti-XSS measure
 			const languages = $( this ).data( 'languages' );
 			const labels = $( this ).data( 'labels' );
 			const maxNumCols = $( this ).data( 'max-col-shown' );
@@ -177,7 +178,8 @@
 	function prepareCssClassesOfLyricsColumns(): void {
 		// This function set ups the CSS classes which facilitates the automatic toggling of columns through jQuery 
 		$(".lyrics-options").each(function() {
-			const id: string = $( this ).data( 'id' ).replace(/</g, '&lt;');
+			let id = $( this ).data( 'id' )
+			if (typeof id === 'string') id = id.replace(/</g, '&lt;'); 	// Anti-XSS measure
 			const languages = $( this ).data( 'languages' ).split( ',' );
 			const isoLangCode = $( this ).data( 'iso-lang' );
 			const n_languages = languages.length;
