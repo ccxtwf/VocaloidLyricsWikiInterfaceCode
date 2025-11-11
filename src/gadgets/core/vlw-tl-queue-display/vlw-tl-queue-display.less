@@ -13,7 +13,7 @@
   background-color: var(--tl-queue-container-bg-color, #fff);
   border: solid 2px #5d5d5d;
   border-radius: 20px;
-  padding: 10px;
+  padding: 15px 10px;
   margin-bottom: 20px;
   margin-top: 10px;
   word-break: break-word;
@@ -23,6 +23,11 @@
     margin-top: 20px;
     margin-bottom: 10px;
     text-align: left;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1.0;
+    }
 
     img {
       width: 20px;
@@ -39,7 +44,7 @@
 
   .label {
     color: var(--tl-queue-label-color, #7e4f4f);
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     font-weight: bold;
     margin-top: 10px;
   }
@@ -47,9 +52,9 @@
   ul {
     padding-left: 0px;
     margin-left: 0px;
+    font-size: 0.9rem;
 
     li {
-      font-size: 0.9rem;
       line-height: 1.25rem;
       list-style: none;
       display: block;
@@ -115,5 +120,15 @@
     margin-right: 4px;
     content: url('https://upload.wikimedia.org/wikipedia/commons/b/bc/Not_allowed.svg');
     display: inline;
+  }
+
+  .tl-check-page-link {
+    margin-top: 6px;
+    margin-bottom: 15px;
+  }
+
+  .tl-check-page-link > a {
+    font-size: 0.8rem;
+    line-height: 1.2;
   }
 }

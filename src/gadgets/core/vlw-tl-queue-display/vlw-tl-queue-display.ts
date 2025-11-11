@@ -97,7 +97,7 @@ interface IAppStore {
         const resolvedTlRequests: TLQueueItem[] = [];
         const onQueueTlRequests: TLQueueItem[] = [];
         const headings = Array.from(wikitext.matchAll(/(?<=\n)={2}(?!=)\s*([^\n]+?)\s*(?<=)={2}[ \r]*(?=\n)/g));
-        for (let [heading] of headings) {
+        for (let [_, heading] of headings) {
           let item: TLQueueItem;
           let isApproved: boolean | undefined = undefined;
           let rTemplate: RegExpMatchArray | string | null = heading.match(/^(.+)\s*\{\{([Aa]ccepted|[Rr]ejected|[Pp]ending)\s*\|?\s*\b([^\}]*)\s*\}\}\s*$/);
@@ -105,7 +105,7 @@ interface IAppStore {
             heading = rTemplate[1];
             if (rTemplate[2].match(/^[Aa]ccepted$/) !== null) { 
               isApproved = true; 
-            } else if (rTemplate[2].match(/^[Rr]ejected/) !== null) { 
+            } else if (rTemplate[2].match(/^[Rr]ejected$/) !== null) { 
               isApproved = false; 
             }
             rTemplate = (rTemplate[3] === '') ? rTemplate[2] : rTemplate[3];
@@ -122,7 +122,7 @@ interface IAppStore {
               producer: null,
               tlAuthor: null,
               link: linkDirect,
-              isApproved: isApproved
+              isApproved
             };
           } else {
             item = {
@@ -130,7 +130,7 @@ interface IAppStore {
               producer: splitComponents[1],
               tlAuthor: splitComponents.slice(2).join(' | '),
               link: linkDirect,
-              isApproved: isApproved
+              isApproved
             };
           }
           if (isApproved !== undefined) {
@@ -256,6 +256,7 @@ interface IAppStore {
       } else {
         loadApp();
       }
+      populate(false);
 
     });
   }
@@ -267,23 +268,19 @@ interface IAppStore {
     //@ts-ignore
     const App = Vue.createMwApp({
       template: `
-        <div id="vlw-tl-queue-container">
-          <tl-queue-section 
-            cssClass="on-queue" 
-            headingMessageName="vlw-tl-queue--heading-in-queue" 
-            storeKeyData="inQueue"
-            storeKeyHasLoadedMore="loadedMoreInQueue"
-          >
-          </tl-queue-section>
-          <tl-queue-section 
-            cssClass="resolved" 
-            headingMessageName="vlw-tl-queue--heading-resolved"  
-            storeKeyData="resolved"
-            storeKeyHasLoadedMore="loadedMoreInResolved"
-          >
-          </tl-queue-section>
-          <tl-queue-more-actions />
-        </div>
+        <tl-queue-section 
+          cssClass="on-queue" 
+          headingMessageName="vlw-tl-queue--heading-in-queue" 
+          storeKeyData="inQueue"
+          storeKeyHasLoadedMore="loadedMoreInQueue"
+        />
+        <tl-queue-section 
+          cssClass="resolved" 
+          headingMessageName="vlw-tl-queue--heading-resolved"  
+          storeKeyData="resolved"
+          storeKeyHasLoadedMore="loadedMoreInResolved"
+        />
+        <tl-queue-more-actions />
       `,
       setup: () => ({ store }),
     });
@@ -312,7 +309,7 @@ interface IAppStore {
                 :id="toggleHtmlId" 
                 class="toggle" 
                 @click="onClickLoadMore" 
-                v-if="!isEmpty && !hasLoadedMore"
+                v-if="!isEmpty && hasMoreDataToShow"
               >
                 {{ $i18n( 'vlw-tl-queue--load-more' ).text() }}
               </li>
@@ -350,15 +347,17 @@ interface IAppStore {
         isEmpty() {
           return this.storedData.length === 0;
         },
-        hasLoadedMore() {
+        hasMoreDataToShow() {
           //@ts-ignore
-          return store[this.storeKeyHasLoadedMore];
+          const hasLoadedMore = store[this.storeKeyHasLoadedMore];
+          if (hasLoadedMore) return false;
+          return this.storedData.length > SHOW_NUMBER_OF_ITEMS_AT_START;
         },
         renderedData() {
-          if (this.hasLoadedMore) {
+          if (!this.hasMoreDataToShow) {
             return this.storedData;
           }
-          return this.storedData.slice(SHOW_NUMBER_OF_ITEMS_AT_START);
+          return this.storedData.slice(0, SHOW_NUMBER_OF_ITEMS_AT_START);
         }
       },
       methods: {
@@ -401,7 +400,7 @@ interface IAppStore {
       template: `
         <div class="more-actions">
           <a id="icon-refresh" :title="$i18n('vlw-tl-queue--reload-prompt-tooltip').text()">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Refresh_icon.svg/1024px-Refresh_icon.svg.png" />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Ic_refresh_48px.svg" />
             <span class="label">
               {{ $i18n('vlw-tl-queue--reload-prompt').text() }}
             </span>
@@ -442,7 +441,6 @@ interface IAppStore {
   // =================
   mw.loader.using( ['mediawiki.util'] ).then(function() {
     init();
-    populate(false);
     // mw.hook('wikipage.content') fires several times each page (e.g. refreshing recent changes queue)
   });
   
