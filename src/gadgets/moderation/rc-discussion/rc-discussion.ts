@@ -107,8 +107,10 @@ import {
 		'rc-discussion--prompt-refresh': 'Refresh',
 		'rc-discussion--action-new-topic': 'posted a new topic',
 		'rc-discussion--action-new-reply': 'posted a reply',
+		'rc-discussion--loading': 'Loading...',
 		'rc-discussion--failed-to-load': "Failed to load the comment. Click the link to the post to see the full discussion.",
-		'rc-discussion--unexpected-error': 'An unexpected error has occured. Please report this bug if it persists.'
+		'rc-discussion--unexpected-error': 'An unexpected error has occured. Please report this bug if it persists.',
+		'rc-discussion--no-data': 'No discussions found with the selected criteria.',
 	};
 	mw.messages.set(messages);
 
@@ -137,10 +139,13 @@ import {
 	let store: Reactive<IAppStore> | undefined;
 
 	function loadApp(): void {
+		// Change document title
+		document.getElementsByTagName('title')[0].innerHTML = mw.msg('rc-discussion--title', config.wgSiteName);
+		// Change page title
 		document.getElementById('firstHeading')!.textContent = mw.msg('rc-discussion--title', config.wgSiteName);
 		mw.loader.using( ['vue', '@wikimedia/codex'] ).then(require => {
 			const Vue = require('vue');
-			const { CdxButton, CdxIcon, CdxCombobox, CdxField, CdxProgressIndicator } = require('@wikimedia/codex');
+			const { CdxButton, CdxIcon, CdxSelect, CdxField, CdxProgressIndicator } = require('@wikimedia/codex');
 			
 			//@ts-ignore
 			store = Vue.reactive({
@@ -159,7 +164,7 @@ import {
 						</div>
 						<div id="rc-discussion-dropdown">
 							<cdx-field>
-								<cdx-combobox 
+								<cdx-select 
 									v-model:selected="store.option"
 									v-model:modelValue="selectedLabel"
 									:menu-items="dropdownMenuItems"
@@ -179,8 +184,11 @@ import {
 						<div id="rc-discussion-feeds-articles-container">
 							<div id="rc-discussion-feeds-articles">
 								<cdx-progress-indicator show-label v-if="store.isLoading">
-									Loading...
+									{{ $i18n('rc-discussion--loading').text() }}
 								</cdx-progress-indicator>
+								<div class="rc-discussion-no-data" v-else-if="dateGroups.length === 0">
+									{{ $i18n('rc-discussion--no-data').text() }}
+								</div>
 								<rc-discussion-cards-grouped-by-date 
 									v-else
 									v-for="(dateGroup, index) in dateGroups" 
@@ -192,7 +200,7 @@ import {
 						</div>
 					</div>
 					`,
-				components: { CdxButton, CdxIcon, CdxCombobox, CdxField, CdxProgressIndicator },
+				components: { CdxButton, CdxIcon, CdxSelect, CdxField, CdxProgressIndicator },
 				setup: () => {
 					return {
 						siteName: config.wgSiteName,
@@ -402,7 +410,10 @@ import {
 
 	function fillIntermediaryRevs(parsedApiRcs: IParsedApiQueryRc[], revToIdx: Map<number, number>) {
 		return new Promise(function (resolve, reject) {
-			if (revToIdx.size === 0) { resolve(parsedApiRcs); }
+			if (revToIdx.size === 0) { 
+				resolve(parsedApiRcs); 
+				return;
+			}
 			const revids = Array.from(revToIdx.keys());
 			api.get({
 				action: 'query', 

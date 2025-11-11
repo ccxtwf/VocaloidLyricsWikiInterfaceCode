@@ -12,6 +12,9 @@
 */
 #rc-discussion-dropdown {
   margin-top: 20px;
+  .cdx-select-vue {
+    width: 100%;
+  }
 }
 
 #rc-discussion-feeds-articles-container {
@@ -79,6 +82,10 @@
     border-top: solid 1px #d1d1d1;
     margin-top: 8px;
   }
+  .rc-discussion-no-data {
+    text-align: center;
+    font-style: italic;
+  }
   .cdx-progress-indicator {
     display: inline-flex;
     align-items: center;
@@ -100,9 +107,6 @@
     .cdx-field__control {
       display: inline-block;
       flex-grow: 2;
-      .cdx-combobox {
-        width: 100%;
-      }
     }
   }
 }
