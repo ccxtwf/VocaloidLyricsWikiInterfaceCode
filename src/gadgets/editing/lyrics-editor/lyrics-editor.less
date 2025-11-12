@@ -97,7 +97,7 @@
 
 /* Handsontable dark mode */
 @dark-mode-css-definitions: {
-  & {
+  .ht-portal:not([class*=ht-theme]), .ht-root-wrapper:not([class*=ht-theme]) {
 		--ht-border-color: #313132;
 		--ht-accent-color: #476af7;
 		--ht-foreground-color: #c7c7c7;
@@ -148,13 +148,11 @@
 		--ht-header-row-active-background-color: #476af7;
 	}
 }
-html.theme-dark #lyrics-editor-jstable-container, 
-:root.skin-theme-clientpref-night #lyrics-editor-jstable-container {
+html.theme-dark, html.skin-theme-clientpref-night, :root.skin-theme-clientpref-night {
 	@dark-mode-css-definitions();
 }
 @media screen and (prefers-color-scheme: dark) {
-	html.skin-theme-clientpref-os #lyrics-editor-jstable-container, 
-	:root.skin-theme-clientpref-os #lyrics-editor-jstable-container {
+	html.skin-theme-clientpref-os, :root.skin-theme-clientpref-os {
 		@dark-mode-css-definitions();
 	}
 }

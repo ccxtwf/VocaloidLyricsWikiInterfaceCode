@@ -319,8 +319,8 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
   function clearHotTable(): void {
   	if ($hotTable) {
 	  $hotTable.destroy();
-	  $('#lyrics-editor-jstable-container-wrapper').html(
-      $('<div>', { id: 'lyrics-editor-jstable-container' }).html()
+	  $('#lyrics-editor-jstable-container-wrapper').html('').append(
+      $('<div>', { id: 'lyrics-editor-jstable-container' })
     );
 	}
   }
@@ -346,7 +346,6 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
   	$modal.hide();
     clearHotTable();
     $modalContent.find('#lyrics-editor-table-selector').html('');
-    $modalContent.find('#lyrics-editor-jstable-container').html('');
     $modalContent.find('#lyrics-editor-loader').show();
   }
   
@@ -388,11 +387,11 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
     $modalContent = $('.lyrics-editor-modal-content');
     $modalContent.find('#lyrics-editor-loader').hide();
     if (tables.length) {
-      $modalContent.find('#lyrics-editor-table-selector')
-        .html(
+      $modalContent.find('#lyrics-editor-table-selector').html('')
+        .append(
           $('<p>').text(
             mw.msg('vlw-lyrics-editor--found-n-tables', tables.length)
-          ).html()
+          )
         );
       const dropdown = new OO.ui.DropdownInputWidget( {
         options: tables.map(function (_, index) {
@@ -414,8 +413,8 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
       });
       $modalContent.find('#lyrics-editor-table-selector').append(dropdown.$element);
     } else {
-      $modalContent.find('#lyrics-editor-table-selector').html(
-        $('<p>').text(mw.msg('vlw-lyrics-editor--no-table-found')).html()
+      $modalContent.find('#lyrics-editor-table-selector').html('').append(
+        $('<p>').text(mw.msg('vlw-lyrics-editor--no-table-found'))
       );
     }
   }
@@ -429,7 +428,7 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
       .append(
         $('<div>', { "class": "lyrics-editor-modal-box" })
           .append(
-            $('<span>', { "class": "close" }).text("&times;")
+            $('<span>', { "class": "close" }).text("✕")
           )
           .append(
             $('<div>', { "class": "lyrics-editor-modal-content" })
