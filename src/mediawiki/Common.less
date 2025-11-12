@@ -71,40 +71,8 @@ td.lyrics-comb.only-selected.italic {
   }
 }
 
-/* Extension:SocialProfile */
 .visualClear {
   clear: both;
-}
-@media (max-width: 500px) {
-  #profile-top, 
-  #profile-title-container, 
-  #profile-title, 
-  .profile-actions, 
-  #user-page-left,
-  #user-page-right {
-    display:block;
-    float: none;
-  }
-  #profile-top {
-    display:block;
-    float: none;
-    height: 240px;
-    margin-top: 30px;
-  }
-  #profile-image, #profile-right {
-    display: block;
-    margin-top: 0px;
-    float: none;
-  }
-  #profile-right {
-    width: 100%;
-  }
-  #profile-toggle-button {
-    margin-top: -35px;
-  }
-  #user-page-left, #user-page-right {
-    width: 100%;
-  }
 }
 
 /* Add custom Add New Topic Button for Discussion Tools */
@@ -210,6 +178,49 @@ dl > dd:has(> *:first-child:not(dl) span[data-mw-comment-start]) {
 /* Resize Spotify embeds */
 .album-infobox-embed .embedvideo-wrapper:has(.embedvideo-player[src^="https://open.spotify.com"]) {
   height: 370px !important;
+}
+
+/* UserProfileV2 */
+.profile-user-group {
+  background-color: #4d4d4d;
+  border: solid 1px #dbdbdb;
+  border-radius: 8px;
+  &[data-group="bureaucrat"] {
+    background-color: #4d07b1 !important;
+    color: #f7ffea !important;
+  }
+  &[data-group="sysop"] {
+    background-color: #08b400 !important;
+    color: #ffffff !important;
+  }
+  &[data-group="interface-admin"] {
+    background-color: #ff00b6 !important;
+    color: #00146c !important;
+  }
+  &[data-group="steward"] {
+    background-color: #ffc300 !important;
+    color: #2b0404 !important;
+  }
+  &[data-group="suppress"] {
+    background-color: #383838 !important;
+    color: #d0d0d0 !important;
+  }
+  &[data-group="translationadmin"] {
+    background-color: #1d4e07 !important;
+    color: #ecd3d3 !important;
+  }
+  &[data-group="bot"] {
+    background-color: #000 !important;
+    color: #fff !important;
+  }
+  &[data-group="blocked"] {
+    background-color: #5d0000 !important;
+    color: #ffffff !important;
+  }
+}
+.profile-externalLinks > .tooltip {
+  display: inline-block;
+  opacity: 1;
 }
 
 /* MW1.44 Upgrade Workaround: Force exticon link to use MW1.44 resource instead of MW1.43 */
