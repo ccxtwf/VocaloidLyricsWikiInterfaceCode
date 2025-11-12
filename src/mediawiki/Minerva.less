@@ -1,0 +1,42 @@
+/* All CSS here will be loaded for users of the Minerva skin */
+@dark-mode-css-definitions: {
+  & {
+    --lyrics-table-header: #353535;
+	  --lyrics-row-odd-color: #202020;
+	  --album-embed-container-bg-color: #313131;
+    --album-embed-container-text-color: #bebebe;
+    --album-embed-container-shadow-color: #3e3e3e61;
+    --album-embed-container-active-tab-color: #dbdbdb;
+    --producer-links-container-bg-color: #022421;
+    --producer-table-header-bg-color: #022421;
+    --producer-table-alternating-row-color: #05534c30;
+  }
+  .vlw-notify {
+    background-color: black;
+  }
+  .vlw-notify.darkblue {
+    border: 1px solid #024fd4;
+    border-width: 1px 10px;
+    .vlw-notify-exclamation > div.icon {
+      background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ctitle%3Enotice%3C/title%3E%3Cpath d='M10 0a10 10 0 1 0 10 10A10 10 0 0 0 10 0zm1 16H9v-2h2zm0-4H9V4h2z' id='path4' style='fill:%23024fd4;fill-opacity:1' /%3E%3C/svg%3E%0A");
+    }
+  }
+  .vlw-notify.black {
+    border: 1px solid white;
+    border-width: 1px 10px;
+    .vlw-notify-exclamation > div.icon {
+      background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ctitle%3Enotice%3C/title%3E%3Cpath d='M10 0a10 10 0 1 0 10 10A10 10 0 0 0 10 0zm1 16H9v-2h2zm0-4H9V4h2z' id='path4' style='fill:white;fill-opacity:1' /%3E%3C/svg%3E%0A");
+    }
+  }
+}
+/* DARK MODE */
+html.skin-theme-clientpref-night {
+  @dark-mode-css-definitions();
+}
+
+/* AUTO THEME MODE */
+@media screen and (prefers-color-scheme: dark) {
+	html.skin-theme-clientpref-os {
+		@dark-mode-css-definitions();
+	}
+}

@@ -1,0 +1,29 @@
+/* All CSS here will be loaded for users of the Monobook skin */
+/* Gadget-vlw-tl-queue-display: Translation Queue List */
+#sidebar #vlw-tl-queue-container {
+	margin-left: 10px;
+	margin-right: 10px;
+	padding-top: 5px;
+	border-width: 1px;
+	border-radius: 5px;
+	box-sizing: border-box;
+  .label {
+    font-size: 0.85rem;
+  }
+  ul li {
+    font-size: 0.75rem;
+  }
+  .tl-check-req-producer, #sidebar #vlw-tl-queue-container .tl-check-req-author {
+    font-size: 0.65rem;
+  }
+}
+@media screen and (min-width: 551px) {
+	#sidebar #vlw-tl-queue-container {
+		width: 11.6em;
+		margin-left: 0;
+		margin-right: 0;
+	}
+	#sidebar #vlw-tl-queue-container ul li > a {
+		display: block;
+	}
+}

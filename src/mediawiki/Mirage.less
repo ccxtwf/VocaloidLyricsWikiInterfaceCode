@@ -1,0 +1,128 @@
+/* All CSS here will be loaded for users of the Mirage skin */
+img.mw-logo-icon {
+    display: none;
+}
+
+/* Navbar */
+#mirage-fixed-header {
+    background-color: #000000;
+    color: #fff;
+}
+#mirage-fixed-header #p-search input[type="search"] {
+    background-color: #cacbcb;
+    color: #525252;
+}
+#mirage-fixed-header .skin-mirage-dropdown-header  {
+    color: #d0d0d0 !important;
+}
+#mirage-fixed-header .skin-mirage-ooui-indicator::before {
+    filter: invert(1) hue-rotate(180deg);
+}
+#mirage-fixed-header #pt-notifications-alert a, #mirage-fixed-header #pt-notifications-notice a {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+/* Top header (below navbar) */
+#mirage-top-header {
+    background-color: #557b71;
+    color: #d0d0d0;
+}
+#module-site-navigation {
+    display: inline-block;
+    width: 100%;
+    margin-top: 10px;
+    background-color: #b3d4cb;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+    float: none;
+    clear: both;
+}
+#module-site-tools > ul > .mw-list-item, #module-site-tools .skin-mirage-dropdown-container {
+    background-color: #b3d4cb;
+}
+#module-page-navigation a:not(.new) {
+    color: #d8e7f9;
+}
+#module-page-navigation .skin-mirage-tabs .selected a {
+    box-shadow: inset 0 -5px 0 0 #003aff;
+}
+#ca-watch > a, #ca-unwatch > a {
+    width: fit-content !important;
+}
+.skin-mirage-mirage-navigation .skin-mirage-navigation-entry-item {
+    margin-left: 1rem;
+}
+
+#mirage-right-rail {
+    background-color: #e4e4e4;
+}
+
+#module-site-navigation .skin-mirage-dropdown-container {
+    min-width: 180px;
+    max-width: 270px;
+}
+#module-site-navigation .skin-mirage-dropdown-list {
+    width: 180px;
+}
+#module-site-navigation .skin-mirage-dropdown-list ul > li > a {
+	text-wrap: wrap;
+    text-wrap: pretty;
+    word-break: break-word;
+    word-wrap: break-word;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+@media (max-width: 500px) {
+    #module-site-navigation .skin-mirage-dropdown-container {
+        min-width: 120px;
+        max-width: 200px;
+    }
+    #module-site-navigation .skin-mirage-dropdown-list {
+        width: 120px;
+    }
+    #module-site-navigation .skin-mirage-dropdown-header {
+        font-size: 1.2rem;
+    }
+}
+
+/* Producer pages */
+.producer-links .skin-mirage-ooui-icon-edit::before {
+    background-image: none;
+    width: 0;
+    height: 0;
+    margin: 0;
+}
+
+#pt-darkmode::before {
+    content: '' !important;
+    display: none !important;
+}
+
+/* Force dark mode */
+.skin-theme-clientpref-night:not(.mw-invert) #mirage-fixed-header, .client-darkmode:not(.mw-invert) #mirage-fixed-header, .skin-theme-clientpref-night:not(.mw-invert) #mirage-top-header, .client-darkmode:not(.mw-invert) #mirage-top-header {
+    filter: invert(1) hue-rotate(180deg);
+    -webkit-filter: invert(1) hue-rotate(180deg);
+}
+.skin-theme-clientpref-night:not(.mw-invert) .mw-logo-wordmark, .client-darkmode:not(.mw-invert) .mw-logo-wordmark {
+    filter: none;
+    -webkit-filter: none;
+}
+.skin-theme-clientpref-night .vlw-altver-infobox, .client-darkmode .vlw-altver-infobox {
+    background-color: #ddd;
+}
+/* Force iconlinks to render as normal on dark mode */
+.skin-theme-clientpref-night .iconlink::before, .client-darkmode .iconlink::before {
+    filter: invert(1) hue-rotate(180deg) !important;
+    -webkit-filter: invert(1) hue-rotate(180deg) !important;
+}
+
+/* Gadget-vlw-tl-queue-display: Translation Queue List */
+#p-tb + #vlw-tl-queue-container {
+	margin-left: 10px;
+	margin-right: 10px;
+	padding-top: 5px;
+	border-width: 1px;
+	border-radius: 5px;
+	box-sizing: border-box;
+}

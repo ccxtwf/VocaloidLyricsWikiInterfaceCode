@@ -218,17 +218,10 @@ a.mw-echo-notifications-badge.mw-echo-notification-badge-nojs.oo-ui-icon-tray {
   font-size: 0.8rem;
   color: #000;
   transition: auto;
-}
-#pt-themes .ext-themetoggle-simple-icon::before {
-  padding-left: 0;
-  padding-right: 0.5rem;
-}
-html.theme-dark #pt-themes .ext-themetoggle-simple-icon {
-  color: #ddd;
-}
-html.theme-dark #pt-themes .ext-themetoggle-simple-icon::before {
-  filter: brightness(1) invert(1);
-  backdrop-filter: brightness(1) invert(1);
+  &::before {
+    padding-left: 0;
+    padding-right: 0.5rem;
+  }
 }
 
 /* DataTables + Special:AllMessages */
