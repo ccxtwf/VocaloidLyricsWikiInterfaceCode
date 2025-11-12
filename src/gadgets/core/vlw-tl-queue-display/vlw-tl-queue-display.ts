@@ -1,4 +1,4 @@
-import type { Reactive } from "vue";
+import type { Reactive, App } from "vue";
 
 interface TLQueueItem {
   title: string
@@ -41,6 +41,7 @@ interface IAppStore {
   const DEBUGGING_ID = 'vlw-tl-queue-display';
   
   let $container: JQuery<HTMLElement>;
+  let $app: App | undefined;
   let store: Reactive<IAppStore> | undefined;
 
   const messages = {
@@ -61,13 +62,9 @@ interface IAppStore {
   // =================
   const linkToPage = mw.util.getUrl(TL_CHECKING_PAGE_NAME);
   function fetchFromCache(): [TLQueueItem[], TLQueueItem[]] | null {
-    try {
-      const o = mw.storage.getObject(LOCALSTORAGE_PREFIX);
-      return o;
-    } catch(error) {
-      clearCache(); 
-      return null;
-    }		
+    // we make it coalesce to null because mw.storage.getObject may return false
+    const o = mw.storage.getObject(LOCALSTORAGE_PREFIX) || null;
+    return o;
   }
   
   function saveToCache(res: [TLQueueItem[], TLQueueItem[]]): void {
@@ -162,12 +159,12 @@ interface IAppStore {
         function _onMqChangeVector(mq: MediaQueryList) {
           if (mq.matches) {
             if ($('.mw-footer-container').find('#'+containerId).length > 0) return;
-            $('#mw-panel').find('#'+containerId).remove();
+            if (!!$app) $app.unmount();
             $('.mw-footer-container').prepend($container);
             loadApp();
           } else {
             if ($('#mw-panel').find('#'+containerId).length > 0) return;
-            $('.mw-footer-container').find('#'+containerId).remove();
+            if (!!$app) $app.unmount();
             $('#mw-panel').append($container);
             loadApp();
           }
@@ -180,12 +177,12 @@ interface IAppStore {
         function _onMqChangeMedik(mq: MediaQueryList) {
           if (mq.matches) {
             if ($('#footer').find('#'+containerId).length > 0) return;
-            $('#mw-navigation').find('#'+containerId).remove();
+            if (!!$app) $app.unmount();
             $('#footer').prepend($container);
             loadApp();
           } else {
             if ($('#mw-navigation').find('#'+containerId).length > 0) return;
-            $('#footer').find('#'+containerId).remove();
+            if (!!$app) $app.unmount();
             $('#mw-navigation').append($container);
             loadApp();
           }
@@ -202,12 +199,12 @@ interface IAppStore {
         function _onMqChangeTimeless(mq: MediaQueryList) {
           if (mq.matches) {
             if ($('#mw-content-container').find('> #'+containerId).length > 0) return;
-            $('#mw-related-navigation').find('#'+containerId).remove();
+            if (!!$app) $app.unmount();
             $('#mw-content-container').append($container);
             loadApp();
           } else {
             if ($('#mw-related-navigation').find('#'+containerId).length > 0) return;
-            $('#mw-content-container').find('#'+containerId).remove();
+            if (!!$app) $app.unmount();
             $('#mw-related-navigation').append($container);
             loadApp();
           }
@@ -265,8 +262,7 @@ interface IAppStore {
     const Vue = (mw.libs as any).Vue;
     const CdxProgressIndicator = (mw.libs as any).CdxProgressIndicator;
 
-    //@ts-ignore
-    const App = Vue.createMwApp({
+    $app = Vue.createMwApp({
       template: `
         <tl-queue-section 
           cssClass="on-queue" 
@@ -284,7 +280,7 @@ interface IAppStore {
       `,
       setup: () => ({ store }),
     });
-    App.component('tl-queue-section', {
+    $app!.component('tl-queue-section', {
       template: `
         <div :id="containerHtmlId">
           <div class="label">
@@ -367,7 +363,7 @@ interface IAppStore {
         }
       }
     });
-    App.component('tl-queue-item', {
+    $app!.component('tl-queue-item', {
       template: `
       <li>
         <a class="tl-check-req-title" :href="link" target="_blank" rel="nofollow noindex">
@@ -396,7 +392,7 @@ interface IAppStore {
         }
       }
     });
-    App.component('tl-queue-more-actions', {
+    $app!.component('tl-queue-more-actions', {
       template: `
         <div class="more-actions">
           <a id="icon-refresh" :title="$i18n('vlw-tl-queue--reload-prompt-tooltip').text()">
@@ -413,7 +409,7 @@ interface IAppStore {
         }
       }
     });
-    App.mount('#'+containerId);
+    $app!.mount('#'+containerId);
   }
   
   function populate(noCacheMode: boolean): void {

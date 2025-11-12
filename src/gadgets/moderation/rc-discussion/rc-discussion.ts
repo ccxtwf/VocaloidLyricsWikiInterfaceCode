@@ -8,7 +8,7 @@ import type {
 	IExpectedApiQueryRvResponse, 
 	IAppStore,
 } from "./types.js";
-import type { Reactive } from "vue";
+import type { Reactive, App } from "vue";
 
 import { 
 	parseRcFeeds, 
@@ -147,7 +147,6 @@ import {
 			const Vue = require('vue');
 			const { CdxButton, CdxIcon, CdxSelect, CdxField, CdxProgressIndicator } = require('@wikimedia/codex');
 			
-			//@ts-ignore
 			store = Vue.reactive({
 				option: 0,
 				data: {},
@@ -155,8 +154,7 @@ import {
 			});
 			loadDiscussions(store!.option, false);
 
-			//@ts-ignore
-			const App = Vue.createMwApp({
+			const $app: App = Vue.createMwApp({
 				template: `
 					<div id="rc-discussion-feeds">
 						<div>
@@ -233,7 +231,7 @@ import {
 					}
 				}
 			});
-			App.component("rc-discussion-cards-grouped-by-date", {
+			$app.component("rc-discussion-cards-grouped-by-date", {
 				template: `
 					<div class="rc-discussion-date-group">
 						<div class="rc-discussion-date">
@@ -258,7 +256,7 @@ import {
 					}
 				}
 			});
-			App.component("rc-discussion-card", {
+			$app.component("rc-discussion-card", {
 				template: `
 					<article>
 				
@@ -338,7 +336,7 @@ import {
 					}
 				}
 			});
-			App.mount("#mw-content-text");
+			$app.mount("#mw-content-text");
 		});
 	}
 
@@ -437,21 +435,13 @@ import {
 	//   Caching
 	// =================
 	function fetchFromCache(): IGroupedParsedApiQueryRc | null {
-		try {
-			const o = mw.storage.getObject(LOCAL_STORAGE_KEY);
-			return o; 
-		} catch(error) {
-			clearCache(); 
-			return null;
-		}		
+		// we make it coalesce to null because mw.storage.getObject may return false
+		const o = mw.storage.getObject(LOCAL_STORAGE_KEY) || null;
+		return o;
 	}
 
 	function saveToCache(res: IGroupedParsedApiQueryRc): void {
 		mw.storage.setObject(LOCAL_STORAGE_KEY, res, LOCAL_STORAGE_MAX_AGE);
-	}
-
-	function clearCache(): void {
-		mw.storage.remove(LOCAL_STORAGE_KEY);
 	}
 
 	// =================
