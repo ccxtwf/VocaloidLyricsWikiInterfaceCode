@@ -17,6 +17,22 @@
 		//@ts-ignore
 		$widgetElement.html($iframe);
 	})();
+
+	/* Bandcamp Embed */
+	(function () {
+		const $widgetElement = $(".bandcamp-embed");
+		const src = `https://bandcamp.com/EmbeddedPlayer/album=${$widgetElement.data("album-id")}/size=large/bgcol=${$widgetElement.data("bgcolor")}/linkcol=0687f5/tracklist=false/track=${$widgetElement.data("track-id")}/transparent=true/`;
+		const $iframe = $("<iframe>", {
+			src: src,
+			width: $widgetElement.data("width"),
+			height: $widgetElement.data("height"),
+			allowtransparency: "true",
+			frameborder: "0",
+			sandbox: "allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+		});
+		//@ts-ignore
+		$widgetElement.html($iframe);
+	})();
 	
 	/* Add custom Add New Topic for Discussion Tools */
 	mw.loader.using( 'mediawiki.util', function () {
