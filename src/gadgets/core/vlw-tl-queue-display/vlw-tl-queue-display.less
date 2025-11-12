@@ -132,3 +132,30 @@
     line-height: 1.2;
   }
 }
+
+.invert() {
+  -moz-filter: brightness(1) invert(1);
+  -webkit-filter: brightness(1) invert(1);
+  filter: brightness(1) invert(1);
+}
+@dark-mode-css-definitions: {
+  & {
+    --tl-queue-container-bg-color: #000;
+    --tl-queue-action-label-color: #e6d1d1;
+    --tl-queue-label-color: #9a4848;
+    --tl-queue-item-link-color: #c9a3a3;
+    --tl-queue-item-link-hover-color: #f1c8c8;
+    --tl-queue-item-subtitle-color: #aaa;
+  }
+  #vlw-tl-queue-container #icon-refresh img {
+    .invert();
+  }
+}
+html.theme-dark, html.skin-theme-clientpref-night, :root.skin-theme-clientpref-night {
+  @dark-mode-css-definitions();
+}
+@media screen and (prefers-color-scheme: dark) {
+  html.skin-theme-clientpref-os, :root.skin-theme-clientpref-os {
+    @dark-mode-css-definitions();
+  }
+}

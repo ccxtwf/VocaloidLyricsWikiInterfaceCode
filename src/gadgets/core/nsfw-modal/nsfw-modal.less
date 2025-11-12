@@ -152,3 +152,20 @@
     font-size: 0.85rem;
   }
 }
+
+@dark-mode-css-definitions: {
+  & {
+    --nsfw-modal-msg-container-bg-color: #000;
+    --nsfw-modal-msg-heading-text-color: #ddd;
+    --nsfw-modal-msg-subheading-text-color: #bbb;
+    --nsfw-modal-msg-more-actions-text-color: #bbb;
+  }
+}
+html.theme-dark, html.skin-theme-clientpref-night, :root.skin-theme-clientpref-night {
+  @dark-mode-css-definitions();
+}
+@media screen and (prefers-color-scheme: dark) {
+  html.skin-theme-clientpref-os, :root.skin-theme-clientpref-os {
+    @dark-mode-css-definitions();
+  }
+}

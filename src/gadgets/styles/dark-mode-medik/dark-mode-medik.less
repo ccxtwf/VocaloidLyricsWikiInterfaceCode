@@ -178,9 +178,9 @@ html.theme-dark {
 
   // ThemeToggle
   #pt-themes .ext-themetoggle-simple-icon {
-    color: #ddd;
-  }
-  #pt-themes .ext-themetoggle-simple-icon::before {
-    .invert();
+    color: #ddd !important;
+    &::before {
+      .invert();
+    }
   }
 }
