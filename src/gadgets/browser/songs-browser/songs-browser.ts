@@ -93,17 +93,20 @@ import { ISongBrowserDropdownOption, IAlbumFetchUtils, ICategoryFetchUtils } fro
 		cbOnOptionChange: (id: number, isSelected: boolean) => void
 	): void {
 		const selectedOptionsOnStorage = getSelectedOptionsFromSession();
-		$('#songs-browser-container').html(
-			$('<div>', { id: 'songs-browser' })
-				.append($('<div>', { 'class': 'dropdown-toggle' }).text(dropdownToggleText))
-				.append($('<div>', { 'class': 'dropdown-menu' }).append($('<ul>')))
-				.html()
+		$('#songs-browser-container').html('').append(
+			$('<div>', { id: 'songs-browser' }).append(
+				$('<div>', { 'class': 'dropdown' })
+					.append($('<div>', { 'class': 'dropdown-toggle' }).text(dropdownToggleText))
+					.append($('<div>', { 'class': 'dropdown-menu' }).append($('<ul>')))
+			)
 		);
 		$container = $('#songs-browser-container');
 		$dropdown = $('#songs-browser .dropdown-menu ul');
+		console.log($dropdown);
 		
 		for (let i = 0; i < DROPDOWN_OPTIONS.length; i++) {
 			const isChecked = selectedOptionsOnStorage.indexOf(i) > -1;
+			console.log('Appending');
 			$dropdown.append(
 				$('<li>')
 					.append(
@@ -238,7 +241,7 @@ import { ISongBrowserDropdownOption, IAlbumFetchUtils, ICategoryFetchUtils } fro
 			const chipSelector = '.'+chipCssClass.replace(/ /g, '.');
 			
 			const tooltip = mw.msg(`songs-browser--${id}-tooltip`);
-			const chipText = mw.msg(`songs-browser--${id}-chip-tooltip`);
+			const chipText = mw.msg(`songs-browser--${id}-chip-text`);
 
 			cats.push({ title: categoryTitles[i], event });
 			hooks.push({

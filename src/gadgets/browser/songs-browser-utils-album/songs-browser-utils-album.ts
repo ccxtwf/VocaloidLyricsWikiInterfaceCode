@@ -125,15 +125,17 @@ import type { IAlbumFetchUtils, ILookForCategories, IApiSettings, IExpectedApiQu
 				.filter(([_, isFetched]) => !isFetched )
 				.map(([title, _]) => title );
 			const [promises, catsInBatches] = this.createQueryPromises(categories);
+			const onSettledPromises = (arrResults: PromiseSettledResult<IExpectedApiQueryAlbum>[]) => {
+				for (let i = 0; i < arrResults.length; i++) {
+					this.processSettledPromise(arrResults[i], catsInBatches[i]);
+				}
+				for (const category of categories) {
+					this.publishResultsToObserver(category);
+				}
+			}
+			onSettledPromises.bind(this);
 			Promise.allSettled(promises)
-				.then(function (arrResults) {
-					for (let i = 0; i < arrResults.length; i++) {
-						this.processSettledPromise(arrResults[i], catsInBatches[i]);
-					}
-					for (const category of categories) {
-						this.publishResultsToObserver(category);
-					}
-				})
+				.then(onSettledPromises)
 				.catch(function (err) {
 					console.error(err, DEBUGGING_ID);
 				});
