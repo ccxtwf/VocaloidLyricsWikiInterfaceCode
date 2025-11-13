@@ -86,7 +86,7 @@ import {
 			ns: [829]
 		}
 	];
-	const SHOW_ON_PAGES = ['Special:RecentDiscussions', 'Special:BlankPage/RC-Discussions'];
+	const SHOW_ON_SPECIAL_PAGE = 'recentdiscussions';
 	const NUMBER_OF_POSTS = 50;
 	const MAX_DURATION_IN_DAYS = 7;
 
@@ -127,7 +127,7 @@ import {
 	]);
 
 	installPortletLink();
-	if (SHOW_ON_PAGES.indexOf(config.wgPageName) < 0) {
+	if (config.wgCanonicalSpecialPageName !== SHOW_ON_SPECIAL_PAGE) {
 		return;
 	}
 
@@ -450,10 +450,11 @@ import {
 	function installPortletLink(): void {
 		const label = mw.msg( 'rc-discussion--menu-label' );
 		const tooltipText = mw.msg( 'rc-discussion--menu-tooltip', config.wgSiteName );
+		const { wgFormattedNamespaces: { '-1': specialNamespace } = { '-1': 'Special' } } = mw.config.get(['wgFormattedNamespaces'])
 		if (!$('#t-rc-discussion').length) {
 			mw.util.addPortletLink(
 				'p-tb',
-				mw.util.getUrl(SHOW_ON_PAGES[0]),
+				mw.util.getUrl(`${specialNamespace}:${SHOW_ON_SPECIAL_PAGE}`),
 				label,
 				't-rc-discussion',
 				tooltipText,
@@ -461,22 +462,10 @@ import {
 				'#t-specialpages'
 			);
 		}
-		if (!$('#n-rc-discussion').length) {
-			mw.util.addPortletLink(
-				'p-navigation',
-				mw.util.getUrl(SHOW_ON_PAGES[0]),
-				label,
-				'n-rc-discussion',
-				tooltipText,
-				undefined,
-				'#n-Create-Page'
-			);
-			$('#n-rc-discussion > a').addClass('nav-link');
-		}
 		if (config.wgCanonicalSpecialPageName === 'Recentchanges' && !$('#ca-nstab-rc-discussion').length) {
 			mw.util.addPortletLink(
 				'p-namespaces',
-				mw.util.getUrl(SHOW_ON_PAGES[0]),
+				mw.util.getUrl(`${specialNamespace}:${SHOW_ON_SPECIAL_PAGE}`),
 				label,
 				'ca-nstab-rc-discussion',
 				tooltipText
