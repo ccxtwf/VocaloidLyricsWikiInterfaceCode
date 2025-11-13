@@ -105,6 +105,7 @@ gadgets:
         - Krinkle
       code: 
         - real-time-recent-changes.js
+        - real-time-recent-changes.less
       resourceLoader:
         namespaces: "-1"
         actions: 
@@ -149,6 +150,7 @@ gadgets:
         - https://github.com/lihaohong6/inpageedit-v2
       code:
         - in-page-edit.js
+        - in-page-edit.less
       resourceLoader:
         rights:
           - edit

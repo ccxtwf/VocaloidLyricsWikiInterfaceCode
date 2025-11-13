@@ -1,0 +1,50 @@
+@dark-mode-css-definitions: {
+  .ssi-modalWindow {
+    background: #2f2f2f;
+  }
+  .in-page-edit {
+    color: #ccc;
+    .diff-deletedline.diff-side-deleted,
+    .diff-addedline.diff-side-added {
+      background-color: #000;
+      color: #eee;
+    }
+    .diff-context {
+      background-color: #222;
+      color: #aaa;
+    }
+    &:not(.notify) .ssi-modalTitle {
+      background: #2f2f2f;
+      color: #ccc;
+    }
+    .ssi-overflow:before, .ssi-overflow:after {
+      background-color: #2f2f2f;
+    }
+    .dialog .ssi-buttons .btn {
+      color: #ccc;
+      &:hover {
+        background: #717171 !important;
+      }
+    }
+    input {
+      background-color: #3b3b3b;
+      color: #ccc;
+    }
+    &.ipe-editor .ssi-buttons {
+      background-color: #2f2f2f;
+      color: #ccc;
+    }
+  }
+  .ipe-editor .editArea {
+    background-color: #3b3b3b;
+    color: #ccc;
+  }
+}
+html.theme-dark, html.skin-theme-clientpref-night, :root.skin-theme-clientpref-night {
+  @dark-mode-css-definitions();
+}
+@media screen and (prefers-color-scheme: dark) {
+  html.skin-theme-clientpref-os, :root.skin-theme-clientpref-os {
+    @dark-mode-css-definitions();
+  }
+}

@@ -60,8 +60,12 @@
   black: #000;
   purple: #800080;
 }
+@colour-items-dark-mode: {
+  darkblue: #024fd4;
+  black: #fff;
+}
 
-:root {
+& {
   each(@colour-items, {
     .vlw-notify.@{key} {
 
@@ -69,7 +73,7 @@
       border-width: 1px 10px;
 
       .vlw-notify-exclamation > div.icon {
-        background-image: %("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ctitle%3Enotice%3C/title%3E%3Cpath d='M10 0a10 10 0 1 0 10 10A10 10 0 0 0 10 0zm1 16H9v-2h2zm0-4H9V4h2z' id='path4' style='fill:%a;fill-opacity:1' /%3E%3C/svg%3E%0A", escape( @value ));
+        background-image: data-uri( %("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ctitle%3Enotice%3C/title%3E%3Cpath d='M10 0a10 10 0 1 0 10 10A10 10 0 0 0 10 0zm1 16H9v-2h2zm0-4H9V4h2z' id='path4' style='fill:%a;fill-opacity:1' /%3E%3C/svg%3E%0A", escape( @value )) );
       }
       
     }
@@ -102,5 +106,32 @@
     line-clamp: none;
     overflow-y: visible;
     max-height: fit-content;
+  }
+}
+
+/* Dark Mode */
+@dark-mode-css-definitions: {  
+  .vlw-notify {
+    background-color: black;
+    each(@colour-items-dark-mode, {
+      &.@{key} {
+
+        border: 1px solid @value;
+        border-width: 1px 10px;
+
+        .vlw-notify-exclamation > div.icon {
+          background-image: data-uri( %("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ctitle%3Enotice%3C/title%3E%3Cpath d='M10 0a10 10 0 1 0 10 10A10 10 0 0 0 10 0zm1 16H9v-2h2zm0-4H9V4h2z' id='path4' style='fill:%a;fill-opacity:1' /%3E%3C/svg%3E%0A", escape( @value )) );
+        }
+        
+      }
+    });
+  } 
+}
+html.theme-dark, html.skin-theme-clientpref-night, :root.skin-theme-clientpref-night {
+  @dark-mode-css-definitions();
+}
+@media screen and (prefers-color-scheme: dark) {
+  html.skin-theme-clientpref-os, :root.skin-theme-clientpref-os {
+    @dark-mode-css-definitions();
   }
 }
