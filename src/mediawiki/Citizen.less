@@ -47,6 +47,12 @@ table.lyrics-table > tbody > tr.lyrics-table-header {
 .citizen-menu__content.collapse.show {
   display: block;
 }
+
+#mw-allmessagestable {
+  display: block;
+  overflow-x: scroll;
+}
+
 @dark-mode-css-definitions: {
   & {
     --border-color-base: rgba(255, 255, 255, 0.3);
@@ -63,9 +69,4 @@ table.lyrics-table > tbody > tr.lyrics-table-header {
   :root {
     @dark-mode-css-definitions();
   }
-}
-
-#mw-allmessagestable {
-  display: block;
-  overflow-x: scroll;
 }
