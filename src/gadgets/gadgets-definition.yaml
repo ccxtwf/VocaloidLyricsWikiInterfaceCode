@@ -29,15 +29,6 @@ gadgets:
         dependencies:
           - oojs-ui-core
           - oojs-ui-widgets
-    mobile-collapsible-lyrics:
-      description: "When this gadget is turned on, the lyrics rows will collapse responsively on mobile, making the original lyrics, romanized lyrics, and English translated lyrics easier to read. If turned off, then the lyrics will simply display as a normal grid."
-      authors: 
-        - CoolMikeHatsune22
-      code:
-        - mobile-collapsible-lyrics.css
-      resourceLoader:
-        default: true
-        type: "styles"
     vlw-tl-queue-display:
       description: "Adds a list to the sidebar/footer of the wiki that shows the translations on queue for checking/verification on the wiki."
       authors: 
@@ -162,6 +153,7 @@ gadgets:
         - CoolMikeHatsune22 (porting to Miraheze)
       links:
         - https://dev.fandom.com/wiki/PreloadTemplates
+        - https://dev.miraheze.org/wiki/PreloadTemplates
       code:
         - preload-templates.js
         - preload-templates.less
@@ -193,6 +185,7 @@ gadgets:
         - CoolMikeHatsune22 (porting to Miraheze)
       links:
         - https://dev.fandom.com/wiki/View_Source
+        - https://dev.miraheze.org/wiki/View_Source
       code:
         - view-source-definitions.js
         - view-source.js
@@ -222,6 +215,7 @@ gadgets:
         - CoolMikeHatsune22 (porting to Miraheze)
       links: 
         - https://dev.fandom.com/wiki/Countdown
+        - https://dev.miraheze.org/wiki/Countdown
       code:
         - countdown.js
       resourceLoader:
@@ -350,3 +344,12 @@ gadgets:
           - timeless
           - medik
           - vector-2022
+    mobile-collapsible-lyrics:
+      description: "When this gadget is turned on, the lyrics rows will collapse responsively on mobile, making the original lyrics, romanized lyrics, and English translated lyrics easier to read. If turned off, then the lyrics will simply display as a normal grid."
+      authors: 
+        - CoolMikeHatsune22
+      code:
+        - mobile-collapsible-lyrics.css
+      resourceLoader:
+        default: true
+        type: "styles"
