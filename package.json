@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "build-show": "vite build && vite preview",
     "tests": "jest",
-    "sync": "vite build && node dev-sync/test.ts"
+    "sync": "vite build && node --env-file=.env dev-sync/sync.ts"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",

@@ -24,10 +24,10 @@ This repository allows you to write your MediaWiki userscripts in TypeScript and
 
 Running `npm run watch` will start up Vite in Build Mode. Vite will not terminate after the build process is finished. Instead, Vite will watch for any changes made to the code, rebuilding each time it detects such changes.
 
-While `npm run watch` is running, run `npm run preview` on another process to get Vite to serve your userscripts on localhost. When your scripts are ready, Vite will automatically open the page `https://localhost:4173/load.js` on your web browser. This is the entrypoint from which you can run your userscripts on your MediaWiki instance. To use this `load.js` file, add the following line of code in your User:&lt;Username&gt;/common.js on your local (non-prod) MediaWiki instance:
+While `npm run watch` is running, run `npm run preview` on another process to get Vite to serve your userscripts on localhost. When your scripts are ready, Vite will automatically open the page `http://localhost:4173/load.js` on your web browser. This is the entrypoint from which you can run your userscripts on your MediaWiki instance. To use this `load.js` file, add the following line of code in your User:&lt;Username&gt;/common.js on your local (non-prod) MediaWiki instance:
 
 ```js
-mw.loader.load('https://localhost:4173/load.js');
+mw.loader.load('http://localhost:4173/load.js');
 ```
 
 You can check if your gadgets have been loaded onto MediaWiki instance by running `console.log(mw.loader.getState("ext.gadget.<Name of gadget>"));` on the Developer Console.
@@ -46,6 +46,8 @@ npm run tests
 Running `npm run build` will start up Vite in Build mode and terminate after build is finished. Files are saved onto the `dist/` folder after the build process is finished. 
 
 To sync the latest state of the project with the code running on the wiki, run `npm run sync`. This will start a bot run (powered by [Mwn](https://github.com/siddharthvp/mwn)), with edit logs saved onto the folder `logs/` on the project directory. 
+
+> **Note**: Make sure that the account whose credentials you're using has either been assigned the `interface-admin` user group, or the user rights `editsitecss` and `editsitejs`. If the bot is set to login to the MediaWiki API via BotPasswords, then make sure that the options "*Edit the MediaWiki namespace and sitewide/user JSON*" and "*Edit sitewide and user CSS/JS*" are checked when creating the BotPassword.
 
 Transpiling of userscripts written in Typescript into Javascript is configured in `vite.config.ts` (`build` options). This repository targets **Javascript ES2018**.
 
