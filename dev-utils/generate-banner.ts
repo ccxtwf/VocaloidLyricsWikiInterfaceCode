@@ -48,7 +48,7 @@ function generateBanner({ ghUrl, ghBranch = 'development', id, gadgetDefinition 
  * 
  * ${tag}
  * 
- * ${'*'.padEnd(78, '*')}*/`
+ *${'*'.padEnd(78, '*')}*/`
   ).trim() + '\n\n';
 }
 
