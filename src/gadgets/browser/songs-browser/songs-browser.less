@@ -147,6 +147,35 @@
   }
 }
 
+/* Timeless */
+body.skin-timeless #songs-browser {
+  min-height: 28px;
+  .dropdown {
+    .dropdown-menu {
+      margin-top: 8px;
+    }
+    @media screen and (max-width: 850px) {
+      & {
+        display: block;
+        min-height: 28px;
+        background: none; 
+        border: none; 
+        border-width: none;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+        line-height: initial;
+        word-wrap: break-word;
+        font-size: inherit;
+        position: static;
+        min-width: 0;
+        max-width: 100%;
+        overflow: visible;
+      }
+    }
+  }
+}
+
 @media (max-width: 500px) {
   #songs-browser {
     float: none;

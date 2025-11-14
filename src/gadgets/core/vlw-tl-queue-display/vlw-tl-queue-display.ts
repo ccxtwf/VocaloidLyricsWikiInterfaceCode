@@ -264,29 +264,31 @@ interface IAppStore {
 
     $app = Vue.createMwApp({
       template: `
-        <tl-queue-section 
-          cssClass="on-queue" 
-          headingMessageName="vlw-tl-queue--heading-in-queue" 
-          storeKeyData="inQueue"
-          storeKeyHasLoadedMore="loadedMoreInQueue"
-        />
-        <tl-queue-section 
-          cssClass="resolved" 
-          headingMessageName="vlw-tl-queue--heading-resolved"  
-          storeKeyData="resolved"
-          storeKeyHasLoadedMore="loadedMoreInResolved"
-        />
+        <div class="tl-queue-sections">
+          <tl-queue-section 
+            cssClass="on-queue" 
+            headingMessageName="vlw-tl-queue--heading-in-queue" 
+            storeKeyData="inQueue"
+            storeKeyHasLoadedMore="loadedMoreInQueue"
+          />
+          <tl-queue-section 
+            cssClass="resolved" 
+            headingMessageName="vlw-tl-queue--heading-resolved"  
+            storeKeyData="resolved"
+            storeKeyHasLoadedMore="loadedMoreInResolved"
+          />
+        </div>
         <tl-queue-more-actions />
       `,
       setup: () => ({ store }),
     });
     $app!.component('tl-queue-section', {
       template: `
-        <div :id="containerHtmlId">
+        <div class="tl-queue-section">
           <div class="label">
             {{ $i18n( headingMessageName ).text() }}
           </div>
-          <div :id="tlContainerHtmlId">
+          <div class="tl-queue-contents">
             <cdx-progress-indicator show-label v-if="store.isLoading">
               {{ $i18n( 'vlw-tl-queue--loading' ).text() }}
             </cdx-progress-indicator>
@@ -301,34 +303,25 @@ interface IAppStore {
                 v-for="(item, idx) in renderedData"
                 :item="item"
               />
-              <li 
-                :id="toggleHtmlId" 
-                class="toggle" 
-                @click="onClickLoadMore" 
-                v-if="!isEmpty && hasMoreDataToShow"
-              >
-                {{ $i18n( 'vlw-tl-queue--load-more' ).text() }}
-              </li>
-              <li
-                :id="tlLinkHtmlId"
-                class="tl-check-page-link" 
-                v-else
-              >
-                <a class="tl-check-req-title" :href="linkToPage" target="_blank" rel="nofollow noindex">
-                  {{ $i18n( 'vlw-tl-queue--view-more' ).text() }}
-                </a>
-              </li>
             </ul>
+          </div>
+          <div class="more-links">
+            <a 
+              class="toggle" 
+              @click="onClickLoadMore" 
+              v-if="!isEmpty && hasMoreDataToShow"
+            >
+              {{ $i18n( 'vlw-tl-queue--load-more' ).text() }}
+            </a>
+            <a class="tl-check-page-link" :href="linkToPage" target="_blank" rel="nofollow noindex">
+              {{ $i18n( 'vlw-tl-queue--view-more' ).text() }}
+            </a>
           </div>
         </div>
         `,
       components: { CdxProgressIndicator },
-      props: ['cssClass', 'headingMessageName', 'storeKeyData', 'storeKeyHasLoadedMore'],
-      setup: ({ cssClass, headingMessageName, storeKeyData, storeKeyHasLoadedMore }: { cssClass: string, headingMessageName: string, storeKeyData: string, storeKeyHasLoadedMore: string }) => ({
-        containerHtmlId: `${cssClass}-tl-division`,
-        tlContainerHtmlId: `${cssClass}-tl-container`,
-        toggleHtmlId: `${cssClass}-tl-toggle`,
-        tlLinkHtmlId: `${cssClass}-tl-link`,
+      props: ['headingMessageName', 'storeKeyData', 'storeKeyHasLoadedMore'],
+      setup: ({ headingMessageName, storeKeyData, storeKeyHasLoadedMore }: { cssClass: string, headingMessageName: string, storeKeyData: string, storeKeyHasLoadedMore: string }) => ({
         linkToPage,
         headingMessageName, 
         storeKeyData, 
