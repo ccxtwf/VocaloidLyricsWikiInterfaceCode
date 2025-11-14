@@ -86,11 +86,19 @@ a:not(.new):visited, a.external:visited {
   font-size: 0.85rem;
   padding: 3px 5px !important;
 }
-.dropdown .mw-list-item .dropdown-item.active, 
-.dropdown .mw-list-item .dropdown-item:active, 
-.dropdown .mw-list-item .dropdown-item:hover {
-  background-color: var(--medik) !important;
-  color: #fff !important;
+.dropdown .mw-list-item .dropdown-item {
+  &.active, &:active, &:hover, &:focus {
+    background-color: var(--medik) !important;
+    color: #fff !important;
+  }
+}
+#p-personal, aside {
+  li a:not(.dropdown-item):hover {
+    background-color: #f8f9fa;
+  }
+}
+#msupload-dropzone {
+  box-sizing: content-box;
 }
 
 /* Sidebar */
