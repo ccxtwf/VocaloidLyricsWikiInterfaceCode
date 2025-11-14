@@ -72,7 +72,7 @@ interface IAppStore {
   }
   
   function clearCache(): void {
-    localStorage.removeItem(LOCALSTORAGE_PREFIX);
+    mw.storage.remove(LOCALSTORAGE_PREFIX);
   }
   
   function getListOfTranslations(noCacheMode: boolean): Promise<[TLQueueItem[], TLQueueItem[]]> {
