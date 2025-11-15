@@ -489,6 +489,8 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
   }
   
   function addButton (skin: string, $list: JQuery<HTMLElement>): void {
+    const commonId = 'ca-edit-lyrics';
+    if ($('#'+commonId).length > 0) return; 
     let tag = '<a>';
     if (['minerva', 'citizen'].indexOf(skin) > -1) {
       tag = '<span>';
@@ -500,7 +502,6 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
       $modal.show();
       loadModalUtilities();
     });
-    const commonId = 'ca-edit-lyrics';
     switch (skin) {
       case "vector-2022":
       case "vector":
