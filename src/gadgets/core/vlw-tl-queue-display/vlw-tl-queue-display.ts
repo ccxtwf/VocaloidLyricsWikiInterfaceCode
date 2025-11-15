@@ -388,7 +388,7 @@ interface IAppStore {
     $app!.component('tl-queue-more-actions', {
       template: `
         <div class="more-actions">
-          <a id="icon-refresh" :title="$i18n('vlw-tl-queue--reload-prompt-tooltip').text()">
+          <a id="icon-refresh" :title="$i18n('vlw-tl-queue--reload-prompt-tooltip').text()" @click="onClickRefresh">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Ic_refresh_48px.svg" />
             <span class="label">
               {{ $i18n('vlw-tl-queue--reload-prompt').text() }}
