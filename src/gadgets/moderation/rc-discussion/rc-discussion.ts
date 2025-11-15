@@ -7,6 +7,7 @@ import type {
 	IExpectedApiQueryRcResponse,
 	IExpectedApiQueryRvResponse, 
 	IAppStore,
+	IExpectedApiQueryCompareResponse,
 } from "./types.js";
 import type { Reactive, App } from "vue";
 
@@ -16,6 +17,7 @@ import {
 	parseRvApiQuery,
 	compareParsedRcs,
 	groupDiscussionsByDate,
+	parseCompareApiQuery
 } from './utils.js';
 
 ( function ( $, mw ) {
@@ -108,7 +110,7 @@ import {
 		'rc-discussion--action-new-topic': 'posted a new topic',
 		'rc-discussion--action-new-reply': 'posted a reply',
 		'rc-discussion--loading': 'Loading...',
-		'rc-discussion--failed-to-load': "Failed to load the comment. Click the link to the post to see the full discussion.",
+		'rc-discussion--failed-to-load': "The comment has failed to load. Click this text to get the tool to try loading the comment again.",
 		'rc-discussion--unexpected-error': 'An unexpected error has occured. Please report this bug if it persists.',
 		'rc-discussion--no-data': 'No discussions found with the selected criteria.',
 	};
@@ -190,7 +192,7 @@ import {
 								<rc-discussion-cards-grouped-by-date 
 									v-else
 									v-for="(dateGroup, index) in dateGroups" 
-									:key="index" 
+									:key="dateGroup" 
 									:date="dateGroup"
 									:posts="store.data[dateGroup]"
 								/>
@@ -238,9 +240,11 @@ import {
 							{{ renderedDate }}
 						</div>
 						<rc-discussion-card 
-							v-for="(post, index) in posts" 
-							:key="index" 
+							v-for="(post, index) in posts"
+							:key="''+post.toRev+(post.contents === null ? '' : 't')"
 							:post="post" 
+							:date="date"
+							:index="index"
 						/>
 					</div>
 					`,
@@ -281,7 +285,7 @@ import {
 						</div>
 				
 						<div class="rc-discussion-feed-added-comment">
-							<span v-if="contents === null" class="rc-discussion-error">
+							<span v-if="contents === null" class="rc-discussion-error" @click="onClickedFailedToLoadCard">
 								{{ $i18n( 'rc-discussion--failed-to-load' ).text() }}
 							</span>
 							<span v-else>
@@ -295,10 +299,10 @@ import {
 				
 					</article>
 					`,
-				props: ["post"],
-				setup: ({ post }: { post: IParsedApiQueryRc }) => {
-					const { username, heading, contents, timestamp, pageTitle, isNewTopic, isReply, isAnon } = post;
-					return { username, heading, contents, timestamp, pageTitle, isNewTopic, isReply, isAnon };
+				props: ["post", "date", "index"],
+				setup: ({ post, date, index }: { post: IParsedApiQueryRc, date: string, index: number }) => {
+					const { username, heading, contents, timestamp, pageTitle, isNewTopic, isReply, isAnon, fromRev, toRev } = post;
+					return { username, heading, contents, timestamp, pageTitle, isNewTopic, isReply, isAnon, fromRev, toRev, date, index, store };
 				},
 				computed: {
 					userTalkPage() {
@@ -333,6 +337,18 @@ import {
 							"timeZoneName": "shortOffset"
 						});
 						return timestamp;
+					}
+				},
+				methods: {
+					onClickedFailedToLoadCard() {
+						const { fromRev, toRev, heading, isReply, date, index } = this;
+						parseCommentFromCompareActionApi({ fromRev, toRev, heading, isReply, date, index })
+							.then(function () {
+							})
+							.catch((err) => {
+								mw.notify(mw.msg('rc-discussion--unexpected-error'), { type: 'error' });
+								console.error( err, DEBUGGING_ID );
+							});
 					}
 				}
 			});
@@ -428,6 +444,26 @@ import {
 				resolve(parsedApiRcs);
 			})
 			.fail(reject);
+		});
+	}
+
+	function parseCommentFromCompareActionApi({ fromRev, toRev, heading, isReply, date, index }: { fromRev: number, toRev: number, heading: string, isReply: boolean, date: string, index: number }): Promise<void> {
+		return new Promise((resolve, reject) => {
+			api.get({
+				action: 'compare',
+				format: 'json',
+				fromrev: fromRev,
+				torev: toRev,
+				prop: 'diff',
+				difftype: 'table'
+			})
+				.done((res: IExpectedApiQueryCompareResponse) => {
+					const comment = parseCompareApiQuery({ parser, res, heading, isReply });
+					store!.data[date]![index]!.contents = comment;
+					console.log(store!.data);
+					resolve();
+				})
+				.catch(reject);
 		});
 	}
 

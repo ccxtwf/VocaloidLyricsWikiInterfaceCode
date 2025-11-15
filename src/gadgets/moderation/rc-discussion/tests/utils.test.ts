@@ -7,7 +7,8 @@ import { readFileSync } from "fs";
 import { resolve } from "path";
 import type {
   IExpectedApiQueryRcResponse, 
-  IExpectedApiQueryRvResponse 
+  IExpectedApiQueryRvResponse,
+  IExpectedApiQueryCompareResponse,
 } from "../types.js";
 import {
 	parseRcFeeds, 
@@ -15,6 +16,7 @@ import {
 	parseRvApiQuery,
 	compareParsedRcs,
 	groupDiscussionsByDate,
+  parseCompareApiQuery,
 } from "../utils.js";
 
 import { 
@@ -78,7 +80,7 @@ describe('RecentDiscussions: Successfully parse the Recent Changes RSS Feed', ()
     expect(gotResults2).toEqual(expectedParsedRss2);
   });
   
-})
+});
 
 describe('RecentDiscussions: Successfully parse the Recent Changes Query API', () => {
   const gotResults1 = (() => {
@@ -179,7 +181,34 @@ describe('RecentDiscussions: Fill intermediary revs', () => {
     expect(parsedApiRcs).toEqual(expectedFinalOutputUncached); 
   });
 
-})
+});
+
+describe('RecentDiscussions: Parse results obtained from action=compare', () => {
+  test('new topic', () => {
+    const compareApiRes: IExpectedApiQueryCompareResponse = JSON.parse(
+      readFileSync(resolve(__dirname, "./compare-api-new-topic.txt"), { encoding: 'utf-8' })
+    );
+    const comment = parseCompareApiQuery({ 
+      parser: new DOMParser(), 
+      res: compareApiRes, 
+      isReply: false, 
+      heading: 'I am a new topic' }
+    );
+    expect(comment).toEqual('I am a new topic! —');
+  });
+  test('new reply', () => {
+    const compareApiRes: IExpectedApiQueryCompareResponse = JSON.parse(
+      readFileSync(resolve(__dirname, "./compare-api-reply.txt"), { encoding: 'utf-8' })
+    );
+    const comment = parseCompareApiQuery({ 
+      parser: new DOMParser(), 
+      res: compareApiRes, 
+      isReply: true, 
+      heading: 'Some comment' }
+    );
+    expect(comment).toEqual('I am a reply! —');
+  });
+});
 
 describe('RecentDiscussions: Successfully group discussions by date', () => {
   test('group results by date', () => {

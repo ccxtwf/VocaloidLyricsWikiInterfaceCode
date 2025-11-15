@@ -1,0 +1,5 @@
+{
+  "compare": {
+    "*": "<tr>\n  <td colspan=\"2\" class=\"diff-lineno\">Line 148:</td>\n  <td colspan=\"2\" class=\"diff-lineno\">Line 148:</td>\n</tr>\n<tr>\n  <td class=\"diff-marker\"></td>\n  <td class=\"diff-context diff-side-deleted\"><br /></td>\n  <td class=\"diff-marker\"></td>\n  <td class=\"diff-context diff-side-added\"><br /></td>\n</tr>\n<tr>\n  <td class=\"diff-marker\"></td>\n  <td class=\"diff-context diff-side-deleted\"><div>Existing text</div></td>\n  <td class=\"diff-marker\"></td>\n  <td class=\"diff-context diff-side-added\"><div>Existing text</div></td>\n</tr>\n<tr>\n  <td colspan=\"2\" class=\"diff-empty diff-side-deleted\"></td>\n  <td class=\"diff-marker\" data-marker=\"+\"></td>\n  <td class=\"diff-addedline diff-side-added\"><br /></td>\n</tr>\n<tr>\n  <td colspan=\"2\" class=\"diff-empty diff-side-deleted\"></td>\n  <td class=\"diff-marker\" data-marker=\"+\"></td>\n  <td class=\"diff-addedline diff-side-added\"><div>:I am a reply! — [[User:ExampleUser|ExampleUser]] ([[User talk:ExampleUser|talk]]) 14:36, 14 November 2025 (UTC)</div></td>\n</tr>\n"
+  }
+}

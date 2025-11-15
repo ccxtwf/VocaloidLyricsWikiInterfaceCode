@@ -7,7 +7,8 @@ import type {
   IParsedApiQueryRc, 
   IGroupedParsedApiQueryRc,
   IExpectedApiQueryRcResponse, 
-  IExpectedApiQueryRvResponse 
+  IExpectedApiQueryRvResponse, 
+  IExpectedApiQueryCompareResponse
 } from "./types.js";
 
 /**
@@ -244,6 +245,26 @@ export function parseRvApiQuery(parser: DOMParser, res: IExpectedApiQueryRvRespo
       }
     })
   }
+}
+
+/**
+ * For comments that have failed to load, use `action=compare` of the MediaWiki Action API to 
+ * parse the added comment. One request is made for one comment, so this is only done on request. 
+ * 
+ * @param parser 
+ * @param res 
+ */
+export function parseCompareApiQuery({ parser, res, heading, isReply }: {parser: DOMParser, res: IExpectedApiQueryCompareResponse, heading: string, isReply: boolean }): string {
+  const diffs = res.compare['*'];
+  const d = parser.parseFromString(`<html><table>${diffs}</table></html>`, 'application/xml');
+  const arrd = parseNewAdditionDiffs(d);
+  const comment = buildStringFromDiffs(
+    parser,
+    arrd, 
+    heading, 
+    isReply
+  );
+  return comment;
 }
 
 /**
