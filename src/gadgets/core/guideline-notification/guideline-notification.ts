@@ -63,7 +63,7 @@
 			return;
 		}
 		if (isSongPageWithinThreshold()) {
-			mw.notify( mw.msg('vlw-guideline-notification--header') , { autoHide: false, type: 'warn', title: mw.msg('vlw-guideline-notification--message') } );
+			mw.notify( mw.msg('vlw-guideline-notification--message') , { autoHide: false, type: 'warn', title: mw.msg('vlw-guideline-notification--header') } );
 		}
 	}
 	showNotice();
