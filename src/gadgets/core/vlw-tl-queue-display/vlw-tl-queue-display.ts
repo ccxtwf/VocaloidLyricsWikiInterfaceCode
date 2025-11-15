@@ -31,7 +31,7 @@ interface IAppStore {
   const TL_CHECKING_PAGE_NAME = 'Help talk:Translation Checking';
   const SERVER_RESPONSE_CACHE_EXPIRATION = 15 * 60;					// 15 minutes
   const LOCALSTORAGE_CACHE_EXPIRATION = 30 * 60;        		// 30 minutes
-  const SHOW_NUMBER_OF_ITEMS_AT_START = 5;
+  const SHOW_NUMBER_OF_ITEMS_AT_START = window.matchMedia("(max-width: 350px)").matches ? 3 : 5;
   const SHOW_MAX_NUMBER_OF_ITEMS = 10;
   
   const LOCALSTORAGE_PREFIX = 'vlw_tl_checking_queue_data';
