@@ -6,9 +6,11 @@
 		'wgNamespaceNumber',
 		'wgCategories'
 	]);
-	const LOCALSTORAGE_KEY = 'skip_nsfw_notice_article_ids_';
-	const USER_PREFERENCE_PREFIX = 'userjs-suppress-nsfw-modal';
-	const ptLc = 10000;
+	const SESSIONSTORAGE_KEY = 'skip-nsfw-notice';
+	const USER_PREFERENCE_KEY = 'userjs-suppress-nsfw-modal';
+	const USER_PREFERENCE_EXPIRY_KEY = USER_PREFERENCE_KEY+'-EXPIRY';
+	const ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+	const SUPPRESS_EXPIRY = 30 * ONE_DAY_IN_MILLISECONDS;	 // 1 month
 	let skipIds: string[] = [];
 	let $modal: JQuery<HTMLElement>;
 	
@@ -27,18 +29,37 @@
 	}
 	
 	// Skip if user has given their consent to not show any NSFW modals
-	if (localStorage.getItem(USER_PREFERENCE_PREFIX) === 'true' || mw.user.options.get([USER_PREFERENCE_PREFIX])[USER_PREFERENCE_PREFIX] === 'true') {
+	const userHasSuppressedModals = checkUserSavedOptions();
+	if (userHasSuppressedModals) {
 		return;
 	}
 	
 	// Skip if user has already given consent for a single page
-	const idx_lc = Math.ceil(config.wgArticleId / ptLc);
-	const lc = localStorage.getItem( LOCALSTORAGE_KEY + idx_lc );
+	const lc = sessionStorage.getItem( SESSIONSTORAGE_KEY );
 	if (!!lc) {
 		skipIds = (lc || '').split(',');
 	}
 	if (skipIds.indexOf(''+config.wgArticleId) > -1) {
 		return;
+	}
+
+	function checkUserSavedOptions(): boolean {
+		const curTimestamp = Date.now();
+		const lcSuppressedModals = localStorage.getItem(USER_PREFERENCE_KEY) === 'true';
+		const lcSuppressedModalsExpiry = +(localStorage.getItem(USER_PREFERENCE_EXPIRY_KEY) || 0);
+		if (lcSuppressedModals && lcSuppressedModalsExpiry > curTimestamp) {
+			return true;
+		}
+		localStorage.removeItem(USER_PREFERENCE_KEY);
+		localStorage.removeItem(USER_PREFERENCE_EXPIRY_KEY);
+		const mwSuppressedModals = mw.user.options.get([USER_PREFERENCE_KEY])[USER_PREFERENCE_KEY] === 'true';
+		const mwSuppressedModalsExpiry = +(mw.user.options.get([USER_PREFERENCE_EXPIRY_KEY])[USER_PREFERENCE_EXPIRY_KEY] || 0);
+		if (mwSuppressedModals && mwSuppressedModalsExpiry > curTimestamp) {
+			localStorage.setItem(USER_PREFERENCE_KEY, 'true');
+			localStorage.setItem(USER_PREFERENCE_EXPIRY_KEY, ''+mwSuppressedModalsExpiry);
+			return true;
+		}
+		return false;
 	}
 	
 	function onClickConfirm(): void {
@@ -46,16 +67,17 @@
 		
 		// Save user consent to local storage 
 		skipIds.push(''+config.wgArticleId);
-		localStorage.setItem( LOCALSTORAGE_KEY + idx_lc, skipIds.join(',') );
+		sessionStorage.setItem( SESSIONSTORAGE_KEY, skipIds.join(',') );
 		
 		// Save option to user preferences
 		if ($('#cw-suppress-nsfw-notifs').prop('checked') === true) {
-			//@ts-ignore
-			localStorage.setItem(USER_PREFERENCE_PREFIX, true);
+			const expiry = new Date(Date.now() + SUPPRESS_EXPIRY).getTime();
+			localStorage.setItem(USER_PREFERENCE_KEY, 'true');
+			localStorage.setItem(USER_PREFERENCE_EXPIRY_KEY, ''+expiry);
 			if (mw.user.getId() != 0) {
 				const api = new mw.Api();
-				//@ts-ignore
-				api.saveOption(USER_PREFERENCE_PREFIX, true);
+				api.saveOption(USER_PREFERENCE_KEY, 'true');
+				api.saveOption(USER_PREFERENCE_EXPIRY_KEY, ''+expiry);
 			}
 		}
 		
