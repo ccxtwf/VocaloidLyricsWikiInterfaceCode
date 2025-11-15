@@ -8,8 +8,8 @@ import type { IAlbumFetchUtils, ILookForCategories, IApiSettings, IExpectedApiQu
 
 	class AlbumFetchUtils implements IAlbumFetchUtils {
 		api: mw.Api;
-		titles: string[];
 		lookForCategories: ILookForCategories;
+		checkForAlbumTitles: string[];
 		apiSettings: IApiSettings;
 
 		constructor(serverCacheMaxAge: number) {
@@ -20,6 +20,7 @@ import type { IAlbumFetchUtils, ILookForCategories, IApiSettings, IExpectedApiQu
 				mapToEvents: {},
 				mapToResults: {},
 			};
+			this.checkForAlbumTitles = this.findAlbumSongTitles();
 			this.apiSettings = {
 				serverCacheMaxAge,
 				apiMaxLimit: 500
@@ -48,10 +49,10 @@ import type { IAlbumFetchUtils, ILookForCategories, IApiSettings, IExpectedApiQu
 		createQueryPromises(categories: string[]): [mw.Api.AbortablePromise[], string[][]] {
 			const promises: mw.Api.AbortablePromise[] = [];
 			const batchCategories: string[][] = [];
-			if (this.titles.length === 0) {
+			if (this.checkForAlbumTitles.length === 0) {
 				return [promises, batchCategories];
 			}
-			const ctPerQuery = Math.floor(this.apiSettings.apiMaxLimit / this.titles.length);
+			const ctPerQuery = Math.floor(this.apiSettings.apiMaxLimit / this.checkForAlbumTitles.length);
 			const numQueries = Math.ceil(categories.length / ctPerQuery);
 			for (let i = 0; i < numQueries; i++) {
 				const fetchCats = categories
@@ -62,7 +63,7 @@ import type { IAlbumFetchUtils, ILookForCategories, IApiSettings, IExpectedApiQu
 					prop: 'categories',
 					cllimit: 500,
 					clcategories: fetchCats,
-					titles: this.titles,
+					titles: this.checkForAlbumTitles,
 					redirects: true,
 					maxage: this.apiSettings.serverCacheMaxAge || 0,
 					smaxage: this.apiSettings.serverCacheMaxAge || 0

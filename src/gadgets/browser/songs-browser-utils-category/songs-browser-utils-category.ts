@@ -8,7 +8,6 @@ import type { ICategoryFetchUtils, ILookForCategories, IApiSettings, IExpectedAp
 
 	class CategoryFetchUtils implements ICategoryFetchUtils {
 		api: mw.Api;
-		titles: string[];
 		lookForCategories: ILookForCategories;
 		apiSettings: IApiSettings;
 		categorySettings: { 

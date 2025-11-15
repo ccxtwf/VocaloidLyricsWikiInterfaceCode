@@ -30,7 +30,6 @@ export interface IApiSettings {
 
 interface IBasicFetchUtils {
   api: mw.Api
-	titles: string[]
 	lookForCategories: ILookForCategories
 	apiSettings: IApiSettings
   registerCategory: (title: string, event: string) => void
@@ -41,6 +40,7 @@ interface IBasicFetchUtils {
 }
 
 export interface IAlbumFetchUtils extends IBasicFetchUtils {
+  checkForAlbumTitles: string[]
   findAlbumSongTitles: () => string[]
 }
 
