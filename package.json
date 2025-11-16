@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
+    "rollup": "vite build --mode rollup",
     "watch": "vite build --mode watch-build",
     "preview": "vite preview",
     "build-show": "vite build && vite preview",

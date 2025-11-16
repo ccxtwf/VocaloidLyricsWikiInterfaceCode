@@ -1,7 +1,11 @@
-import autogenerateEntrypoint from './plugins/autogenerate-entrypoint.js';
-import generateCssBanner from './plugins/generate-css-banner.js';
-import generateGadgetsDefinitionWikitext from './plugins/generate-gadgets-definition-wikitext.js';
+import {
+  autogenerateEntrypoint,
+  generateCssBanner,
+  generateGadgetsDefinitionWikitext,
+  createMwGadgetImplementation,
+} from './plugins';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
+
 import { 
   readGadgetsDefinition, 
   getGadgetsToBuild,
@@ -22,14 +26,15 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
   const env = loadEnv(mode, process.cwd(), '');
   const { 
     GADGET_NAMESPACE: gadgetNamespace = 'ext.gadget',
-    GITHUB_REPOSITORY_URL: ghUrl = '', 
-    GITHUB_REPOSITORY_BRANCH: ghBranch = 'development',
+    GIT_REPOSITORY_URL: ghUrl = '', 
+    GIT_REPOSITORY_BRANCH: ghBranch = 'development',
     SERVER_DEV_ORIGIN: serverDevOrigin = 'http://localhost:5173',
     SERVER_PREVIEW_ORIGIN: serverPreviewOrigin = 'http://localhost:4173',
   } = env;
   
   const isDev = mode === 'development';
   const isOnBuildWatch = mode === 'watch-build';
+  const createRolledUpImplementation = mode === 'rollup';
   
   if (isDev) { 
     setViteServerOrigin(serverDevOrigin); 
@@ -51,6 +56,10 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
 
       // On Vite Build, generate the contents of MediaWiki:Gadgets-definition
       generateGadgetsDefinitionWikitext(gadgetsDefinition),
+
+      // Create the rolled up gadget implementation if prompted to
+      createRolledUpImplementation && 
+        createMwGadgetImplementation(gadgetsToBuild, mwInterfaceCodeToBuild),
       
       // On Vite Build, copy the i18n.json files to dist/
       viteStaticCopy({
@@ -59,12 +68,13 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
       }),
 
       // On Vite Build, automatically add banner to each CSS file
-      generateCssBanner(ghUrl, ghBranch, gadgetsDefinition)
+      !createRolledUpImplementation && 
+        generateCssBanner(ghUrl, ghBranch, gadgetsDefinition)
     ],
     build: {
       target: 'es2018',
-      minify: false,
-      cssMinify: false,
+      minify: createRolledUpImplementation,
+      cssMinify: createRolledUpImplementation,
       rollupOptions: {
         input: bundleInputs,
         output: {
@@ -79,7 +89,8 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
             }
             return 'assets/[name][extname]';
           },
-          banner: generateScriptBanner({ ghUrl, ghBranch, gadgetsDefinition })
+          banner: createRolledUpImplementation ? undefined : 
+            generateScriptBanner({ ghUrl, ghBranch, gadgetsDefinition })
         },
       },
       outDir: 'dist',

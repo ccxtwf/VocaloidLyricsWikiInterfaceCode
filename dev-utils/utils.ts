@@ -112,7 +112,7 @@ export function resolveSrcGadgetsPath(gadgetSectionName?: string, gadgetName?: s
  * 
  * @param filename 
  */
-export function resolveSrcMediawikiGadgetsPath(filename?: string): string {
+export function resolveSrcMediawikiCodePath(filename?: string): string {
   const srcDirPath = resolveSrcPath();
   const mediawikiDir = resolve(srcDirPath, './mediawiki');
   let fileDir = mediawikiDir;
@@ -141,6 +141,43 @@ export function resolveDistPath(relativeFilepath?: string): string {
     mkdirSync(dir);
   }
   return dir;
+}
+
+/**
+ * Resolves the path of the dist/gadgets directory. If `gadgetSectionName` and `gadgetName`
+ * is provided, then this function will resolve the path of the gadget section / gadget's 
+ * subdirectory.
+ * 
+ * @param gadgetSectionName 
+ * @param gadgetName 
+ * @param codeRelativePath
+ * @returns 
+ */
+export function resolveDistGadgetsPath(gadgetSectionName?: string, gadgetName?: string, codeRelativePath?: string): string {
+  const srcDirPath = resolveDistPath();
+  const gadgetsDir = resolve(srcDirPath, './gadgets');
+  let gadgetDir = gadgetsDir;
+  for (let rel of [gadgetSectionName, gadgetName, codeRelativePath]) {
+    if (!rel) { break; }
+    gadgetDir = resolve(gadgetDir, rel);
+  }
+  return normalizePath(gadgetDir);
+}
+
+/**
+ * Resolves the path of the dist/mediawiki directory. If `filename` is given then 
+ * this function will resolve the path of the file within the directory.
+ * 
+ * @param filename 
+ */
+export function resolveDistMediawikiCodePath(filename?: string): string {
+  const srcDirPath = resolveDistPath();
+  const mediawikiDir = resolve(srcDirPath, './mediawiki');
+  let fileDir = mediawikiDir;
+  if (!!filename) {
+    fileDir = resolve(fileDir, filename);
+  }
+  return normalizePath(fileDir);
 }
 
 /**

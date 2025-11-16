@@ -9,7 +9,7 @@ import { resolveSrcPath } from './utils.js';
 /**
  * Creates a piece of text to be added to bundled JS & CSS files
  * 
- * @param ghUrl URL to GitHub Repository
+ * @param ghUrl URL to Git Repository
  * @param ghBranch name of Git branch (default: development)
  * @param id id of bundle input
  * @param gadgetDefinition defines gadget metadata

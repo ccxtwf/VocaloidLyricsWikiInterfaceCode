@@ -13,7 +13,7 @@ import type { GadgetDefinition } from '../dev-utils/types.js';
 export default function autogenerateEntrypoint(gadgetsToBuildAtIntialState: GadgetDefinition[], mediawikiInterfaceCodeToBuildAtInitialState: GadgetDefinition[]): PluginOption {
   
   return {
-    name: 'autogenerateEntrypoint',
+    name: 'autogenerate-entrypoint',
     enforce: 'post', // Enforce after Vite build plugins
 
     // Build Mode

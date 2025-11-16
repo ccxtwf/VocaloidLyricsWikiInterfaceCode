@@ -9,11 +9,13 @@ import {
   removeFileExtension, 
   resolveFileExtension,
   resolveSrcGadgetsPath,
-  resolveSrcMediawikiGadgetsPath,
+  resolveSrcMediawikiCodePath,
   resolveEntrypointFilepath,
   checkGadgetExists,
   getGadgetId,
   resolveFilepathForBundleInputKey,
+  resolveDistGadgetsPath,
+  resolveDistMediawikiCodePath,
 } from './utils.js';
 
 const { gadgetsDir, mediawikiInterfaceDir } = resolveCodeDirectory();
@@ -50,7 +52,7 @@ export function setGadgetNamespace(_gadgetNamespace: string): void {
  */
 export function resolveCodeDirectory(): { gadgetsDir: string, mediawikiInterfaceDir: string } {
   const gadgetsDir = resolveSrcGadgetsPath();
-  const mediawikiInterfaceDir = resolveSrcMediawikiGadgetsPath();
+  const mediawikiInterfaceDir = resolveSrcMediawikiCodePath();
   return { gadgetsDir, mediawikiInterfaceDir };
 }
 
@@ -315,7 +317,8 @@ function addGadgetImplementationLoadConditions(gadgetImplementation: string,
     dependencies = null, rights = null, skins = null, 
     actions = null, categories = null, namespaces = null, 
     contentModels = null 
-  } = {} }: GadgetDefinition
+  } = {} }: GadgetDefinition,
+  { minify = false }: { minify: boolean }
 ): string {
   if ([dependencies, rights, skins, actions, categories, namespaces, contentModels].every((v) => v === null)) {
     return gadgetImplementation;
@@ -358,12 +361,12 @@ function addGadgetImplementationLoadConditions(gadgetImplementation: string,
 
   if (!!dependencies) {
     dependencies = normalizeVariable(dependencies);
-    wrapped = `mw.loader.using([${dependencies.map(el => `"${el}"`).join(',')}],function(require){\n  ${wrapped}\n  });`
+    wrapped = `mw.loader.using([${dependencies.map(el => `"${el}"`).join(',')}],function(require){${minify ? '' : '\n  '}${wrapped}${minify ? '' : '\n  '}});`
   }
   if (conditions.length === 1) {
     wrapped = `if (${conditions[0]}){\n  ${wrapped}\n  }`;
   } else if (conditions.length > 0) {
-    wrapped = `if ([${conditions.join(',')}].every(function(el){ return el; })){\n  ${wrapped}\n  }`;
+    wrapped = `if ([${conditions.join(',')}].every(function(el){${minify ? '' : ' '}return el;${minify ? '' : ' '}})){${minify ? '' : '\n  '}${wrapped}${minify ? '' : '\n  '}}`;
   }
 
   return wrapped;
@@ -377,9 +380,10 @@ function addGadgetImplementationLoadConditions(gadgetImplementation: string,
  * (through mw.loader.impl).
  * 
  * @param gadget
+ * @param rollup  Set as true to get the gadget to write the rolled up gadget implementation
  * @returns
  */
-export async function createGadgetImplementation(gadget: GadgetDefinition): Promise<string> {
+export async function createGadgetImplementation(gadget: GadgetDefinition, rollup: boolean = false): Promise<string> {
   try {
     const { section, name } = gadget;
     
@@ -390,32 +394,62 @@ export async function createGadgetImplementation(gadget: GadgetDefinition): Prom
 
     const hash = crypto.randomBytes(4).toString('hex');
 
-    const scriptsToLoad = getScriptsToLoadFromGadgetDefinition(gadget)
-      .map((script) => {
-        const scriptUrl = getStaticUrlToFile(script.replaceAll('"', '\\"'), { 
-          gadgetSubdir: `${section}/${name}`, isMediawikiInterfaceCode: isMwInterfaceCode
-        });
-        return `"${scriptUrl}"`;
-      });
-    
-    const stylesToLoad = getStylesheetsToLoadFromGadgetDefinition(gadget)
-      .map((style) => {
-        const styleUrl = getStaticUrlToFile(style.replaceAll('"', '\\"'), { 
-          gadgetSubdir: `${section}/${name}`, isMediawikiInterfaceCode: isMwInterfaceCode
-        });
-        return `"${styleUrl}"`;
-      });
+    let snippet: string;
 
-    let snippet = `  mw.loader.impl(function (){
-      return [
-        "${namespace}.${name}@${hash}",
-        [${scriptsToLoad.join(',')}],
-        {"url":{"all":[${stylesToLoad.join(',')}]}},
-        {}, {}, null
-      ];
-    });`;
-    snippet = addGadgetImplementationLoadConditions(snippet, gadget);
-    snippet = `(function (mw) {\n  ${snippet}\n})(mediaWiki);`
+    if (rollup) {
+
+      const scriptContents = await Promise.all(
+        getScriptsToLoadFromGadgetDefinition(gadget)
+          .map((script) => readFile(
+            isMwInterfaceCode ?
+              resolveDistMediawikiCodePath(resolveFileExtension(script)) :
+              resolveDistGadgetsPath(section, name, resolveFileExtension(script)), 
+            { encoding: 'utf-8', flag: 'r' }
+          ))
+      );
+
+      const styleContents = (await Promise.all(
+        getStylesheetsToLoadFromGadgetDefinition(gadget)
+          .map((style) => readFile(
+            isMwInterfaceCode ?
+              resolveDistMediawikiCodePath(resolveFileExtension(style)) :
+              resolveDistGadgetsPath(section, name, resolveFileExtension(style)), 
+            { encoding: 'utf-8', flag: 'r' }
+          ))
+      )).map(contents => `"${contents.replaceAll(/"/g, '\\"').trim()}"`);
+      
+      snippet = `mw.loader.impl(function(){return ["${namespace}.${name}@${hash}",function($,jQuery,require,module){${scriptContents.join('\n')}},{"css":[${styleContents.join(',')}]},{},{},null];});`.trim();
+
+    } else {
+
+      const scriptsToLoad = getScriptsToLoadFromGadgetDefinition(gadget)
+        .map((script) => {
+          const scriptUrl = getStaticUrlToFile(script.replaceAll('"', '\\"'), { 
+            gadgetSubdir: `${section}/${name}`, isMediawikiInterfaceCode: isMwInterfaceCode
+          });
+          return `"${scriptUrl}"`;
+        });
+      
+      const stylesToLoad = getStylesheetsToLoadFromGadgetDefinition(gadget)
+        .map((style) => {
+          const styleUrl = getStaticUrlToFile(style.replaceAll('"', '\\"'), { 
+            gadgetSubdir: `${section}/${name}`, isMediawikiInterfaceCode: isMwInterfaceCode
+          });
+          return `"${styleUrl}"`;
+        });
+
+      snippet = `  mw.loader.impl(function (){
+        return [
+          "${namespace}.${name}@${hash}",
+          [${scriptsToLoad.join(',')}],
+          {"url":{"all":[${stylesToLoad.join(',')}]}},
+          {}, {}, null
+        ];
+      });`;
+    }
+
+    snippet = addGadgetImplementationLoadConditions(snippet, gadget, { minify: rollup });
+    snippet = `(function (mw) {${rollup ? '': '\n  '}${snippet}${rollup ? '' : '\n'}})(mediaWiki);`
 
     return snippet;
 
@@ -439,7 +473,7 @@ export function mapWikicodeSourceFiles(gadgetsToBuild: GadgetDefinition[], mwInt
   mwInterfaceCodeToBuild.forEach((definition) => {
     const loadFile = (filepath: string) => {
       const key = `mediawiki/${resolveFilepathForBundleInputKey(filepath)}`;
-      entries[key] = resolveSrcMediawikiGadgetsPath(filepath);
+      entries[key] = resolveSrcMediawikiCodePath(filepath);
     }
     getStylesheetsToLoadFromGadgetDefinition(definition).forEach(loadFile);
     getScriptsToLoadFromGadgetDefinition(definition).forEach(loadFile);
