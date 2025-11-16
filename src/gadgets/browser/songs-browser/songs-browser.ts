@@ -102,11 +102,9 @@ import { ISongBrowserDropdownOption, IAlbumFetchUtils, ICategoryFetchUtils } fro
 		);
 		$container = $('#songs-browser-container');
 		$dropdown = $('#songs-browser .dropdown-menu ul');
-		console.log($dropdown);
 		
 		for (let i = 0; i < DROPDOWN_OPTIONS.length; i++) {
 			const isChecked = selectedOptionsOnStorage.indexOf(i) > -1;
-			console.log('Appending');
 			$dropdown.append(
 				$('<li>')
 					.append(
