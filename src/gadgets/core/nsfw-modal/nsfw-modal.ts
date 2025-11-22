@@ -1,39 +1,39 @@
+"use strict";
+
+const config = mw.config.get([
+	'wgArticleId',
+	'wgNamespaceNumber',
+	'wgCategories'
+]);
+const SESSIONSTORAGE_KEY = 'skip-nsfw-notice';
+const USER_PREFERENCE_KEY = 'userjs-suppress-nsfw-modal';
+const USER_PREFERENCE_EXPIRY_KEY = USER_PREFERENCE_KEY+'-EXPIRY';
+const ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+const SUPPRESS_EXPIRY = 30 * ONE_DAY_IN_MILLISECONDS;	 // 1 month
+let skipIds: string[] = [];
+let $modal: JQuery<HTMLElement>;
+
+const messages = {
+	'vlw-nsfw-modal--cw-heading': 'The following content is not safe for work.',
+	'vlw-nsfw-modal--cw-subheading': 'To continue, you must confirm that you are over the age of 18.',
+	'vlw-nsfw-modal--cw-confirm': 'Yes, I am over the age of 18',
+	'vlw-nsfw-modal--cw-back': 'No, let me go back',
+	'vlw-nsfw-modal--do-not-show': 'Don\'t show me any more of these warnings.'
+};
+mw.messages.set(messages);
+
 (function (mw, $) {
-	"use strict";
-
-	const config = mw.config.get([
-		'wgArticleId',
-		'wgNamespaceNumber',
-		'wgCategories'
-	]);
-	const SESSIONSTORAGE_KEY = 'skip-nsfw-notice';
-	const USER_PREFERENCE_KEY = 'userjs-suppress-nsfw-modal';
-	const USER_PREFERENCE_EXPIRY_KEY = USER_PREFERENCE_KEY+'-EXPIRY';
-	const ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
-	const SUPPRESS_EXPIRY = 30 * ONE_DAY_IN_MILLISECONDS;	 // 1 month
-	let skipIds: string[] = [];
-	let $modal: JQuery<HTMLElement>;
-	
-	const messages = {
-		'vlw-nsfw-modal--cw-heading': 'The following content is not safe for work.',
-		'vlw-nsfw-modal--cw-subheading': 'To continue, you must confirm that you are over the age of 18.',
-		'vlw-nsfw-modal--cw-confirm': 'Yes, I am over the age of 18',
-		'vlw-nsfw-modal--cw-back': 'No, let me go back',
-		'vlw-nsfw-modal--do-not-show': 'Don\'t show me any more of these warnings.'
-	};
-	mw.messages.set(messages);
-
 	// Skip if namespace is not main or the category is not detected
 	if (config.wgNamespaceNumber !== 0 || config.wgCategories.indexOf("Songs with NSFW content") < 0) {
 		return;
 	}
-	
+
 	// Skip if user has given their consent to not show any NSFW modals
 	const userHasSuppressedModals = checkUserSavedOptions();
 	if (userHasSuppressedModals) {
 		return;
 	}
-	
+
 	// Skip if user has already given consent for a single page
 	const lc = sessionStorage.getItem( SESSIONSTORAGE_KEY );
 	if (!!lc) {
@@ -59,9 +59,12 @@
 			localStorage.setItem(USER_PREFERENCE_EXPIRY_KEY, ''+mwSuppressedModalsExpiry);
 			return true;
 		}
+		const api = new mw.Api();
+		api.saveOption(USER_PREFERENCE_KEY, null);
+		api.saveOption(USER_PREFERENCE_EXPIRY_KEY, null);
 		return false;
 	}
-	
+
 	function onClickConfirm(): void {
 		$('#cw-modal').hide();
 		
@@ -87,7 +90,7 @@
 		document.body.style.top = '';
 		window.scrollTo(0, parseInt(scrollY || '0') * -1);
 	}
-	
+
 	function onClickBack() {
 		if (window.history.length > 1) {
 			window.history.back();
@@ -101,7 +104,7 @@
 			}
 		}, 100);
 	}
-	
+
 	function init() {
 		$modal = $('<div>', { id: 'cw-modal' })
 			.append(
@@ -149,7 +152,7 @@
 		$('#cw-modal #cw-confirm').on('click', onClickConfirm);
 		$('#cw-modal #cw-back').on('click', onClickBack);
 	}
-	
+
 	init();
 	mw.hook('wikipage.content').add(function () {
 		$('#cw-modal').show();
@@ -157,5 +160,5 @@
 		document.body.style.position = 'fixed';
 		document.body.style.top = '-' + window.scrollY + 'px';
 	});
-	
+  
 }(mediaWiki, jQuery));

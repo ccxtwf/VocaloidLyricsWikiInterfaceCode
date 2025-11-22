@@ -48,11 +48,14 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
   const mwInterfaceCodeToBuild = await getMediaWikiInterfaceCodeToBuild();
   const [bundleInputs, bundleAssets] = mapWikicodeSourceFiles(gadgetsToBuild, mwInterfaceCodeToBuild);
 
+  const minify = createRolledUpImplementation;
+
   return {
     plugins: [
+
       // On Vite Build, watches changes made to files in gadgets/ subdirectory
       // and generate the load.js entrypoint file 
-      autogenerateEntrypoint(gadgetsToBuild, mwInterfaceCodeToBuild),
+      autogenerateEntrypoint(gadgetsToBuild, mwInterfaceCodeToBuild, createRolledUpImplementation),
 
       // On Vite Build, generate the contents of MediaWiki:Gadgets-definition
       generateGadgetsDefinitionWikitext(gadgetsDefinition),
@@ -73,8 +76,8 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
     ],
     build: {
       target: 'es2018',
-      minify: createRolledUpImplementation,
-      cssMinify: createRolledUpImplementation,
+      minify: minify,
+      cssMinify: minify,
       rollupOptions: {
         input: bundleInputs,
         output: {
@@ -112,8 +115,12 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
       },
     },
     esbuild: {
+      // Specify build as CommonJS for MediaWiki userscripts
+      format: 'esm',
       // Preserve banner & footer
       legalComments: 'inline',
+      // Ignore annotations such as /* @__PURE__ */ when building
+      ignoreAnnotations: true,
     },
     optimizeDeps: {
       esbuildOptions: {

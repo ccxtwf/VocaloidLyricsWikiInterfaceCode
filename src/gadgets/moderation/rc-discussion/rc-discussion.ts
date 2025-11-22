@@ -20,114 +20,114 @@ import {
 	parseCompareApiQuery
 } from './utils.js';
 
-( function ( $, mw ) {
-	'use strict';
+'use strict';
 
-	// =================
-	//   Configuration
-	// =================
-	const MENU_OPTIONS: IMenuUption[] = [
-		{ 
-			label: 'All (Excluding User Talk)', 
-			frc: '&namespace=3&invert=true', 
-			ns: [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 500, 501, 828, 829]
-		},
-		{ 
-			label: 'All', 
-			frc: '', 
-			ns: null
-		},
-		{
-			label: 'Main Talk', 
-			frc: '&namespace=1', 
-			ns: [1]
-		},
-		{
-			label: 'Help Talk', 
-			frc: '&namespace=13', 
-			ns: [13]
-		},
-		{
-			label: 'Vocaloid Lyrics Wiki Discussion', 
-			frc: '&namespace=4', 
-			ns: [4]
-		},
-		{
-			label: 'Vocaloid Lyrics Wiki Talk', 
-			frc: '&namespace=5', 
-			ns: [5]
-		},
-		{
-			label: 'User Talk', 
-			frc: '&namespace=3', 
-			ns: [3]
-		},
-		{
-			label: 'Category Talk', 
-			frc: '&namespace=15', 
-			ns: [15]
-		},
-		{
-			label: 'File Talk', 
-			frc: '&namespace=7', 
-			ns: [7]
-		},
-		{
-			label: 'MediaWiki Talk', 
-			frc: '&namespace=9', 
-			ns: [9]
-		},
-		{
-			label: 'Template Talk', 
-			frc: '&namespace=11', 
-			ns: [11]
-		},
-		{
-			label: 'Module Talk', 
-			frc: '&namespace=829', 
-			ns: [829]
-		}
-	];
-	const SHOW_ON_SPECIAL_PAGE = 'recentdiscussions';
-	const NUMBER_OF_POSTS = 50;
-	const MAX_DURATION_IN_DAYS = 7;
+// =================
+//   Configuration
+// =================
+const MENU_OPTIONS: IMenuUption[] = [
+	{ 
+		label: 'All (Excluding User Talk)', 
+		frc: '&namespace=3&invert=true', 
+		ns: [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 500, 501, 828, 829]
+	},
+	{ 
+		label: 'All', 
+		frc: '', 
+		ns: null
+	},
+	{
+		label: 'Main Talk', 
+		frc: '&namespace=1', 
+		ns: [1]
+	},
+	{
+		label: 'Help Talk', 
+		frc: '&namespace=13', 
+		ns: [13]
+	},
+	{
+		label: 'Vocaloid Lyrics Wiki Discussion', 
+		frc: '&namespace=4', 
+		ns: [4]
+	},
+	{
+		label: 'Vocaloid Lyrics Wiki Talk', 
+		frc: '&namespace=5', 
+		ns: [5]
+	},
+	{
+		label: 'User Talk', 
+		frc: '&namespace=3', 
+		ns: [3]
+	},
+	{
+		label: 'Category Talk', 
+		frc: '&namespace=15', 
+		ns: [15]
+	},
+	{
+		label: 'File Talk', 
+		frc: '&namespace=7', 
+		ns: [7]
+	},
+	{
+		label: 'MediaWiki Talk', 
+		frc: '&namespace=9', 
+		ns: [9]
+	},
+	{
+		label: 'Template Talk', 
+		frc: '&namespace=11', 
+		ns: [11]
+	},
+	{
+		label: 'Module Talk', 
+		frc: '&namespace=829', 
+		ns: [829]
+	}
+];
+const SHOW_ON_SPECIAL_PAGE = 'recentdiscussions';
+const NUMBER_OF_POSTS = 50;
+const MAX_DURATION_IN_DAYS = 7;
 
-	// Set to the domain of another (live/prod) wiki for testing on a local (non-prod) MW mirror
-	const DEBUG_FOREIGN_WIKI: string = ''; 
+// Set to the domain of another (live/prod) wiki for testing on a local (non-prod) MW mirror
+const DEBUG_FOREIGN_WIKI: string = ''; 
 
-	const LOCAL_STORAGE_KEY = 'vlw_rc_discussions_items';
-	const LOCAL_STORAGE_MAX_AGE = 5 * 60; // 5 minutes
+const LOCAL_STORAGE_KEY = 'vlw_rc_discussions_items';
+const LOCAL_STORAGE_MAX_AGE = 5 * 60; // 5 minutes
 
-	const DEBUGGING_ID = 'gadget-recent-discussions';
+const DEBUGGING_ID = 'gadget-recent-discussions';
 
-	const messages = {
-		'rc-discussion--title': 'Recent Discussions - $1',
-		'rc-discussion--menu-label': 'Recent Discussions',
-		'rc-discussion--menu-tooltip': 'View recent discussion on the $1',
-		'rc-discussion--app-overview': "Use this page to look at recent discussion throughout the $1 (max $2 posts for a $3 day period).",
-		'rc-discussion--prompt-filter': 'Filter Discussions',
-		'rc-discussion--prompt-refresh': 'Refresh',
-		'rc-discussion--action-new-topic': 'posted a new topic',
-		'rc-discussion--action-new-reply': 'posted a reply',
-		'rc-discussion--loading': 'Loading...',
-		'rc-discussion--failed-to-load': "The comment has failed to load. Click this text to get the tool to try loading the comment again.",
-		'rc-discussion--unexpected-error': 'An unexpected error has occured. Please report this bug if it persists.',
-		'rc-discussion--no-data': 'No discussions found with the selected criteria.',
-	};
-	mw.messages.set(messages);
+const messages = {
+	'rc-discussion--title': 'Recent Discussions - $1',
+	'rc-discussion--menu-label': 'Recent Discussions',
+	'rc-discussion--menu-tooltip': 'View recent discussion on the $1',
+	'rc-discussion--app-overview': "Use this page to look at recent discussion throughout the $1 (max $2 posts for a $3 day period).",
+	'rc-discussion--prompt-filter': 'Filter Discussions',
+	'rc-discussion--prompt-refresh': 'Refresh',
+	'rc-discussion--action-new-topic': 'posted a new topic',
+	'rc-discussion--action-new-reply': 'posted a reply',
+	'rc-discussion--loading': 'Loading...',
+	'rc-discussion--failed-to-load': "The comment has failed to load. Click this text to get the tool to try loading the comment again.",
+	'rc-discussion--unexpected-error': 'An unexpected error has occured. Please report this bug if it persists.',
+	'rc-discussion--no-data': 'No discussions found with the selected criteria.',
+};
+mw.messages.set(messages);
 
-	const parser = new window.DOMParser();
+const parser = new window.DOMParser();
 
-	// =================
-	//   UI
-	// =================
-	const config = mw.config.get([
-		'wgPageName',
-		'wgCanonicalSpecialPageName',
-		'wgScriptPath',
-		'wgSiteName'
-	]);
+// =================
+//   UI
+// =================
+const config = mw.config.get([
+	'wgPageName',
+	'wgCanonicalSpecialPageName',
+	'wgScriptPath',
+	'wgSiteName'
+]);
 
+(function (mw, $) {
 	installPortletLink();
 	if (config.wgCanonicalSpecialPageName !== SHOW_ON_SPECIAL_PAGE) {
 		return;
@@ -513,4 +513,4 @@ import {
 	//   Run
 	// =================	
 	loadApp();
-} )( jQuery, mediaWiki );
+})(mediaWiki, jQuery);

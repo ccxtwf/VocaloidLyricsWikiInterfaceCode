@@ -9,14 +9,18 @@ import {
 } from "./utils.js";
 import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSettings } from "./hottable.js";
 
+'use strict';
+
 (function (mw, $) {
-  'use strict';
-  
   // Only on desktop
-  if (((window.screen || {}).width || window.innerWidth) < 500 || ((window.screen || {}).height || window.innerHeight) < 500) { return; }
-  
+  if (((window.screen || {}).width || window.innerWidth) < 500 || ((window.screen || {}).height || window.innerHeight) < 500) { 
+    return;
+  }
+
   // Only load once
-  if ($('#ca-edit-lyrics').length > 0) { return; }
+  if ($('#ca-edit-lyrics').length > 0) { 
+    return;
+  }
 
   const DEBUGGING_ID = "vlw-lyrics-editor";
 
@@ -34,7 +38,7 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
     'vlw-lyrics-editor--report-message': 'You can report any bugs to [[MediaWiki talk:Gadget-lyrics-editor]] or to [[User talk:CoolMikeHatsune22|the script developer\'s user talk page.]]'
   };
   mw.messages.set(messages);
-  
+
   // =================
   //   Configuration
   // =================
@@ -68,7 +72,7 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
     }
     return selectedRows;
   }
-  
+
   function resetColumnHeaders(numColumns: number): void {
     const columnHeaders = ['Row style'];
     const columnWidths = [160];
@@ -81,7 +85,7 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
       colWidths: columnWidths,
     });
   }
-  
+
   function _cbHottableOnPaste(_: string, selection: CellSelection[], __: MouseEvent): void {
     if (!selection || selection.length === 0) {
       return;
@@ -142,12 +146,12 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
         window.alert(mw.msg('vlw-lyrics-editor--failed-to-paste'));
       });
   }
-  
+
   // Criteria for unbold/unitalicize: At least one row must be styled
   // Criteria for bold/italicize: Every row must not be styled
   // Return the boolean value to set whether the option should be hidden
   function _cbHottableCheckForStyleInSelection(rowInlineCss: RegExp, cellWikitextMarkup: RegExp, modeRemoveStyle: boolean): ContextMenuCallback {
-  	return function(): boolean {
+    return function(): boolean {
       const selectedRows = getSelectedRowData((this as Core));
       let res: boolean;
       if (modeRemoveStyle) {
@@ -163,7 +167,7 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
           return false;
         });
       } else {
-      	res = selectedRows.every(function (row) {
+        res = selectedRows.every(function (row) {
           if ((row[0] || '').match(rowInlineCss) !== null) {
             return false;
           } 
@@ -178,9 +182,9 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
       return !res;
     };
   }
-  
+
   function _cbHottableAddStyle(customStyle: string): ContextMenuCallback {
-  	return function (_, selection, __): void {
+    return function (_, selection, __): void {
       if (!selection || selection.length === 0) {
         return;
       }
@@ -196,9 +200,9 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
       (this as Core).loadData(data);
     };
   }
-  
+
   function _cbHottableRemoveStyle(rowInlineCss: RegExp, cellWikitextMarkup: RegExp): ContextMenuCallback {
-  	return function (_, selection, __): void {
+    return function (_, selection, __): void {
       if (!selection || selection.length === 0) {
         return;
       }
@@ -208,7 +212,7 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
       } = selection[0];
       const data = (this as Core).getData();
       for (let i = fromRow!; i <= toRow!; i++) {
-      	data[i][0] = (data[i][0] || '').replace(rowInlineCss, "");
+        data[i][0] = (data[i][0] || '').replace(rowInlineCss, "");
         for (let j = 1; j < data[i].length; j++) {
           const m = ((data[i][j] || '') as string).match(cellWikitextMarkup);
           if (m !== null) {
@@ -219,7 +223,7 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
       (this as Core).loadData(data);
     };
   }
-  
+
   const contextMenu: ContextMenuSettings = {
     items: {
       copy: { disabled: false },
@@ -315,42 +319,42 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
       clear_column: { disabled: false }
     }
   };
-  
+
   function clearHotTable(): void {
-  	if ($hotTable) {
-	  $hotTable.destroy();
-	  $('#lyrics-editor-jstable-container-wrapper').html('').append(
+    if ($hotTable) {
+    $hotTable.destroy();
+    $('#lyrics-editor-jstable-container-wrapper').html('').append(
       $('<div>', { id: 'lyrics-editor-jstable-container' })
     );
-	}
   }
-  
+  }
+
   function resetColumnHeadersOnUndoRedo({ actionType }: { actionType: string }): void {
     if (actionType === 'insert_col' || actionType === 'remove_col') {
       resetColumnHeaders((this as Core).countCols());
     }
   }
-  
+
   // =================
   //   Run on loaded modal
   // =================
   function replaceLyricsTable(tableRegexResults: RegExpMatchArray): void {
-  	const oldTable = tableRegexResults[0];
+    const oldTable = tableRegexResults[0];
     const newTable = buildLyricsTable(tableRegexResults.groups!['header']!, $hotTable.getData());
     const oldWikitext = (''+$(EDITOR_TEXTAREA_SELECTOR).val() || '');
     const newWikitext = oldWikitext.replace(oldTable, newTable);
     $(EDITOR_TEXTAREA_SELECTOR).val(newWikitext);
   }
-  
+
   function closeModal(): void {
-  	$modal.hide();
+    $modal.hide();
     clearHotTable();
     $modalContent.find('#lyrics-editor-table-selector').html('');
     $modalContent.find('#lyrics-editor-loader').show();
   }
-  
+
   function loadLyricsData(tableRegexResults: RegExpMatchArray): void {
-  	const [lyrics, numColumns] = parseLyrics(tableRegexResults.groups!['body']!, MAX_HOTTABLE_COLUMNS-1);
+    const [lyrics, numColumns] = parseLyrics(tableRegexResults.groups!['body']!, MAX_HOTTABLE_COLUMNS-1);
     const gridSettings: GridSettings = {
       data: lyrics,
       rowHeaders: true,
@@ -459,7 +463,7 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
       closeModal();
     });
   }
-  
+
   function findListOfActionButtons (skin: string): JQuery<HTMLElement> | null {
     let list: JQuery<HTMLElement> | null;
     switch (skin) {
@@ -477,8 +481,8 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
         $('#p-cactions').removeClass('emptyPortlet');
         break;
       case "medik":
-		    list = $('#p-actions ul');
-		    break;
+        list = $('#p-actions ul');
+        break;
       case "citizen":
         list = $('#p-cactions .citizen-menu__content .citizen-menu__content-list');
         break;
@@ -487,7 +491,7 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
     }
     return list;
   }
-  
+
   function addButton (skin: string, $list: JQuery<HTMLElement>): void {
     const commonId = 'ca-edit-lyrics';
     if ($('#'+commonId).length > 0) return; 
@@ -545,7 +549,7 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
           break;
     }
   }
-  
+
   function init(skin: string): void {
     installModal();
     $list = findListOfActionButtons(skin);
@@ -553,7 +557,7 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
       addButton(skin, $list);
     }
   }
-  
+
   // =================
   //   Entrypoint
   // =================
@@ -567,5 +571,4 @@ import { Core, GridSettings, CellSelection, ContextMenuCallback, ContextMenuSett
     }, function () {
       console.error("Failed to load Handsontable JS dependency for Gadget-lyrics-editor.js", DEBUGGING_ID);
     });
-    
-}(mediaWiki, jQuery));
+})(mediaWiki, jQuery);

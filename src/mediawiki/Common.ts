@@ -20,18 +20,45 @@
 
 	/* Bandcamp Embed */
 	(function () {
-		const $widgetElement = $(".bandcamp-embed");
-		const src = `https://bandcamp.com/EmbeddedPlayer/album=${$widgetElement.data("album-id")}/size=large/bgcol=${$widgetElement.data("bgcolor")}/linkcol=0687f5/tracklist=false/track=${$widgetElement.data("track-id")}/transparent=true/`;
-		const $iframe = $("<iframe>", {
-			src: src,
-			width: $widgetElement.data("width"),
-			height: $widgetElement.data("height"),
-			allowtransparency: "true",
-			frameborder: "0",
-			sandbox: "allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
-		});
-		//@ts-ignore
-		$widgetElement.html($iframe);
+		const widthBreakpoint = 350;
+		function installBandcampEmbeds(this: HTMLElement) {
+			const albumId = $(this).data("album-id");
+			const trackId = $(this).data("track-id");
+			const bgColor = $(this).data("bgcolor") || 'ffffff';
+			if (!albumId || !trackId) {
+				return;
+			}
+
+			const containerWidth = $(this).innerWidth();
+			const isOnSmallWidthViewports = (!containerWidth || containerWidth < widthBreakpoint);
+			const width = isOnSmallWidthViewports ? '100%' : 
+				($(this).data("width") || widthBreakpoint);
+			const height = isOnSmallWidthViewports ? 120 : 
+				($(this).data("height") || widthBreakpoint);
+			
+			const src = isOnSmallWidthViewports ? 
+				`https://bandcamp.com/EmbeddedPlayer/album=${albumId}/size=large/bgcol=${bgColor}/linkcol=0687f5/tracklist=false/artwork=small/track=${trackId}/transparent=true/`
+				: 
+				`https://bandcamp.com/EmbeddedPlayer/album=${albumId}/size=large/bgcol=${bgColor}/linkcol=0687f5/minimal=true/track=${trackId}/transparent=true/`;
+			
+			const $iframe = $("<iframe>", {
+				src,
+				width,
+				height,
+				allowtransparency: "true",
+				frameborder: "0",
+				sandbox: "allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+			});
+
+			$(this).html('').append($iframe);
+		}
+
+		$(".bandcamp-embed").each(installBandcampEmbeds);
+		window
+			.matchMedia(`(max-width: ${widthBreakpoint}px)`)
+			.addEventListener("change", function() {
+				$(".bandcamp-embed").each(installBandcampEmbeds);
+			});
 	})();
 	
 	/* Add custom Add New Topic for Discussion Tools */

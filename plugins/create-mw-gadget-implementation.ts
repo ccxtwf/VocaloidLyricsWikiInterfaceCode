@@ -26,14 +26,14 @@ export default function createMwGadgetImplementation(gadgetsToBuild: GadgetDefin
       for (const code of mediawikiInterfaceCode) {
         const gadgetImplementation = await createGadgetImplementation(code, true);
         await writeFile(mediaWikiInterfaceGadgetImplementationFilePath, gadgetImplementation, { encoding: 'utf8', flag: 'a'});
-        console.log(`✓ Created the MediaWiki gadget implementation ${mediaWikiInterfaceGadgetImplementationFilePath}`);
+        this.info(`✓ Created the MediaWiki gadget implementation ${mediaWikiInterfaceGadgetImplementationFilePath}`);
       }
 
       for (const gadget of gadgetsToBuild) {
         const gadgetImplementation = await createGadgetImplementation(gadget, true);
         const gadgetImplementationFilePath = resolveDistGadgetsPath(gadget.section, gadget.name, 'gadget-impl.js');
         await writeFile(gadgetImplementationFilePath, gadgetImplementation, { encoding: 'utf8', flag: 'w'});
-        console.log(`✓ Created the MediaWiki gadget implementation ${[gadget.section, gadget.name, 'gadget-impl.js'].join('/')}`);
+        this.info(`✓ Created the MediaWiki gadget implementation ${[gadget.section, gadget.name, 'gadget-impl.js'].join('/')}`);
       }
     },
   }

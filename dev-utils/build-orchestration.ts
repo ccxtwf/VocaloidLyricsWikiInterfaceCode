@@ -1,5 +1,5 @@
-import { readFile, writeFile, readdir } from 'fs/promises';
-import { resolve } from 'path';
+import { readFile, readdir } from 'fs/promises';
+import { createWriteStream } from 'fs';
 import { parse } from 'yaml';
 import * as crypto from 'crypto';
 import { Target } from 'vite-plugin-static-copy';
@@ -10,6 +10,7 @@ import {
   resolveFileExtension,
   resolveSrcGadgetsPath,
   resolveSrcMediawikiCodePath,
+  resolveGadgetsDefinitionManifestPath,
   resolveEntrypointFilepath,
   checkGadgetExists,
   getGadgetId,
@@ -17,8 +18,6 @@ import {
   resolveDistGadgetsPath,
   resolveDistMediawikiCodePath,
 } from './utils.js';
-
-const { gadgetsDir, mediawikiInterfaceDir } = resolveCodeDirectory();
 
 let viteServerOrigin: string;
 
@@ -42,18 +41,6 @@ export function setViteServerOrigin(_origin: string): void {
  */
 export function setGadgetNamespace(_gadgetNamespace: string): void {
   namespace = _gadgetNamespace;
-}
-
-/** 
- * Resolve the path to the directory of gadgets and MediaWiki interface code (Common.css/Common.js) 
- * in the Vite project.
- * 
- * @returns
- */
-export function resolveCodeDirectory(): { gadgetsDir: string, mediawikiInterfaceDir: string } {
-  const gadgetsDir = resolveSrcGadgetsPath();
-  const mediawikiInterfaceDir = resolveSrcMediawikiCodePath();
-  return { gadgetsDir, mediawikiInterfaceDir };
 }
 
 /**
@@ -101,7 +88,7 @@ function getStaticUrlToFile(filepath: string, { gadgetSubdir = '', isMediawikiIn
  * @returns
  */
 export async function readGadgetsDefinition(): Promise<GadgetsDefinition> {
-  const contents = await readFile(resolve(gadgetsDir, 'gadgets-definition.yaml'), { encoding: 'utf8' });
+  const contents = await readFile(resolveGadgetsDefinitionManifestPath(), { encoding: 'utf8' });
   const gadgetsDefinition: GadgetsDefinition = parse(contents);
   return gadgetsDefinition;
 }
@@ -248,7 +235,7 @@ export function getGadgetsToBuild(gadgetsDefinition: GadgetsDefinition): GadgetD
 export async function getMediaWikiInterfaceCodeToBuild(): Promise<GadgetDefinition[]> {
   try {
     const definitions: GadgetDefinition[] = [];
-    const files = await readdir(mediawikiInterfaceDir);
+    const files = await readdir(resolveSrcMediawikiCodePath());
     const kvPairs: { [k: string]: string[] } = {};
     files.forEach((filename) => {
       const k = removeFileExtension(filename).toLowerCase();
@@ -272,35 +259,62 @@ export async function getMediaWikiInterfaceCodeToBuild(): Promise<GadgetDefiniti
 }
 
 /**
- * Build the entrypoint file (load.js) to be served by the Vite server and to be 
+ * Build the entrypoint file (`load.js`) to be served by the Vite server and to be 
  * loaded on the MediaWiki client.
- * Each module is loaded in the MediaWiki client using mw.loader.impl.  
- * You can check on the status of each module using mw.loader.getState(moduleName).
- * You can call on each module using mw.loader.load() or mw.loader.using().
+ * 
+ * Each module is loaded in the MediaWiki client using `mw.loader.impl`.  
+ * 
+ * You can check on the status of each module using `mw.loader.getState(moduleName)`.
+ * 
+ * You can call on each module using `mw.loader.load()` or `mw.loader.using()`.
  * 
  * @param gadgetsToBuild
  * @param mediawikiInterfaceCodeToBuild
+ * @param useRolledUpImplementation
  * @returns
  */
 export async function serveGadgets(
   gadgetsToBuild: GadgetDefinition[], 
-  mediawikiInterfaceCodeToBuild: GadgetDefinition[]
+  mediawikiInterfaceCodeToBuild: GadgetDefinition[],
+  useRolledUpImplementation: boolean = false
 ): Promise<void> {
   const entrypointFile = resolveEntrypointFilepath();
-  // Clear entrypoint file
-  await writeFile(entrypointFile, '', { flag: "w+", encoding: "utf8"});
-
-  // Async generator implementation
-  function* awaitTheseTasks() {
-    for (const gadget of mediawikiInterfaceCodeToBuild) {
-      yield createGadgetImplementation(gadget);
+  const writeStream = createWriteStream(entrypointFile, { flags: 'w', encoding: 'utf-8'});
+  try {
+    const createScriptLoadingStatement = (gadget: GadgetDefinition) => {
+      return `mw.loader.load("${
+        getStaticUrlToFile('gadget-impl.js', { 
+          gadgetSubdir: `${gadget.section}/${gadget.name}`, 
+          isMediawikiInterfaceCode: gadget.section === 'mediawiki'
+        })
+      }");`
     }
-    for (const gadget of gadgetsToBuild) {
-      yield createGadgetImplementation(gadget);
+    // Async generator implementation
+    function* awaitTheseTasks() {
+      if (useRolledUpImplementation) {
+        if (mediawikiInterfaceCodeToBuild.length > 0) {
+          yield createScriptLoadingStatement(mediawikiInterfaceCodeToBuild[0]);
+        }
+      } else {
+        for (const gadget of mediawikiInterfaceCodeToBuild) {
+          yield createGadgetImplementation(gadget);
+        }
+      }
+      
+      for (const gadget of gadgetsToBuild) {
+        yield useRolledUpImplementation ? 
+          createScriptLoadingStatement(gadget) : 
+          createGadgetImplementation(gadget);
+      }
     }
-  }
-  for await (const gadgetImplementation of awaitTheseTasks()) {
-    await writeFile(entrypointFile, gadgetImplementation + '\n\n', { flag: "a+", encoding: "utf8" });
+    for await (const gadgetImplementation of awaitTheseTasks()) {
+      writeStream.write(gadgetImplementation);
+      writeStream.write(useRolledUpImplementation ? '\n' : '\n\n');
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    writeStream.close();
   }
 }
 
@@ -427,9 +441,9 @@ export async function createGadgetImplementation(gadget: GadgetDefinition, rollu
           const scriptUrl = getStaticUrlToFile(script.replaceAll('"', '\\"'), { 
             gadgetSubdir: `${section}/${name}`, isMediawikiInterfaceCode: isMwInterfaceCode
           });
-          return `"${scriptUrl}"`;
+          return `${" ".repeat(10)}fetch("${scriptUrl}")\n${" ".repeat(12)}.then(res => res.text())\n${" ".repeat(12)}.then(contents => $.globalEval(\`(() => {\${contents}})()\`))\n${" ".repeat(12)}.catch(console.error);`;
         });
-      
+
       const stylesToLoad = getStylesheetsToLoadFromGadgetDefinition(gadget)
         .map((style) => {
           const styleUrl = getStaticUrlToFile(style.replaceAll('"', '\\"'), { 
@@ -439,13 +453,16 @@ export async function createGadgetImplementation(gadget: GadgetDefinition, rollu
         });
 
       snippet = `  mw.loader.impl(function (){
-        return [
-          "${namespace}.${name}@${hash}",
-          [${scriptsToLoad.join(',')}],
-          {"url":{"all":[${stylesToLoad.join(',')}]}},
-          {}, {}, null
-        ];
-      });`;
+      return [
+        "${namespace}.${name}@${hash}",
+        function($, jQuery, require, module) {${
+          scriptsToLoad.length === 0 ? '' :
+          `\n` + scriptsToLoad.join('\n') + `\n${" ".repeat(8)}`
+        }},
+        {"url":{"all":[${stylesToLoad.join(',')}]}},
+        {}, {}, null
+      ];
+    });`;
     }
 
     snippet = addGadgetImplementationLoadConditions(snippet, gadget, { minify: rollup });
@@ -460,7 +477,7 @@ export async function createGadgetImplementation(gadget: GadgetDefinition, rollu
 }
 
 /**
- * Pass this function to "build.rollupOptions.input" in Vite's config.
+ * Pass this function to "`build.rollupOptions.input`" in Vite's config.
  *
  * @param gadgetsToBuild
  * @param mwInterfaceCodeToBuild
