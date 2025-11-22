@@ -42,10 +42,10 @@ mq.addEventListener("change", function() { _onMqChangeMedik(mq); });
 function _offsetScrollPosition(hash: string) {
   if (!hash) return;
   hash = $.escapeSelector(decodeURI(hash.substring(1)));
-  if ($('#'+hash)) {
-    const anchorTag = $("span[id='" + hash + "']");
+  const anchorTag = $("#" + hash);
+  if (anchorTag.length) {
     $('html, div#content.mw-body').animate({
-      scrollTop : (anchorTag.offset()?.top as number) - ((window as any).MedikScrollOffset as number)
+      scrollTop : anchorTag.offset()!.top - ((window as any).MedikScrollOffset as number)
     }, 250);
   }
 }
