@@ -73,7 +73,7 @@ export function resolveFilepathForBundleInputKey(filepath: string): string {
 }
 
 /**
- * Resolves the path of the src/ directory in the project
+ * Resolves the path of the `src/` directory in the project
  * 
  * @returns 
  */
@@ -86,7 +86,7 @@ export function resolveSrcPath(): string {
 }
 
 /**
- * Resolves the path of the src/gadgets directory. If `gadgetSectionName` and `gadgetName`
+ * Resolves the path of the `src/gadgets` directory. If `gadgetSectionName` and `gadgetName`
  * is provided, then this function will resolve the path of the gadget section / gadget's 
  * subdirectory.
  * 
@@ -107,7 +107,7 @@ export function resolveSrcGadgetsPath(gadgetSectionName?: string, gadgetName?: s
 }
 
 /**
- * Resolves the path of the src/mediawiki directory. If `filename` is given then 
+ * Resolves the path of the `src/mediawiki` directory. If `filename` is given then 
  * this function will resolve the path of the file within the directory.
  * 
  * @param filename 
@@ -123,7 +123,14 @@ export function resolveSrcMediawikiCodePath(filename?: string): string {
 }
 
 /**
- * Resolves the path of the dist/ directory. If a relative filepath is given, resolve
+ * Resolves the path of `src/gadgets/gadgets-definitions.yaml`
+ */
+export function resolveGadgetsDefinitionManifestPath(): string {
+  return resolveSrcGadgetsPath('gadgets-definition.yaml');
+}
+
+/**
+ * Resolves the path of the `dist/` directory. If a relative filepath is given, resolve
  * the path to the given relative filepath. 
  * 
  * @returns 
@@ -144,7 +151,7 @@ export function resolveDistPath(relativeFilepath?: string): string {
 }
 
 /**
- * Resolves the path of the dist/gadgets directory. If `gadgetSectionName` and `gadgetName`
+ * Resolves the path of the `dist/gadgets` directory. If `gadgetSectionName` and `gadgetName`
  * is provided, then this function will resolve the path of the gadget section / gadget's 
  * subdirectory.
  * 
@@ -165,7 +172,7 @@ export function resolveDistGadgetsPath(gadgetSectionName?: string, gadgetName?: 
 }
 
 /**
- * Resolves the path of the dist/mediawiki directory. If `filename` is given then 
+ * Resolves the path of the `dist/mediawiki` directory. If `filename` is given then 
  * this function will resolve the path of the file within the directory.
  * 
  * @param filename 
@@ -181,7 +188,7 @@ export function resolveDistMediawikiCodePath(filename?: string): string {
 }
 
 /**
- * Resolves the path of dist/load.js
+ * Resolves the path of `dist/load.js`
  * 
  * @returns 
  */

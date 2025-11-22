@@ -10,6 +10,7 @@ import {
   resolveFileExtension,
   resolveSrcGadgetsPath,
   resolveSrcMediawikiCodePath,
+  resolveGadgetsDefinitionManifestPath,
   resolveEntrypointFilepath,
   checkGadgetExists,
   getGadgetId,
@@ -101,7 +102,7 @@ function getStaticUrlToFile(filepath: string, { gadgetSubdir = '', isMediawikiIn
  * @returns
  */
 export async function readGadgetsDefinition(): Promise<GadgetsDefinition> {
-  const contents = await readFile(resolve(gadgetsDir, 'gadgets-definition.yaml'), { encoding: 'utf8' });
+  const contents = await readFile(resolveGadgetsDefinitionManifestPath(), { encoding: 'utf8' });
   const gadgetsDefinition: GadgetsDefinition = parse(contents);
   return gadgetsDefinition;
 }

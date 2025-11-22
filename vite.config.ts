@@ -3,7 +3,9 @@ import {
   generateCssBanner,
   generateGadgetsDefinitionWikitext,
   createMwGadgetImplementation,
+  mwReturnStatementInjector,
 } from './plugins';
+import replace from '@rollup/plugin-replace';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 import { 
@@ -48,8 +50,16 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
   const mwInterfaceCodeToBuild = await getMediaWikiInterfaceCodeToBuild();
   const [bundleInputs, bundleAssets] = mapWikicodeSourceFiles(gadgetsToBuild, mwInterfaceCodeToBuild);
 
+  const minify = createRolledUpImplementation;
+
   return {
     plugins: [
+
+      // This is used to replace any function calls of 'exitMediaWiki' with a `return` statement.
+      // MediaWiki userscripts are inherently wrapped in an IIFE when loaded using mw.loader, 
+      // so there is no problem when running each JS script
+      ...mwReturnStatementInjector(replace, minify),
+
       // On Vite Build, watches changes made to files in gadgets/ subdirectory
       // and generate the load.js entrypoint file 
       autogenerateEntrypoint(gadgetsToBuild, mwInterfaceCodeToBuild),
@@ -73,8 +83,8 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
     ],
     build: {
       target: 'es2018',
-      minify: createRolledUpImplementation,
-      cssMinify: createRolledUpImplementation,
+      minify: minify,
+      cssMinify: minify,
       rollupOptions: {
         input: bundleInputs,
         output: {
@@ -112,8 +122,12 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
       },
     },
     esbuild: {
+      // Specify build as CommonJS for MediaWiki userscripts
+      format: 'esm',
       // Preserve banner & footer
       legalComments: 'inline',
+      // Ignore annotations such as /* @__PURE__ */ when building
+      ignoreAnnotations: true,
     },
     optimizeDeps: {
       esbuildOptions: {
