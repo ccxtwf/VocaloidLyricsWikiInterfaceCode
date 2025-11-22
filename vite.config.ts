@@ -3,9 +3,7 @@ import {
   generateCssBanner,
   generateGadgetsDefinitionWikitext,
   createMwGadgetImplementation,
-  mwReturnStatementInjector,
 } from './plugins';
-import replace from '@rollup/plugin-replace';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 import { 
@@ -54,11 +52,6 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
 
   return {
     plugins: [
-
-      // This is used to replace any function calls of 'exitMediaWiki' with a `return` statement.
-      // MediaWiki userscripts are inherently wrapped in an IIFE when loaded using mw.loader, 
-      // so there is no problem when running each JS script
-      ...mwReturnStatementInjector(replace, minify),
 
       // On Vite Build, watches changes made to files in gadgets/ subdirectory
       // and generate the load.js entrypoint file 

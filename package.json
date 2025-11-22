@@ -13,7 +13,6 @@
     "sync": "vite build && node --env-file=.env dev-sync/sync.ts"
   },
   "devDependencies": {
-    "@rollup/plugin-replace": "^6.0.3",
     "@types/jest": "^30.0.0",
     "@types/less": "^3.0.8",
     "@types/node": "^24.3.0",
