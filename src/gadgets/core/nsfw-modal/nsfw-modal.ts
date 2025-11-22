@@ -58,6 +58,9 @@ function checkUserSavedOptions(): boolean {
 		localStorage.setItem(USER_PREFERENCE_EXPIRY_KEY, ''+mwSuppressedModalsExpiry);
 		return true;
 	}
+	const api = new mw.Api();
+	api.saveOption(USER_PREFERENCE_KEY, null);
+	api.saveOption(USER_PREFERENCE_EXPIRY_KEY, null);
 	return false;
 }
 
