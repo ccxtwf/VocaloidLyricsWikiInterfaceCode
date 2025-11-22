@@ -18,8 +18,9 @@ export default function autogenerateEntrypoint(gadgetsToBuildAtIntialState: Gadg
 
     // Build Mode
     buildEnd() {
-      console.log('\nBuilding dist/load.js...\n');
+      this.info('Creating dist/load.js...');
       serveGadgets(gadgetsToBuildAtIntialState, mediawikiInterfaceCodeToBuildAtInitialState);
+      this.info('Created dist/load.js...');
     },
   }
 }
