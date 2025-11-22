@@ -1,4 +1,4 @@
-import { writeFileSync } from 'fs';
+import { writeFile } from 'fs/promises';
 import { normalizePath } from 'vite';
 import { resolve } from 'path';
 import type { GadgetDefinition, GadgetsDefinition, ResourceLoaderConditions } from './types.js';
@@ -19,7 +19,7 @@ function resolveGadgetsDefinitionWikitextFile(): string {
  * 
  * @param gadgetsDefinition 
  */
-export function writeWikitextFile(gadgetsDefinition: GadgetsDefinition): void {
+export async function writeWikitextFile(gadgetsDefinition: GadgetsDefinition): Promise<void> {
   try {
     const gadgetsDefinitionWikitextFile = resolveGadgetsDefinitionWikitextFile();
 
@@ -39,7 +39,7 @@ export function writeWikitextFile(gadgetsDefinition: GadgetsDefinition): void {
       s.push('');
     }
 
-    writeFileSync(gadgetsDefinitionWikitextFile, s.join('\n'), { flag: "w+", encoding: "utf8" });
+    await writeFile(gadgetsDefinitionWikitextFile, s.join('\n'), { flag: "w+", encoding: "utf8" });
   } catch (err) {
     console.error('Unable to create the contents of gadgets-definition.wikitext');
     console.error(err);

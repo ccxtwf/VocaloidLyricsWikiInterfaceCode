@@ -20,9 +20,10 @@ export default function generateGadgetsDefinitionWikitext(
 
     // Build Mode
     closeBundle() {
+      const startTime = Date.now();
       this.info('Creating dist/gadgets/gadgets-definition.wikitext...');
-      writeWikitextFile(gadgetsDefinition);
-      this.info('Created dist/gadgets/gadgets-definition.wikitext');
+      writeWikitextFile(gadgetsDefinition)
+        .then(() => this.info(`Created dist/gadgets/gadgets-definition.wikitext in ${(Date.now() - startTime) / 1000} s`));
     },
   }
 }

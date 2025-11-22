@@ -62,7 +62,7 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
 
       // On Vite Build, watches changes made to files in gadgets/ subdirectory
       // and generate the load.js entrypoint file 
-      autogenerateEntrypoint(gadgetsToBuild, mwInterfaceCodeToBuild),
+      autogenerateEntrypoint(gadgetsToBuild, mwInterfaceCodeToBuild, createRolledUpImplementation),
 
       // On Vite Build, generate the contents of MediaWiki:Gadgets-definition
       generateGadgetsDefinitionWikitext(gadgetsDefinition),
