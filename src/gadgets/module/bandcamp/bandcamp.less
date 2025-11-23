@@ -1,0 +1,27 @@
+.bandcamp-embed {
+  max-width: 700px;
+}
+
+.vlw-infobox-song .bandcamp-embed {
+  max-width: 630px;
+  margin: auto;
+  @media (max-width: 767px) {
+    max-width: 500px;
+  }
+  @media (max-width: 500px) {
+    max-width: 350px;
+  }
+  @media (max-width: 400px) {
+    max-width: 250px;
+  }
+}
+
+.vlw-altver-infobox .bandcamp-embed {
+  max-width: 200px;
+  margin: auto;
+  
+  &[data-mode="4"] {
+    max-width: initial;
+    margin: 0;
+  }
+}
