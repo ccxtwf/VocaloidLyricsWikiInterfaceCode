@@ -234,6 +234,16 @@ gadgets:
         dependencies:
           - mediawiki.cookie
           - jquery.client
+    bandcamp:
+      description: "Install mobile-responsive Bandcamp embeds on the wiki."
+      authors:
+        - CoolMikeHatsune22
+      code:
+        - bandcamp.ts
+        - bandcamp.less
+      resourceLoader:
+        default: true
+        hidden: true
     user-group-badges:
       description: "Show staff profiles on user badges."
       authors:

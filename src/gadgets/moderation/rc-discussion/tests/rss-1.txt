@@ -276,7 +276,6 @@
       <dc:creator>NewUser5</dc:creator>
       <comments>https://my.local.wiki/wiki/Page_5</comments>
     </item>
-  </channel>
   <item>
       <title>Page 6</title>
       <link>https://my.local.wiki/wiki/Page_6?diff=8&amp;oldid=0</link>
@@ -566,4 +565,5 @@
       <dc:creator>NewUser7</dc:creator>
       <comments>https://my.local.wiki/wiki/Page_1</comments>
     </item>
+  </channel>
 </rss>
