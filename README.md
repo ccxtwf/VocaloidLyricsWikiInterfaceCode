@@ -89,11 +89,11 @@ workspace:
   # Set as true if you want to load all the gadgets defined in gadgets-definition.yaml
   enable_all: true
   # This setting excludes the following gadgets from being loaded when enable_all = true
-  disable: ["foo", "bar"]
+  disable: ["section/foo", "section/bar"]
 
   # Alternatively, these options enable only the specified gadgets
   # enable_all: false
-  # enable: ["foo", "bar"]
+  # enable: ["section/foo", "section/bar"]
 
 gadgets:
   # This informs the name of the gadget section under which the gadget will be registered 
