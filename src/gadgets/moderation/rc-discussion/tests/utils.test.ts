@@ -133,6 +133,36 @@ describe('RecentDiscussions: Successfully parse the Recent Changes Query API', (
 
 });
 
+describe('RecentDiscussions: Successfully parse HTML tags from the Recent Changes Feed', () => {
+  const gotResults = (() => {
+    const rssBody = readFileSync(resolve(__dirname, "./rss-xss.txt"), { encoding: 'utf-8' });
+    return parseRcFeeds(new DOMParser(), rssBody);
+  })();
+  /*
+   * This is a possible XSS vector... RecentDiscussions uses Vue that sanitizes such input as text
+   * so we're not overly worried, but be forewarned nonetheless 
+   */
+  test('parse dangerous script tag', () => {
+    expect(gotResults[0]).toEqual({
+      author: 'NewUser1',
+      pageTitle: 'Page 1',
+      heading: 'XSS Test',
+      textAdditions: [
+        '',
+        '== XSS Test ==',
+        '',
+        '<script>alert(\'XSS\')</script> [[User:NewUser1|NewUser1]] ([[User talk:NewUser1|talk]]) 08:26, 25 October 2025 (UTC)'
+      ],
+      timestamp: Date.parse('2025-10-25T08:26:49Z'),
+      isReply: false,
+      fromRev: 1, 
+      toRev: 2,
+      isNewPage: false,
+      hasMultipleRevs: false
+    });
+  });
+});
+
 describe('RecentDiscussions: Compare both feedrecentchanges & query API outputs', () => {
   test('simple case', () => {
     const [gotCombined, gotMap] = compareParsedRcs(new DOMParser(), structuredClone(expectedParsedRss1), structuredClone(expectedParsedApiRcs1));
