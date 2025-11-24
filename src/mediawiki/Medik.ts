@@ -40,7 +40,8 @@ mq.addEventListener("change", function() { _onMqChangeMedik(mq); });
 
 /* When an anchor link is clicked, the browser will offset the vertical scroll position by window.MedikScrollOffset */
 function _offsetScrollPosition(hash: string) {
-  if (!hash) return;
+  // Ignore TabberNeue
+  if (!hash || hash.startsWith('tabber-')) return;
   hash = $.escapeSelector(decodeURI(hash.substring(1)));
   const anchorTag = $("#" + hash);
   if (anchorTag.length) {
