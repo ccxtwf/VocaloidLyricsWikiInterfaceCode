@@ -297,7 +297,7 @@ Execute Jest unit tests.
 <tr>
 <td><code>npm run sync</code></td>
 <td>
-Syncs the interface code written in the wiki with the latest built code bundle.
+Syncs the interface code written in the wiki with the latest built code bundle.<br /><br />Run `npm run sync -- --update-all` to force the script to update all pages. 
 </td>
 </tr>
 </tbody>
