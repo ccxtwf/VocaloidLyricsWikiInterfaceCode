@@ -42,6 +42,20 @@ ENV_REJECT_UNAUTHORIZED=0
 ```
 **Do not** do this on a production environment.
 
+#### Setting up multiple .env files for multiple wiki instances
+
+If using this repository to deploy changes to multiple wikis, e.g. to a production live wiki and to a locally hosted development/mirror wiki, then you can also set up multiple `.env` files, e.g. `.env.dev` and `.env.prod`. 
+
+Note that only one `.env` file will be loaded at a time. To control which `.env` file will be loaded during development/deployment, you can set the variable `NODE_PROJECT_PROFILE` in your shell. Alternatively, you can run the utility script:
+
+```sh
+# Load .env.prod
+. set-profile.sh prod
+
+# Load .env
+. set-profile.sh
+```
+
 ### Development
 
 This repository allows you to write your MediaWiki userscripts in TypeScript and LESS, in addition to standard JS and CSS.
@@ -74,6 +88,10 @@ To sync the latest state of the project with the code running on the wiki, run `
 > **Note**: Make sure that the account whose credentials you're using has either been assigned the `interface-admin` user group, or the user rights `editsitecss` and `editsitejs`. If the bot is set to login to the MediaWiki API via BotPasswords, then make sure that the options "*Edit the MediaWiki namespace and sitewide/user JSON*" and "*Edit sitewide and user CSS/JS*" are checked when creating the BotPassword.
 
 Transpiling of userscripts written in Typescript into Javascript is configured in `vite.config.ts` (`build` options). This repository targets **Javascript ES2018**.
+
+#### Deploying to multiple wikis
+
+See [the section on setting up multiple .env files for multiple wiki instances](#Setting up multiple .env files for multiple wiki instances).
 
 ## Code Definition
 

@@ -15,6 +15,7 @@ import {
   setGadgetNamespace,
 } from './dev-utils/build-orchestration.js';
 import { generateScriptBanner } from './dev-utils/generate-banner.js';
+import { resolveCommandLineArgumentsPassedToVite } from './dev-utils/resolve-env.js';
 import { 
   ConfigEnv, 
   defineConfig, 
@@ -23,7 +24,11 @@ import {
 } from 'vite';
 
 export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => {
-  const env = loadEnv(mode, process.cwd(), '');
+  const customArgs = resolveCommandLineArgumentsPassedToVite();
+  const envProfile = process.env.NODE_PROJECT_PROFILE;
+  console.log(`Loading profile: '${envProfile || 'default'}'\n`);
+  const env = loadEnv(envProfile || mode, process.cwd(), '');
+
   const { 
     GADGET_NAMESPACE: gadgetNamespace = 'ext.gadget',
     GIT_REPOSITORY_URL: ghUrl = '', 
@@ -33,8 +38,8 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
   } = env;
   
   const isDev = mode === 'development';
-  const isOnBuildWatch = mode === 'watch-build';
-  const createRolledUpImplementation = mode === 'rollup';
+  const isOnBuildWatch = customArgs.cmd === 'watch-build';
+  const createRolledUpImplementation = customArgs.cmd === 'rollup';
   
   if (isDev) { 
     setViteServerOrigin(serverDevOrigin); 

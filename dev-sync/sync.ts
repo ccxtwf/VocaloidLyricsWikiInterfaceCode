@@ -39,6 +39,19 @@ function log(message: string) {
   Mwn.log(`[I] ${message}`);
 }
 
+function resolveEnv(): void {
+  const profile = process.env.NODE_PROJECT_PROFILE || null;
+  console.log(`Running Node script on profile '${profile ?? 'default'}'`);
+  if (profile !== null) process.env.profile = profile;
+
+  const envFilename = `.env${!!profile ? '.' : ''}${profile || ''}`;
+  const envFile = resolve(process.cwd(), envFilename);
+  if (!existsSync(envFile)) {
+    throw new Error(`Cannot find ./${envFilename}!`);
+  }
+  process.loadEnvFile(envFile);
+}
+
 async function initBot(): Promise<Mwn> {
   /* Constructor */
   const bot = new Mwn({
@@ -174,25 +187,31 @@ async function syncWikiCode(bot: Mwn, pagesToUpdate: Map<string, string>): Promi
 }
 
 async function main() {
-  log("Starting the deploy script...");
+  try {
+    resolveEnv();
+    log("Starting the deploy script...");
 
-  const bot = await initBot();
-  
-  /* Get last updated time */
-  const lastUpdatedLogFile = resolve(logsFolderPath, 'last-updated.txt');
-  let from: Date | undefined;
-  if (existsSync(lastUpdatedLogFile)) {
-    const rw = await readFile(lastUpdatedLogFile, { encoding: 'utf-8', flag: 'r' });
-    const rn = Date.parse(rw.trim());
-    if (!isNaN(rn)) {
-      from = new Date(rn);
+    const bot = await initBot();
+    
+    /* Get last updated time */
+    const lastUpdatedLogFileName = `last-updated${!!process.env.profile ? '.' : ''}${process.env.profile || ''}.txt`;
+    const lastUpdatedLogFile = resolve(logsFolderPath, lastUpdatedLogFileName);
+    let from: Date | undefined;
+    if (existsSync(lastUpdatedLogFile)) {
+      const rw = await readFile(lastUpdatedLogFile, { encoding: 'utf-8', flag: 'r' });
+      const rn = Date.parse(rw.trim());
+      if (!isNaN(rn)) {
+        from = new Date(rn);
+      }
     }
+
+    const pagesToUpdate = await getPagesToUpdate(from);
+    syncWikiCode(bot, pagesToUpdate);
+
+    /* Save last updated time for next time */
+    await writeFile(lastUpdatedLogFile, new Date(Date.now()).toISOString(), { encoding: 'utf-8', flag: 'w' });
+  } catch (err) {
+    log(err);
   }
-
-  const pagesToUpdate = await getPagesToUpdate(from);
-  syncWikiCode(bot, pagesToUpdate);
-
-  /* Save last updated time for next time */
-  await writeFile(lastUpdatedLogFile, new Date(Date.now()).toISOString(), { encoding: 'utf-8', flag: 'w' });
 }
 main();
