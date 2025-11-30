@@ -73,6 +73,7 @@ async function initBot(): Promise<Mwn> {
     username: process.env.BOT_USERNAME,
     password: process.env.BOT_PASSWORD,
     userAgent: process.env.BOT_USERAGENT,
+    OAuth2AccessToken: process.env.BOT_OAUTH_ACCESS_TOKEN,
     silent: true,       // suppress messages (except error messages)
     retryPause: 5000,   // pause for 5000 milliseconds (5 seconds) on maxlag error.
     maxRetries: 5       // attempt to retry a failing requests upto 5 times
@@ -89,13 +90,22 @@ async function initBot(): Promise<Mwn> {
   }
 
   /* Finally login */
-  log(`Logging into ${process.env.WIKI_API_URL} as ${process.env.BOT_USERNAME}`);
-  await bot.login({
-    apiUrl: process.env.WIKI_API_URL,
-    username: process.env.BOT_USERNAME,
-    password: process.env.BOT_PASSWORD,
-  });
-  log(`Successfully logged in!`);
+  if (!!process.env.BOT_USERNAME || !!process.env.BOT_PASSWORD) {
+    // Login using Special:BotPasswords
+    log(`Logging into ${process.env.WIKI_API_URL} as ${process.env.BOT_USERNAME}`);
+    await bot.login({
+      apiUrl: process.env.WIKI_API_URL,
+      username: process.env.BOT_USERNAME,
+      password: process.env.BOT_PASSWORD,
+    });
+    log(`Successfully logged in!`);
+  } else {
+    // Login using OAuth
+    log(`Authenticating OAuth credentials by checking in with ${process.env.WIKI_API_URL}`);
+    bot.initOAuth();
+    await bot.getTokensAndSiteInfo();
+    log(`Successfully authenticated!`);
+  }
 
   return bot;
 }
