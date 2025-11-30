@@ -91,7 +91,7 @@ Transpiling of userscripts written in Typescript into Javascript is configured i
 
 #### Deploying to multiple wikis
 
-See [the section on setting up multiple .env files for multiple wiki instances](#Setting up multiple .env files for multiple wiki instances).
+See [the section on setting up multiple .env files for multiple wiki instances](#setting-up-multiple-env-files-for-multiple-wiki-instances).
 
 ## Code Definition
 
