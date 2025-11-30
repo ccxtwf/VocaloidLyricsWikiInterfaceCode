@@ -94,3 +94,7 @@ export interface ResourceLoaderConditions {
   type?: "styles" | "general" | null 
   supportsUrlLoad?: string
 }
+
+export interface ViteCustomCliArguments {
+  cmd?: 'build' | 'watch-build' | 'rollup'
+}

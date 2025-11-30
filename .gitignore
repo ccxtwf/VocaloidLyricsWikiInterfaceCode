@@ -26,3 +26,4 @@ build
 
 load.js
 .env
+.env.*

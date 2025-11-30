@@ -30,7 +30,8 @@ export async function writeWikitextFile(gadgetsDefinition: GadgetsDefinition): P
     for (const [gadgetSectionName, gadgets] of Object.entries(gadgetsDefinition.gadgets)) {
       s.push(`== ${gadgetSectionName} ==`);
       for (const [gadgetName, gadgetDefinition] of Object.entries(gadgets)) {
-        if ((enableAll && hmGadgetNames.has(gadgetName)) || (!enableAll && !hmGadgetNames.has(gadgetName))) continue;
+        const gadgetId = `${gadgetSectionName}/${gadgetName}`;
+        if ((enableAll && hmGadgetNames.has(gadgetId)) || (!enableAll && !hmGadgetNames.has(gadgetId))) continue;
         const wikitext = createSingleGadgetDefinitionWikitext(gadgetName, gadgetDefinition);
         if (wikitext !== null) {
           s.push(wikitext);

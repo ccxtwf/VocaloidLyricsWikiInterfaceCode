@@ -13,7 +13,7 @@
 #vlw-tl-queue-container {
   background-color: var(--tl-queue-container-bg-color, #fff);
   border: solid 2px #5d5d5d;
-  border-radius: 20px;
+  border-radius: 10px;
   padding: 15px 10px;
   margin-bottom: 20px;
   margin-top: 10px;
@@ -163,6 +163,11 @@ body.skin-citizen .citizen-footer__container #vlw-tl-queue-container {
           & {
             column-count: 1;
           }
+        }
+
+        ul li {
+          break-inside: avoid-column;
+          display: inline-block !important;
         }
       }
 
