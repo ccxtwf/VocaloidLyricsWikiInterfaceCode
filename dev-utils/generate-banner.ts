@@ -106,6 +106,6 @@ export function generateStylesheetBanner({ ghUrl, ghBranch, gadgetsDefinition }:
     const gadgetDefinition = (
       m !== null ? gadgetsDefinition.gadgets[m[0]][m[1]] : undefined
     );
-    return `${generateBanner({ ghUrl, ghBranch, id, gadgetDefinition })}\n${src}`;
+    return `${generateBanner({ ghUrl, ghBranch, id: `src/${id}`, gadgetDefinition })}\n${src}`;
   }
 }
