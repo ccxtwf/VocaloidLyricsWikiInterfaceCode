@@ -31,6 +31,8 @@ WIKI_API_URL=https://vocaloidlyrics.miraheze.org/w/api.php
 # These are set using Special:BotPassword
 BOT_USERNAME=<username>@<botname>
 BOT_PASSWORD=pass
+# Set this to authenticate using OAuth
+BOT_OAUTH_ACCESS_TOKEN=
 # Custom user agent to send with your HTTP requests
 BOT_USERAGENT=your user agent
 ```
@@ -85,7 +87,7 @@ Running `npm run build` will start up Vite in Build mode and terminate after bui
 
 To sync the latest state of the project with the code running on the wiki, run `npm run sync`. This will start a bot run (powered by [Mwn](https://github.com/siddharthvp/mwn)), with edit logs saved onto the folder `logs/` on the project directory. 
 
-> **Note**: Make sure that the account whose credentials you're using has either been assigned the `interface-admin` user group, or the user rights `editsitecss` and `editsitejs`. If the bot is set to login to the MediaWiki API via BotPasswords, then make sure that the options "*Edit the MediaWiki namespace and sitewide/user JSON*" and "*Edit sitewide and user CSS/JS*" are checked when creating the BotPassword.
+> **Note**: Make sure that the account whose credentials you're using has either been assigned the `interface-admin` user group, or the user rights `editsitecss` and `editsitejs`. When first creating your bot password/OAuth token, make sure that the options "*Edit the MediaWiki namespace and sitewide/user JSON*" and "*Edit sitewide and user CSS/JS*" were checked.
 
 Transpiling of userscripts written in Typescript into Javascript is configured in `vite.config.ts` (`build` options). This repository targets **Javascript ES2018**.
 
@@ -297,7 +299,7 @@ Execute Jest unit tests.
 <tr>
 <td><code>npm run sync</code></td>
 <td>
-Syncs the interface code written in the wiki with the latest built code bundle.<br /><br />Run `npm run sync -- --update-all` to force the script to update all pages. 
+Syncs the interface code written in the wiki with the latest built bundle.<br /><br />Run <code>npm run sync -- --update-all</code> to force the script to update all pages. 
 </td>
 </tr>
 </tbody>
