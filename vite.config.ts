@@ -53,12 +53,12 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
   const mwInterfaceCodeToBuild = await getMediaWikiInterfaceCodeToBuild();
   const [bundleInputs, bundleAssets] = mapWikicodeSourceFiles(gadgetsToBuild, mwInterfaceCodeToBuild);
 
-  const minify = createRolledUpImplementation;
+  const minify = false;
 
   return {
     plugins: [
 
-      // On Vite Build, watches changes made to files in gadgets/ subdirectory
+      // On Vite Build, watch changes made to files in gadgets/ subdirectory
       // and generate the load.js entrypoint file 
       autogenerateEntrypoint(gadgetsToBuild, mwInterfaceCodeToBuild, createRolledUpImplementation),
 
@@ -67,7 +67,7 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
 
       // Create the rolled up gadget implementation if prompted to
       createRolledUpImplementation && 
-        createMwGadgetImplementation(gadgetsToBuild, mwInterfaceCodeToBuild),
+        createMwGadgetImplementation(gadgetsToBuild, minify),
       
       // On Vite Build, copy the i18n.json files to dist/
       viteStaticCopy({
@@ -126,6 +126,11 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
       legalComments: 'inline',
       // Ignore annotations such as /* @__PURE__ */ when building
       ignoreAnnotations: true,
+
+      // Minification settings
+      minifyWhitespace: minify && true,
+      minifyIdentifiers: minify && false,
+      minifySyntax: minify && true,
     },
     optimizeDeps: {
       esbuildOptions: {
