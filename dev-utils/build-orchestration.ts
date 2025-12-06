@@ -1,8 +1,10 @@
-import { readFile, readdir } from 'fs/promises';
-import { createWriteStream } from 'fs';
+import { createWriteStream, readdirSync } from 'fs';
+import { readFile } from 'fs/promises';
 import { parse } from 'yaml';
 import * as crypto from 'crypto';
 import { Target } from 'vite-plugin-static-copy';
+import { transformWithEsbuild } from 'vite';
+import { OutputBundle } from 'rollup';
 import type { GadgetDefinition, GadgetsDefinition } from './types.js';
 import { 
   getFileType, 
@@ -15,8 +17,6 @@ import {
   checkGadgetExists,
   getGadgetId,
   resolveFilepathForBundleInputKey,
-  resolveDistGadgetsPath,
-  resolveDistMediawikiCodePath,
 } from './utils.js';
 
 let viteServerOrigin: string;
@@ -227,15 +227,15 @@ export function getGadgetsToBuild(gadgetsDefinition: GadgetsDefinition): GadgetD
 }
 
 /**
- * Trawls through /src/mediawiki to determine the code files to build & compile as the wiki's global 
+ * Trawls through `/src/mediawiki` to determine the code files to build & compile as the wiki's global 
  * interface code
  * 
  *  @returns
  */
-export async function getMediaWikiInterfaceCodeToBuild(): Promise<GadgetDefinition[]> {
+export function getMediaWikiInterfaceCodeToBuild(): GadgetDefinition[] {
   try {
     const definitions: GadgetDefinition[] = [];
-    const files = await readdir(resolveSrcMediawikiCodePath());
+    const files = readdirSync(resolveSrcMediawikiCodePath());
     const kvPairs: { [k: string]: string[] } = {};
     files.forEach((filename) => {
       const k = removeFileExtension(filename).toLowerCase();
@@ -259,57 +259,55 @@ export async function getMediaWikiInterfaceCodeToBuild(): Promise<GadgetDefiniti
 }
 
 /**
- * Build the entrypoint file (`load.js`) to be served by the Vite server and to be 
+ * Builds the entrypoint file (`load.js`) to be served by the Vite server and to be 
  * loaded on the MediaWiki client.
- * 
- * Each module is loaded in the MediaWiki client using `mw.loader.impl`.  
- * 
- * You can check on the status of each module using `mw.loader.getState(moduleName)`.
- * 
- * You can call on each module using `mw.loader.load()` or `mw.loader.using()`.
  * 
  * @param gadgetsToBuild
  * @param mediawikiInterfaceCodeToBuild
- * @param useRolledUpImplementation
+ * @param useRolledUpImplementation     If set to true, then `load.js` will load the gadget-impl.js files. 
+ *                                      Otherwise, it will lazily load and execute the individual scripts and stylesheets.
  * @returns
  */
 export async function serveGadgets(
   gadgetsToBuild: GadgetDefinition[], 
   mediawikiInterfaceCodeToBuild: GadgetDefinition[],
-  useRolledUpImplementation: boolean = false
+  useRolledUpImplementation: boolean
 ): Promise<void> {
   const entrypointFile = resolveEntrypointFilepath();
   const writeStream = createWriteStream(entrypointFile, { flags: 'w', encoding: 'utf-8'});
   try {
-    const createScriptLoadingStatement = (gadget: GadgetDefinition) => {
-      return `mw.loader.load("${
-        getStaticUrlToFile('gadget-impl.js', { 
-          gadgetSubdir: `${gadget.section}/${gadget.name}`, 
-          isMediawikiInterfaceCode: gadget.section === 'mediawiki'
-        })
-      }");`
-    }
-    // Async generator implementation
-    function* awaitTheseTasks() {
-      if (useRolledUpImplementation) {
-        if (mediawikiInterfaceCodeToBuild.length > 0) {
-          yield createScriptLoadingStatement(mediawikiInterfaceCodeToBuild[0]);
+    if (useRolledUpImplementation) {
+      const writeScriptLoadingStatement = (gadget: GadgetDefinition) => {
+        return writeStream.write(
+          `mw.loader.load("${
+            getStaticUrlToFile('gadget-impl.js', { 
+              gadgetSubdir: `${gadget.section}/${gadget.name}`, 
+              isMediawikiInterfaceCode: gadget.section === 'mediawiki'
+            })
+          }");\n`
+        );
+      }
+      if (mediawikiInterfaceCodeToBuild.length > 0) {
+        writeScriptLoadingStatement(mediawikiInterfaceCodeToBuild[0]);
+      }
+      gadgetsToBuild.forEach(writeScriptLoadingStatement);
+    } else {
+      // Async generator implementation
+      async function* createGadgetImplementations() {
+        for (const mwInterfaceCode of mediawikiInterfaceCodeToBuild) {
+          yield await createRolledUpGadgetImplementationByLazyLoading(mwInterfaceCode);
         }
-      } else {
-        for (const gadget of mediawikiInterfaceCodeToBuild) {
-          yield createGadgetImplementation(gadget);
+        for (const gadget of gadgetsToBuild) {
+          yield await createRolledUpGadgetImplementationByLazyLoading(gadget);
         }
       }
-      
-      for (const gadget of gadgetsToBuild) {
-        yield useRolledUpImplementation ? 
-          createScriptLoadingStatement(gadget) : 
-          createGadgetImplementation(gadget);
+      // should be ES5-compliant
+      writeStream.write(`{\n\nfunction loadLazily (scriptUrl) {\n\tfetch(scriptUrl)\n\t\t.then(function (res) { return res.text(); })\n\t\t.then(function (contents) { $.globalEval("(function () {" + contents + "})()"); })\n\t\t.catch(console.error);\n}\n\n`);
+      for await (const gadgetImplementation of createGadgetImplementations()) {
+        writeStream.write(gadgetImplementation);
+        writeStream.write('\n\n');
       }
-    }
-    for await (const gadgetImplementation of awaitTheseTasks()) {
-      writeStream.write(gadgetImplementation);
-      writeStream.write(useRolledUpImplementation ? '\n' : '\n\n');
+      writeStream.write(`}`);
     }
   } catch (err) {
     console.error(err);
@@ -319,23 +317,20 @@ export async function serveGadgets(
 }
 
 /**
- * Wraps the mw.loader.impl implementation in conditional expressions
- * to simulate ResourceLoader's conditional loading
+ * Used to simulate ResourceLoader's conditional loading
  * 
- * @param gadgetImplementation  mw.loader.impl implementation
  * @param resourceLoader        conditions to load
  * @returns
  */
-function addGadgetImplementationLoadConditions(gadgetImplementation: string, 
+function generateGadgetImplementationLoadConditionsWrapperCode(
   { resourceLoader: { 
     dependencies = null, rights = null, skins = null, 
     actions = null, categories = null, namespaces = null, 
     contentModels = null 
-  } = {} }: GadgetDefinition,
-  { minify = false }: { minify: boolean }
-): string {
+  } = {} }: GadgetDefinition
+): [string[], string[]] {
   if ([dependencies, rights, skins, actions, categories, namespaces, contentModels].every((v) => v === null)) {
-    return gadgetImplementation;
+    return [[], []];
   }
   const conditions: string[] = [];
   const normalizeVariable = (variable: string | string[]) => {
@@ -344,12 +339,16 @@ function addGadgetImplementationLoadConditions(gadgetImplementation: string,
     }
     return variable;
   }
-  const generateCodeConditionForComparingValues = (rsValues: string[], configKey: string, valueIsNumeric: boolean = false): string => (
-    `[${rsValues.map(el => valueIsNumeric ? el : `"${el}"`).join(',')}].some(function(a){return mw.config.get('${configKey}') === a;})`
-  );
-  const generateCodeConditionForComparingLists = (rsValues: string[], configKey: string, valueIsNumeric: boolean = false): string => (
-    `[${rsValues.map(el => valueIsNumeric ? el : `"${el}"`).join(',')}].some(function(a){return (mw.config.get('${configKey}') || []).indexOf(a) > -1;})`
-  );
+  const generateCodeConditionForComparingValues = (rsValues: string[], configKey: string, valueIsNumeric: boolean = false): string => {
+    const arr = `[${rsValues.map(el => valueIsNumeric ? el : `"${el}"`).join(',')}]`;
+    // should be ES5-compliant
+    return `${arr}.some(function (a) { return mw.config.get('${configKey}') === a; })`;
+  };
+  const generateCodeConditionForComparingLists = (rsValues: string[], configKey: string, valueIsNumeric: boolean = false): string => {
+    const arr = `[${rsValues.map(el => valueIsNumeric ? el : `"${el}"`).join(',')}]`;
+    // should be ES5-compliant
+    return `${arr}.some(function (a) { return (mw.config.get('${configKey}') || []).indexOf(a) > -1; })`
+  };
 
   const checkForConditions = [
     { v: rights, configIsListOfValues: true, configKey: 'wgUserRights', valueIsNumeric: false },
@@ -371,109 +370,164 @@ function addGadgetImplementationLoadConditions(gadgetImplementation: string,
     }
   });
 
-  let wrapped = gadgetImplementation;
+  let head: string[] = [];
+  let tail: string[] = [];
+
+  if (conditions.length === 1) {
+    head.push(`if (${conditions[0]}) {`);
+    tail.unshift(`}`);
+  } else if (conditions.length > 0) {
+    head.push(`if ( ([ ${conditions.join(', ')} ]).every(Boolean) ) {`);
+    tail.unshift(`}`);
+  }
 
   if (!!dependencies) {
     dependencies = normalizeVariable(dependencies);
-    wrapped = `mw.loader.using([${dependencies.map(el => `"${el}"`).join(',')}],function(require){${minify ? '' : '\n  '}${wrapped}${minify ? '' : '\n  '}});`
-  }
-  if (conditions.length === 1) {
-    wrapped = `if (${conditions[0]}){\n  ${wrapped}\n  }`;
-  } else if (conditions.length > 0) {
-    wrapped = `if ([${conditions.join(',')}].every(function(el){${minify ? '' : ' '}return el;${minify ? '' : ' '}})){${minify ? '' : '\n  '}${wrapped}${minify ? '' : '\n  '}}`;
+    head.push(`mw.loader.using([ ${dependencies.map(el => `"${el}"`).join(`, `)} ], function (require) {`);
+    tail.unshift(`});`);
   }
 
-  return wrapped;
+  return [head, tail];
 }
 
 /**
- * Defines the implementation of each gadget.
- * Each gadget is registered on MediaWiki using mw.loader.impl.
- * The responsibility of loading the scripts & stylesheets served statically from
- * the Vite server (when on Dev Mode) lies on the MediaWiki instance 
- * (through mw.loader.impl).
+ * Creates an `mw.loader.impl` implementation with direct execution of each script and stylesheet.
  * 
+ * @param gadgetImplementationFilePath
+ * @param writeBundle
  * @param gadget
- * @param rollup  Set as true to get the gadget to write the rolled up gadget implementation
+ * @param minify
  * @returns
  */
-export async function createGadgetImplementation(gadget: GadgetDefinition, rollup: boolean = false): Promise<string> {
-  try {
-    const { section, name } = gadget;
-    
-    const isMwInterfaceCode = (section === 'mediawiki');
-    if (!isMwInterfaceCode && !checkGadgetExists(section, name)) {
-      throw new Error(`Cannot resolve gadget ${section}/${name}`);
-    }
-
-    const hash = crypto.randomBytes(4).toString('hex');
-
-    let snippet: string;
-
-    if (rollup) {
-
-      const scriptContents = await Promise.all(
-        getScriptsToLoadFromGadgetDefinition(gadget)
-          .map((script) => readFile(
-            isMwInterfaceCode ?
-              resolveDistMediawikiCodePath(resolveFileExtension(script)) :
-              resolveDistGadgetsPath(section, name, resolveFileExtension(script)), 
-            { encoding: 'utf-8', flag: 'r' }
-          ))
-      );
-
-      const styleContents = (await Promise.all(
-        getStylesheetsToLoadFromGadgetDefinition(gadget)
-          .map((style) => readFile(
-            isMwInterfaceCode ?
-              resolveDistMediawikiCodePath(resolveFileExtension(style)) :
-              resolveDistGadgetsPath(section, name, resolveFileExtension(style)), 
-            { encoding: 'utf-8', flag: 'r' }
-          ))
-      )).map(contents => `"${contents.replaceAll(/"/g, '\\"').trim()}"`);
-      
-      snippet = `mw.loader.impl(function(){return ["${namespace}.${name}@${hash}",function($,jQuery,require,module){${scriptContents.join('\n')}},{"css":[${styleContents.join(',')}]},{},{},null];});`.trim();
-
-    } else {
-
-      const scriptsToLoad = getScriptsToLoadFromGadgetDefinition(gadget)
-        .map((script) => {
-          const scriptUrl = getStaticUrlToFile(script.replaceAll('"', '\\"'), { 
-            gadgetSubdir: `${section}/${name}`, isMediawikiInterfaceCode: isMwInterfaceCode
-          });
-          return `${" ".repeat(10)}fetch("${scriptUrl}")\n${" ".repeat(12)}.then(res => res.text())\n${" ".repeat(12)}.then(contents => $.globalEval(\`(() => {\${contents}})()\`))\n${" ".repeat(12)}.catch(console.error);`;
-        });
-
-      const stylesToLoad = getStylesheetsToLoadFromGadgetDefinition(gadget)
-        .map((style) => {
-          const styleUrl = getStaticUrlToFile(style.replaceAll('"', '\\"'), { 
-            gadgetSubdir: `${section}/${name}`, isMediawikiInterfaceCode: isMwInterfaceCode
-          });
-          return `"${styleUrl}"`;
-        });
-
-      snippet = `  mw.loader.impl(function (){
-      return [
-        "${namespace}.${name}@${hash}",
-        function($, jQuery, require, module) {${
-          scriptsToLoad.length === 0 ? '' :
-          `\n` + scriptsToLoad.join('\n') + `\n${" ".repeat(8)}`
-        }},
-        {"url":{"all":[${stylesToLoad.join(',')}]}},
-        {}, {}, null
-      ];
-    });`;
-    }
-
-    snippet = addGadgetImplementationLoadConditions(snippet, gadget, { minify: rollup });
-    snippet = `(function (mw) {${rollup ? '': '\n  '}${snippet}${rollup ? '' : '\n'}})(mediaWiki);`
-
-    return snippet;
-
-  } catch (err) {
-    console.error(err);
-    return '';
+export async function createRolledUpGadgetImplementation( 
+  gadgetImplementationFilePath: string,
+  writeBundle: OutputBundle,
+  gadget: GadgetDefinition, 
+  minify: boolean
+): Promise<string> {
+  const { section, name } = gadget;
+  
+  if (!checkGadgetExists(section, name)) {
+    throw new Error(`Cannot resolve gadget ${section}/${name}`);
   }
+
+  const hash = crypto.randomBytes(4).toString('hex');
+
+  const [rsCondHead, rsCondTail] = generateGadgetImplementationLoadConditionsWrapperCode(gadget);
+
+  const body = [
+    `mw.loader.impl(function () {`,
+    `return [`,
+    `"${namespace}.${name}@${hash}",`,
+    `function ($, jQuery, require, module) {`,
+  ];
+
+  const scripts = getScriptsToLoadFromGadgetDefinition(gadget);
+  const styles = getStylesheetsToLoadFromGadgetDefinition(gadget);
+
+  if (scripts.length > 0) {
+    scripts.forEach((script) => {
+      const moduleInfo = writeBundle[`gadgets/${section}/${name}/${resolveFileExtension(script)}`];
+      if (moduleInfo.type === 'chunk') body.push(moduleInfo.code);
+    });
+  }
+
+  body.push(`}, {"css": [`);
+
+  if (styles.length > 0) {
+    styles.forEach((style) => {
+      const assetInfo = writeBundle[`gadgets/${section}/${name}/${resolveFileExtension(style)}`];
+      if (assetInfo.type === 'asset') {
+        body.push(minify ? `"` : `\``);
+        (() => {
+          let src = assetInfo.source;
+          if (src instanceof Uint8Array) {
+            src = new TextDecoder().decode(src);
+          }
+          src = src.trim().replaceAll(
+            minify ? /(")/g : /(`)/g,
+            '\\$1'
+          );
+          body.push(src);
+        })();
+        body.push(minify ? `"` : `\``);
+        body.push(', ');
+      }
+    });
+  }
+
+  body.push(`]}, {}, {}, null];`);
+  body.push(`});`);
+  
+  return (await transformWithEsbuild(
+    [
+      `(function (mw) {`,
+      ...rsCondHead,
+      ...body,
+      ...rsCondTail,
+      `})(mediaWiki);`,
+    ].join(''), 
+    gadgetImplementationFilePath, 
+    { minify }
+  )).code;
+
+}
+
+/**
+ * Generates an `mw.loader.impl` implementation that executes code and applies stylesheets
+ * by lazy loading.
+ * 
+ * @param gadget 
+ */
+export async function createRolledUpGadgetImplementationByLazyLoading(gadget: GadgetDefinition): Promise<string> {
+  const { section, name } = gadget;
+
+  const isMwInterfaceCode = (section === 'mediawiki');
+  if (!isMwInterfaceCode && !checkGadgetExists(section, name)) {
+    throw new Error(`Cannot resolve gadget ${section}/${name}`);
+  }
+
+  const hash = crypto.randomBytes(4).toString('hex');
+
+  const scriptsToLoad = getScriptsToLoadFromGadgetDefinition(gadget).map((script) => {
+    const scriptUrl = getStaticUrlToFile(script, { 
+      gadgetSubdir: `${section}/${name}`, isMediawikiInterfaceCode: isMwInterfaceCode
+    }).replaceAll(/"/g, '\\"');
+    return `loadLazily("${scriptUrl}");`;
+  }) || [];
+
+  const stylesToLoad = getStylesheetsToLoadFromGadgetDefinition(gadget).map((style) => {
+    const styleUrl = getStaticUrlToFile(style, {
+      gadgetSubdir: `${section}/${name}`, isMediawikiInterfaceCode: isMwInterfaceCode
+    }).replaceAll(/"/g, '\\"');
+    return `"${styleUrl}"`;
+  }) || [];
+
+  const codeBlock = [
+    `mw.loader.impl(function () {`,
+      `return [`,
+        `"${namespace}.${name}@${hash}",`,
+        `function() {`,
+        ...scriptsToLoad,
+        `}, `,
+        `{"url": {"all": [${stylesToLoad.join(',')}] }},`,
+        `{}, {}, null`,
+      `];`,
+    `});`
+  ];
+
+  const [rsCondHead, rsCondTail] = generateGadgetImplementationLoadConditionsWrapperCode(gadget);
+  return (await transformWithEsbuild(
+    [
+      `(function (mw) {`,
+      ...rsCondHead,
+      ...codeBlock,
+      ...rsCondTail,
+      `})(mediaWiki);`
+    ].join(''),
+    resolveEntrypointFilepath(),
+    { minify: false }
+  )).code;
 }
 
 /**
