@@ -97,4 +97,5 @@ export interface ResourceLoaderConditions {
 
 export interface ViteCustomCliArguments {
   cmd?: 'build' | 'watch-build' | 'rollup'
+  minify?: boolean
 }

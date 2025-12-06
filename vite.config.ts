@@ -50,10 +50,10 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
   
   const gadgetsDefinition = await readGadgetsDefinition();
   const gadgetsToBuild = getGadgetsToBuild(gadgetsDefinition);
-  const mwInterfaceCodeToBuild = await getMediaWikiInterfaceCodeToBuild();
+  const mwInterfaceCodeToBuild = getMediaWikiInterfaceCodeToBuild();
   const [bundleInputs, bundleAssets] = mapWikicodeSourceFiles(gadgetsToBuild, mwInterfaceCodeToBuild);
 
-  const minify = false;
+  const minify = customArgs.minify || false;
 
   return {
     plugins: [
@@ -67,7 +67,9 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
 
       // Create the rolled up gadget implementation if prompted to
       createRolledUpImplementation && 
-        createMwGadgetImplementation(gadgetsToBuild, minify),
+        createMwGadgetImplementation(
+          gadgetsToBuild, minify
+        ),
       
       // On Vite Build, copy the i18n.json files to dist/
       viteStaticCopy({
@@ -76,7 +78,7 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
       }),
 
       // On Vite Build, automatically add banner to each CSS file
-      !createRolledUpImplementation && 
+      !minify && 
         generateCssBanner(ghUrl, ghBranch, gadgetsDefinition)
     ],
     build: {
@@ -97,9 +99,26 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
             }
             return 'assets/[name][extname]';
           },
-          banner: createRolledUpImplementation ? undefined : 
+          generatedCode: {
+            /**
+             * Turn these settings off if you want to enforce ES5 compliance
+             */
+            arrowFunctions: true,
+            constBindings: true,
+            objectShorthand: true,
+          },
+          globals: {
+            /**
+             * Pass this to ensure that Vite/Rollup does not use $ as a 
+             * minification symbol
+             */
+            'jquery': '$',
+            'mediawiki': 'mw',
+          },
+          banner: minify ? undefined : 
             generateScriptBanner({ ghUrl, ghBranch, gadgetsDefinition })
         },
+        external: ['jquery', 'mediawiki']
       },
       outDir: 'dist',
       emptyOutDir: true,
@@ -120,7 +139,6 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
       },
     },
     esbuild: {
-      // Specify build as CommonJS for MediaWiki userscripts
       format: 'esm',
       // Preserve banner & footer
       legalComments: 'inline',

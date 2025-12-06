@@ -1,9 +1,10 @@
-import { readFile, readdir, writeFile } from 'fs/promises';
-import { createWriteStream } from 'fs';
+import { createWriteStream, readdirSync } from 'fs';
+import { readFile } from 'fs/promises';
 import { parse } from 'yaml';
 import * as crypto from 'crypto';
 import { Target } from 'vite-plugin-static-copy';
 import { transformWithEsbuild } from 'vite';
+import { OutputBundle } from 'rollup';
 import type { GadgetDefinition, GadgetsDefinition } from './types.js';
 import { 
   getFileType, 
@@ -16,8 +17,6 @@ import {
   checkGadgetExists,
   getGadgetId,
   resolveFilepathForBundleInputKey,
-  resolveDistGadgetsPath,
-  resolveDistMediawikiCodePath,
 } from './utils.js';
 
 let viteServerOrigin: string;
@@ -228,15 +227,15 @@ export function getGadgetsToBuild(gadgetsDefinition: GadgetsDefinition): GadgetD
 }
 
 /**
- * Trawls through /src/mediawiki to determine the code files to build & compile as the wiki's global 
+ * Trawls through `/src/mediawiki` to determine the code files to build & compile as the wiki's global 
  * interface code
  * 
  *  @returns
  */
-export async function getMediaWikiInterfaceCodeToBuild(): Promise<GadgetDefinition[]> {
+export function getMediaWikiInterfaceCodeToBuild(): GadgetDefinition[] {
   try {
     const definitions: GadgetDefinition[] = [];
-    const files = await readdir(resolveSrcMediawikiCodePath());
+    const files = readdirSync(resolveSrcMediawikiCodePath());
     const kvPairs: { [k: string]: string[] } = {};
     files.forEach((filename) => {
       const k = removeFileExtension(filename).toLowerCase();
@@ -392,17 +391,21 @@ function generateGadgetImplementationLoadConditionsWrapperCode(
 }
 
 /**
- * Writes an `mw.loader.impl` implementation with direct execution of each script and stylesheet.
- * Outputs directly to a write stream for better performance.
+ * Creates an `mw.loader.impl` implementation with direct execution of each script and stylesheet.
  * 
  * @param gadgetImplementationFilePath
+ * @param writeBundle
  * @param gadget
  * @param minify
  * @returns
  */
-export async function writeRolledUpGadgetImplementation(gadgetImplementationFilePath: string, gadget: GadgetDefinition, minify: boolean): Promise<void> {
+export async function createRolledUpGadgetImplementation( 
+  gadgetImplementationFilePath: string,
+  writeBundle: OutputBundle,
+  gadget: GadgetDefinition, 
+  minify: boolean
+): Promise<string> {
   const { section, name } = gadget;
-  const isMwInterfaceCode = (section === 'mediawiki');
   
   if (!checkGadgetExists(section, name)) {
     throw new Error(`Cannot resolve gadget ${section}/${name}`);
@@ -421,55 +424,52 @@ export async function writeRolledUpGadgetImplementation(gadgetImplementationFile
 
   const scripts = getScriptsToLoadFromGadgetDefinition(gadget);
   const styles = getStylesheetsToLoadFromGadgetDefinition(gadget);
-  const readFileContents = (src: string, isMediaWikiInterfaceCode: boolean) => readFile(
-    isMediaWikiInterfaceCode ?
-      resolveDistMediawikiCodePath(resolveFileExtension(src)) :
-      resolveDistGadgetsPath(section, name, resolveFileExtension(src)), 
-    { encoding: 'utf-8', flag: 'r' }
-  );
 
   if (scripts.length > 0) {
-    (await Promise.all(scripts.map((script) => (
-      readFileContents(script, isMwInterfaceCode)
-    )))).forEach((src) => {
-      body.push(src);
+    scripts.forEach((script) => {
+      const moduleInfo = writeBundle[`gadgets/${section}/${name}/${resolveFileExtension(script)}`];
+      if (moduleInfo.type === 'chunk') body.push(moduleInfo.code);
     });
   }
 
   body.push(`}, {"css": [`);
 
   if (styles.length > 0) {
-    (await Promise.all(styles.map((style) => (
-      readFileContents(style, isMwInterfaceCode)
-    )))).forEach((src) => {
-      body.push(minify ? `"` : `\``);
-      body.push(src.trim().replaceAll(
-        minify ? /(")/g : /(`)/g,
-        '\\$1'
-      ));
-      body.push(minify ? `"` : `\``);
-      body.push(', ');
+    styles.forEach((style) => {
+      const assetInfo = writeBundle[`gadgets/${section}/${name}/${resolveFileExtension(style)}`];
+      if (assetInfo.type === 'asset') {
+        body.push(minify ? `"` : `\``);
+        (() => {
+          let src = assetInfo.source;
+          if (src instanceof Uint8Array) {
+            src = new TextDecoder().decode(src);
+          }
+          src = src.trim().replaceAll(
+            minify ? /(")/g : /(`)/g,
+            '\\$1'
+          );
+          body.push(src);
+        })();
+        body.push(minify ? `"` : `\``);
+        body.push(', ');
+      }
     });
   }
 
   body.push(`]}, {}, {}, null];`);
   body.push(`});`);
-
-  await writeFile(
+  
+  return (await transformWithEsbuild(
+    [
+      `(function (mw) {`,
+      ...rsCondHead,
+      ...body,
+      ...rsCondTail,
+      `})(mediaWiki);`,
+    ].join(''), 
     gadgetImplementationFilePath, 
-    (await transformWithEsbuild(
-      [
-        `(function (mw) {`,
-        ...rsCondHead,
-        ...body,
-        ...rsCondTail,
-        `})(mediaWiki);`,
-      ].join(''), 
-      gadgetImplementationFilePath, 
-      { minify }
-    )).code,
-    { encoding: 'utf-8', flag: 'w' }
-  );
+    { minify }
+  )).code;
 
 }
 
