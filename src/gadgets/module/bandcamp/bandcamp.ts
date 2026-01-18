@@ -1,5 +1,5 @@
 interface IBandcampEmbedUrlParams {
-	album: number
+	album?: number
 	track: number
 	bgcol: string
 	linkcol: string
@@ -18,7 +18,7 @@ interface IBandcampEmbedUrlParams {
     const albumId = $(this).data("album-id");
     const trackId = $(this).data("track-id");
     const mode = $(this).data("mode") || 1;
-    if (!albumId || !trackId) {
+    if (!albumId && !trackId) {
       return;
     }
 
@@ -91,7 +91,7 @@ interface IBandcampEmbedUrlParams {
     }
 
     const src = `https://bandcamp.com/EmbeddedPlayer${
-      Object.entries(urlParams).map(([k, v]) => `/${k}=${v}`).join('')
+      Object.entries(urlParams).map(([k, v]) => v ? `/${k}=${v}` : '').join('')
     }`;
     const $iframe = $("<iframe>", {
       src,

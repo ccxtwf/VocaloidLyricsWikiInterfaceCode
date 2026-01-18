@@ -33,7 +33,7 @@ const LOCALSTORAGE_CACHE_EXPIRATION = 30 * 60;        		// 30 minutes
 const SHOW_NUMBER_OF_ITEMS_AT_START = window.matchMedia("(max-width: 350px)").matches ? 3 : 5;
 const SHOW_MAX_NUMBER_OF_ITEMS = 10;
 
-const LOCALSTORAGE_PREFIX = 'vlw_tl_checking_queue_data';
+const LOCALSTORAGE_PREFIX = 'vlw_tl_checking_queue';
 
 const containerId = 'vlw-tl-queue-container';
 
@@ -63,6 +63,7 @@ const linkToPage = mw.util.getUrl(TL_CHECKING_PAGE_NAME);
 function fetchFromCache(): [TLQueueItem[], TLQueueItem[]] | null {
   // we make it coalesce to null because mw.storage.getObject may return false
   const o = mw.storage.getObject(LOCALSTORAGE_PREFIX) || null;
+  if (o === null) clearCache();
   return o;
 }
 
