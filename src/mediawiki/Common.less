@@ -223,15 +223,8 @@ dl > dd:has(> *:first-child:not(dl) span[data-mw-comment-start]) {
   opacity: 1;
 }
 
-/* MW1.44 Upgrade Workaround: Force exticon link to use MW1.44 resource instead of MW1.43 */
-body:not(.skin-citizen) {
-  .mw-parser-output a.external, 
-  .link-mailto, 
-  .link-ftp, 
-  .link-irc, 
-  .link-audio, 
-  .link-video, 
-  .link-document {
-    background-image: url(/1.44/resources/src/mediawiki.skinning/images/external-ltr.svg);
-  }
+/* Resize syntax-highlighted source code editor */
+.CodeMirror {
+  resize: vertical;
+  min-height: 60vh;
 }

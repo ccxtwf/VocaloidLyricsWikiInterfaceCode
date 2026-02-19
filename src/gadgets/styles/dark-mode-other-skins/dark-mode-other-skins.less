@@ -298,6 +298,31 @@ html.theme-dark {
   .ui-widget-header .ui-icon {
     .invert();
   }
+
+  .cm-mw-toggle-wikieditor {
+    &:hover, &:active {
+      background-color: #454545;
+    }
+  }
+  
+  #mw-editbutton-codemirror .oo-ui-toggleWidget-on .oo-ui-labelElement-label {
+    color: #f7b947;
+  }
+  
+  .cm-gutters {
+    background-color: #202122;
+    border-right-color: #666;
+    .cm-gutter.cm-lineNumbers {
+      .cm-gutterElement {
+        color: #909494;    
+      }
+    }
+  }
+
+  .cm-editor .cm-tooltip {
+    background-color: var(--background-color-neutral-subtle);
+    border-color: var(--border-color-base);
+  }
   
   // WikiEditor / CodeEditor
   .wikiEditor-ui-toolbar {
