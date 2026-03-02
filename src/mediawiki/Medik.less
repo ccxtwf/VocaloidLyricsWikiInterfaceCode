@@ -283,3 +283,38 @@ table#mw-allmessagestable {
 ol.references li:target, sup.reference:target {
   background-color: var(--background-color-progressive-subtle, #eaf3ff);
 }
+
+/* Medik Workaround */
+.mw-body-content .mw-heading {
+  h2, h3, h4, h5, h6 {
+    font-size: 100%;    
+  }
+}
+
+/* 
+ * We do this to vary the scroll offset when working with a fixed header 
+ * Idea: https://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header
+ */
+@medik-scroll-offset-desktop: 60px;
+@medik-scroll-offset-mobile: 120px;
+.mw-heading {
+  h1, h2, h3, h4, h5, h6 {
+    &::before {
+      content: '';
+      display: block;
+      height: @medik-scroll-offset-desktop;
+      margin-top: -1 * @medik-scroll-offset-desktop;
+      visibility: hidden;
+    }
+  }
+}
+@media (max-width: 768px) {
+  .mw-heading {
+    h1, h2, h3, h4, h5, h6 {
+      &::before {
+        height: @medik-scroll-offset-mobile;
+        margin-top: -1 * @medik-scroll-offset-mobile;
+      }
+    }
+  }
+}

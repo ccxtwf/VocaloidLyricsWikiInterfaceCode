@@ -323,6 +323,22 @@ html.theme-dark {
     background-color: var(--background-color-neutral-subtle);
     border-color: var(--border-color-base);
   }
+
+  .cm-matchingBracket, 
+  .cm-focused .cm-matchingBracket {
+    background-color: #1b1b1b;
+  }
+
+  .cm-mw-exttag-attribute-value, 
+  .cm-mw-htmltag-attribute-value, 
+  .cm-mw-table-definition-value, 
+  .cm-mw-image-parameter {
+    color: #9088ff;
+  }
+
+  .cm-editor .cm-cursor {
+    border-left: 2px solid #cdd2d8;
+  }
   
   // WikiEditor / CodeEditor
   .wikiEditor-ui-toolbar {
@@ -339,10 +355,10 @@ html.theme-dark {
     color: #ccc;
   }
   .ace-tm .ace_gutter-active-line.ace_gutter-cell {
-    background-color: black;
+    background-color: #000;
   }
   div.editOptions {
-    background-color: #222222;
+    background-color: #222;
     color: #f4f4f4;
     border-color: #87878766;
   }
@@ -357,7 +373,7 @@ html.theme-dark {
     background-color: black;
   }
   .ace-tm .ace_marker-layer .ace_selected-word {
-    background: #353535;;
+    background: #353535;
     border: 1px solid rgb(128 128 154);
   }
   .ace-tm .ace_marker-layer .ace_selection {
