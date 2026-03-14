@@ -7,14 +7,18 @@ interface TLQueueItem {
   link: string
   isApproved?: boolean
 }
-
-interface IAppStore {
-  inQueue: TLQueueItem[]
-  resolved: TLQueueItem[]
-  loadedMoreInQueue: boolean
-  loadedMoreInResolved: boolean
+interface TLQueueCollection {
+  onq: TLQueueItem[]
+  res: TLQueueItem[]
+}
+interface TLQueueStore {
   isLoading: boolean
   isError: boolean
+  data: TLQueueCollection | null
+}
+interface IAppStore {
+  firstParty: TLQueueStore
+  thirdParty: TLQueueStore
 }
 
 'use strict';
@@ -28,12 +32,14 @@ const config = mw.config.get([
 //   Configuration
 // =================
 const TL_CHECKING_PAGE_NAME = 'Help talk:Translation Checking';
+const TL_CHECKING_PAGE_NAME_THIRD = 'Help talk:Translation Checking/Third-Party';
 const SERVER_RESPONSE_CACHE_EXPIRATION = 15 * 60;					// 15 minutes
 const LOCALSTORAGE_CACHE_EXPIRATION = 30 * 60;        		// 30 minutes
-const SHOW_NUMBER_OF_ITEMS_AT_START = window.matchMedia("(max-width: 350px)").matches ? 3 : 5;
-const SHOW_MAX_NUMBER_OF_ITEMS = 10;
+const SHOW_NUMBER_OF_ITEMS_AT_START = 3;
+const SHOW_MAX_NUMBER_OF_ITEMS = 8;
 
-const LOCALSTORAGE_PREFIX = 'vlw_tl_checking_queue';
+const LOCALSTORAGE_PREFIX_FIRST_PARTY = 'VLW_TL_CHECKING_QUEUE_FIRST_PARTY';
+const LOCALSTORAGE_PREFIX_THIRD_PARTY = 'VLW_TL_CHECKING_QUEUE_THIRD_PARTY';
 
 const containerId = 'vlw-tl-queue-container';
 
@@ -42,16 +48,20 @@ const DEBUGGING_ID = 'vlw-tl-queue-display';
 let $container: JQuery<HTMLElement>;
 let $app: App | undefined;
 let store: Reactive<IAppStore> | undefined;
+let isExpandedStore: Reactive<{ x: number }> | undefined;
 
 const messages = {
-  'vlw-tl-queue--heading-in-queue': 'Translations in queue',
+  'vlw-tl-queue--heading': 'Translation Checking',
+  'vlw-tl-queue--first-party-section': 'First-party Submissions',
+  'vlw-tl-queue--third-party-section': 'Third-party Submissions',
+  'vlw-tl-queue--heading-in-queue': 'In queue',
   'vlw-tl-queue--heading-resolved': 'Recently checked',
   'vlw-tl-queue--loading': 'Loading',
   'vlw-tl-queue--reload-prompt': 'Reload',
   'vlw-tl-queue--reload-prompt-tooltip': 'Reload this queue',
   'vlw-tl-queue--no-items': 'Currently none',
-  'vlw-tl-queue--load-more': 'Load more...',
-  'vlw-tl-queue--view-more': 'View More on the Translation Checking Page',
+  'vlw-tl-queue--expand': 'Show more...',
+  'vlw-tl-queue--collapse': 'Show less...',
   'vlw-tl-queue--error': 'Failed to fetch data'
 };
 mw.messages.set(messages);
@@ -59,40 +69,53 @@ mw.messages.set(messages);
 // =================
 //   Fetching
 // =================
-const linkToPage = mw.util.getUrl(TL_CHECKING_PAGE_NAME);
-function fetchFromCache(): [TLQueueItem[], TLQueueItem[]] | null {
+function getCorrespondentLocalStorageKey(forThirdParty: boolean): string {
+  return forThirdParty ? LOCALSTORAGE_PREFIX_THIRD_PARTY : LOCALSTORAGE_PREFIX_FIRST_PARTY;
+}
+
+function fetchFromCache(forThirdParty: boolean): TLQueueCollection | null {
   // we make it coalesce to null because mw.storage.getObject may return false
-  const o = mw.storage.getObject(LOCALSTORAGE_PREFIX) || null;
-  if (o === null) clearCache();
+  const o = mw.storage.getObject(getCorrespondentLocalStorageKey(forThirdParty)) || null;
+  if (o === null) clearCache(forThirdParty);
   return o;
 }
 
-function saveToCache(res: [TLQueueItem[], TLQueueItem[]]): void {
-  mw.storage.setObject(LOCALSTORAGE_PREFIX, res, LOCALSTORAGE_CACHE_EXPIRATION);
+function saveToCache(res: TLQueueCollection, forThirdParty: boolean): void {
+  mw.storage.setObject(
+    getCorrespondentLocalStorageKey(forThirdParty), 
+    res, 
+    LOCALSTORAGE_CACHE_EXPIRATION
+  );
 }
 
-function clearCache(): void {
-  mw.storage.remove(LOCALSTORAGE_PREFIX);
+function clearCache(forThirdParty: boolean): void {
+  mw.storage.remove(getCorrespondentLocalStorageKey(forThirdParty));
 }
 
-function getListOfTranslations(noCacheMode: boolean): Promise<[TLQueueItem[], TLQueueItem[]]> {
-  return new Promise<[TLQueueItem[], TLQueueItem[]]>(function (resolve, reject) {
-    
-    if (noCacheMode) clearCache();
-    const cached = fetchFromCache();
+function getListOfTranslations(noCacheMode: boolean, forThirdParty: boolean): Promise<TLQueueCollection> {
+  return new Promise<TLQueueCollection>(function (resolve, reject) {
+    if (noCacheMode) {
+      clearCache(forThirdParty);
+    }
+    const cached = fetchFromCache(forThirdParty);
     if (cached !== null) {
       resolve(cached);
       return;
     }
-    
-    $.get(mw.util.getUrl(TL_CHECKING_PAGE_NAME, {
+
+    const page = forThirdParty ? TL_CHECKING_PAGE_NAME_THIRD : TL_CHECKING_PAGE_NAME;
+    const linkToPage = mw.util.getUrl(page);
+    const promise = $.get(mw.util.getUrl(page, {
       action: 'raw',
       maxage: '' + (noCacheMode ? 0 : SERVER_RESPONSE_CACHE_EXPIRATION),
       smaxage: '' + (noCacheMode ? 0 : SERVER_RESPONSE_CACHE_EXPIRATION),
-    }))
-    .done(function (wikitext: string) {
+    })).promise();
+    
+    promise
+    .then(function (wikitext: string) {
       const resolvedTlRequests: TLQueueItem[] = [];
       const onQueueTlRequests: TLQueueItem[] = [];
+      let s1 = 0, s2 = 0;
       const headings = Array.from(wikitext.matchAll(/(?<=\n)={2}(?!=)\s*([^\n]+?)\s*(?<=)={2}[ \r]*(?=\n)/g));
       for (let [_, heading] of headings) {
         let item: TLQueueItem;
@@ -131,19 +154,28 @@ function getListOfTranslations(noCacheMode: boolean): Promise<[TLQueueItem[], TL
           };
         }
         if (isApproved !== undefined) {
-          if (resolvedTlRequests.length < SHOW_MAX_NUMBER_OF_ITEMS) {
+          // Optimize resolved tl items list
+          if (s1 < SHOW_MAX_NUMBER_OF_ITEMS) {
             resolvedTlRequests.unshift(item);
+            s1++
           }
         } else {
-          if (onQueueTlRequests.length < SHOW_MAX_NUMBER_OF_ITEMS) {
+          // Optimize on queue tl items list
+          if (s2 < SHOW_MAX_NUMBER_OF_ITEMS) {
             onQueueTlRequests.push(item);
+            s2++;
           }
         }
+        if (s1 >= SHOW_MAX_NUMBER_OF_ITEMS && s2 >= SHOW_MAX_NUMBER_OF_ITEMS) {
+          break;
+        }
       }
-      saveToCache([onQueueTlRequests, resolvedTlRequests]);
-      resolve([onQueueTlRequests, resolvedTlRequests]);
+
+      const data = { onq: onQueueTlRequests, res: resolvedTlRequests };
+      saveToCache(data, forThirdParty);
+      resolve(data);
     })
-    .fail(reject);
+    .catch(reject);
   });
 }
 
@@ -240,12 +272,19 @@ function init(): void {
     
     //@ts-ignore
     store = Vue.reactive({
-      inQueue: [],
-      resolved: [],
-      loadedMoreInQueue: false,
-      loadedMoreInResolved: false,
-      isLoading: false,
+      firstParty: {
+        isLoading: false,
+        isError: false,
+        data: null,
+      },
+      thirdParty: {
+        isLoading: false,
+        isError: false,
+        data: null,
+      },
     });
+    //@ts-ignore
+    isExpandedStore = Vue.reactive({ x: 0 });
 
     if ($container.length === 0) {
       $container = $('<div>', { id: containerId });
@@ -264,95 +303,134 @@ function loadApp(): void {
 
   $app = Vue.createMwApp({
     template: `
-      <div class="tl-queue-sections">
-        <tl-queue-section 
-          cssClass="on-queue" 
-          headingMessageName="vlw-tl-queue--heading-in-queue" 
-          storeKeyData="inQueue"
-          storeKeyHasLoadedMore="loadedMoreInQueue"
+      <div class="title">
+        {{ $i18n( 'vlw-tl-queue--heading' ).text() }}
+      </div>
+      <div class="body">
+        <tl-queue-sections 
+          headingMessageName="vlw-tl-queue--first-party-section"
+          :linkToPage="firstPartyTlCheckingPage"
+          :store="firstPartyStore"
+          :exI="1"
         />
-        <tl-queue-section 
-          cssClass="resolved" 
-          headingMessageName="vlw-tl-queue--heading-resolved"  
-          storeKeyData="resolved"
-          storeKeyHasLoadedMore="loadedMoreInResolved"
+        <tl-queue-sections
+          headingMessageName="vlw-tl-queue--third-party-section"
+          :linkToPage="thirdPartyTlCheckingPage"
+          :store="thirdPartyStore"
+          :exI="3"
         />
       </div>
       <tl-queue-more-actions />
     `,
     setup: () => ({ store }),
+    computed: {
+      firstPartyStore() {
+        return this.store.firstParty;
+      },
+      thirdPartyStore() {
+        return this.store.thirdParty;
+      },
+      firstPartyTlCheckingPage() {
+        return mw.util.getUrl(TL_CHECKING_PAGE_NAME);
+      },
+      thirdPartyTlCheckingPage() {
+        return mw.util.getUrl(TL_CHECKING_PAGE_NAME_THIRD);
+      }
+    }
+  });
+  $app!.component('tl-queue-sections', {
+    template: `
+      <div class="tl-queue-sections">
+        <a class="heading" :href="linkToPage" target="_blank" rel="nofollow noindex">
+          {{ $i18n( headingMessageName ).text() }}
+        </a>
+        <cdx-progress-indicator show-label v-if="isLoading">
+          {{ $i18n( 'vlw-tl-queue--loading' ).text() }}
+        </cdx-progress-indicator>
+        <div class="error" v-else-if="isError">
+          {{ $i18n( 'vlw-tl-queue--error' ).text() }}
+        </div>
+        <div v-else>
+          <tl-queue-section  
+            headingMessageName="vlw-tl-queue--heading-in-queue" 
+            :store="onQueueTls"
+            :exI="exI"
+          />
+          <tl-queue-section  
+            headingMessageName="vlw-tl-queue--heading-resolved"  
+            :store="resolvedTls"
+            :exI="exI+1"
+          />
+        </div>
+      </div>
+    `,
+    components: { CdxProgressIndicator },
+    props: ['headingMessageName', 'linkToPage', 'store', 'exI'],
+    setup: ({ headingMessageName, linkToPage, store, exI }: { headingMessageName: string, linkToPage: string, store: TLQueueStore, exI: number }) => ({ headingMessageName, linkToPage, store, exI }),
+    computed: {
+      onQueueTls() {
+        return (this.store.data || {}).onq;
+      },
+      resolvedTls() {
+        return (this.store.data || {}).res;
+      },
+      isLoading() {
+        return this.store.isLoading;
+      },
+      isError() {
+        return this.store.isError;
+      },
+    }
   });
   $app!.component('tl-queue-section', {
     template: `
       <div class="tl-queue-section">
-        <div class="label">
+        <div class="subheading">
           {{ $i18n( headingMessageName ).text() }}
         </div>
         <div class="tl-queue-contents">
-          <cdx-progress-indicator show-label v-if="store.isLoading">
-            {{ $i18n( 'vlw-tl-queue--loading' ).text() }}
-          </cdx-progress-indicator>
-          <div class="error" v-else-if="store.isError">
-            {{ $i18n( 'vlw-tl-queue--error' ).text() }}
-          </div>
+          <span v-if="isEmpty">
+            <i>{{ $i18n( 'vlw-tl-queue--no-items' ).text() }}</i>
+          </span>  
           <ul v-else>
-            <span v-if="isEmpty">
-              <i>{{ $i18n( 'vlw-tl-queue--no-items' ).text() }}</i>
-            </span>
             <tl-queue-item 
               v-for="(item, idx) in renderedData"
               :item="item"
             />
           </ul>
         </div>
-        <div class="more-links">
-          <a 
-            class="toggle" 
-            @click="onClickLoadMore" 
-            v-if="!isEmpty && hasMoreDataToShow"
-          >
-            {{ $i18n( 'vlw-tl-queue--load-more' ).text() }}
-          </a>
-          <a class="tl-check-page-link" :href="linkToPage" target="_blank" rel="nofollow noindex">
-            {{ $i18n( 'vlw-tl-queue--view-more' ).text() }}
-          </a>
-        </div>
+        <a 
+          class="toggle" 
+          @click="onClickExpand" 
+        >
+          {{ $i18n( isExpanded ? 'vlw-tl-queue--collapse' : 'vlw-tl-queue--expand' ).text() }}
+        </a>
       </div>
       `,
-    components: { CdxProgressIndicator },
-    props: ['headingMessageName', 'storeKeyData', 'storeKeyHasLoadedMore'],
-    setup: ({ headingMessageName, storeKeyData, storeKeyHasLoadedMore }: { cssClass: string, headingMessageName: string, storeKeyData: string, storeKeyHasLoadedMore: string }) => ({
-      linkToPage,
-      headingMessageName, 
-      storeKeyData, 
-      storeKeyHasLoadedMore,
-      store
+    props: ['headingMessageName', 'store', 'exI'],
+    setup: ({ headingMessageName, store, exI }: { headingMessageName: string, store?: TLQueueCollection, exI: number }) => ({
+      headingMessageName,
+      store,
+      exI,
+      isExpandedStore,
     }),
     computed: {
       storedData() {
-        //@ts-ignore
-        return store[this.storeKeyData];
+        return this.store;
+      },
+      isExpanded() {
+        return this.isExpandedStore.x === this.exI;
       },
       isEmpty() {
-        return this.storedData.length === 0;
-      },
-      hasMoreDataToShow() {
-        //@ts-ignore
-        const hasLoadedMore = store[this.storeKeyHasLoadedMore];
-        if (hasLoadedMore) return false;
-        return this.storedData.length > SHOW_NUMBER_OF_ITEMS_AT_START;
+        return !this.storedData || this.storedData.length === 0;
       },
       renderedData() {
-        if (!this.hasMoreDataToShow) {
-          return this.storedData;
-        }
-        return this.storedData.slice(0, SHOW_NUMBER_OF_ITEMS_AT_START);
-      }
+        return (this.storedData || []).slice(0, this.isExpanded ? SHOW_MAX_NUMBER_OF_ITEMS : SHOW_NUMBER_OF_ITEMS_AT_START);
+      },
     },
     methods: {
-      onClickLoadMore() {
-        //@ts-ignore
-        store[this.storeKeyHasLoadedMore] = true;
+      onClickExpand() {
+        this.isExpandedStore.x = this.isExpanded ? 0 : this.exI;
       }
     }
   });
@@ -406,23 +484,22 @@ function loadApp(): void {
 }
 
 function populate(noCacheMode: boolean): void {
-  store!.isLoading = true;
-  store!.isError = false;
-  getListOfTranslations(noCacheMode)
-    .then(function (res) {
-      const [onQueueTlRequests, resolvedTlRequests] = res;
-      store!.inQueue = onQueueTlRequests;
-      store!.resolved = resolvedTlRequests;
-      store!.loadedMoreInQueue = false;
-      store!.loadedMoreInResolved = false;
-    })
-    .catch(function (error) {
-      store!.isError = true;
-      console.error(error, DEBUGGING_ID);
-    })
-    .finally(function() {
-      store!.isLoading = false;
-    });
+  const promises = [false, true].map(function (forThirdParty) { 
+    const prop = forThirdParty ? 'thirdParty' : 'firstParty';
+    store![prop].isLoading = true;
+    return getListOfTranslations(noCacheMode, forThirdParty)
+      .then(function (res) {
+        store![prop].data = res;
+      })
+      .catch(function (error) {
+        store![prop].isError = true;
+        console.error(error, DEBUGGING_ID);
+      })
+      .finally(function() {
+        store![prop].isLoading = false;
+      });
+  });
+  Promise.all(promises);
 }
 
 // =================
