@@ -297,28 +297,17 @@ ol.references li:target, sup.reference:target {
 
 /* 
  * We do this to vary the scroll offset when working with a fixed header 
- * Idea: https://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header
+ * Idea: 
+ * https://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header
+ * https://stackoverflow.com/questions/11386807/adding-an-automatic-offset-to-the-scroll-position-for-all-hash-links-calls
  */
 @medik-scroll-offset-desktop: 60px;
 @medik-scroll-offset-mobile: 120px;
-.mw-heading {
-  h1, h2, h3, h4, h5, h6 {
-    &::before {
-      content: '';
-      display: block;
-      height: @medik-scroll-offset-desktop;
-      margin-top: -1 * @medik-scroll-offset-desktop;
-      visibility: hidden;
-    }
-  }
+:target {
+  scroll-margin-top: @medik-scroll-offset-desktop;
 }
 @media (max-width: 768px) {
-  .mw-heading {
-    h1, h2, h3, h4, h5, h6 {
-      &::before {
-        height: @medik-scroll-offset-mobile;
-        margin-top: -1 * @medik-scroll-offset-mobile;
-      }
-    }
+  :target {
+    scroll-margin-top: @medik-scroll-offset-mobile;
   }
 }
