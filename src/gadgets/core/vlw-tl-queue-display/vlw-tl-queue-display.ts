@@ -52,6 +52,7 @@ let isExpandedStore: Reactive<{ x: number }> | undefined;
 
 const messages = {
   'vlw-tl-queue--heading': 'Translation Checking',
+  'vlw-tl-queue--go-to-tl-page': 'Go to the translation checking page',
   'vlw-tl-queue--first-party-section': 'First-party Submissions',
   'vlw-tl-queue--third-party-section': 'Third-party Submissions',
   'vlw-tl-queue--heading-in-queue': 'In queue',
@@ -155,7 +156,7 @@ function getListOfTranslations(noCacheMode: boolean, forThirdParty: boolean): Pr
         }
         if (isApproved !== undefined) {
           // Optimize resolved tl items list
-          if (s1 < SHOW_MAX_NUMBER_OF_ITEMS) {
+          if (s1 < SHOW_NUMBER_OF_ITEMS_AT_START) {
             resolvedTlRequests.unshift(item);
             s1++
           }
@@ -166,7 +167,7 @@ function getListOfTranslations(noCacheMode: boolean, forThirdParty: boolean): Pr
             s2++;
           }
         }
-        if (s1 >= SHOW_MAX_NUMBER_OF_ITEMS && s2 >= SHOW_MAX_NUMBER_OF_ITEMS) {
+        if (s1 >= SHOW_NUMBER_OF_ITEMS_AT_START && s2 >= SHOW_MAX_NUMBER_OF_ITEMS) {
           break;
         }
       }
@@ -341,7 +342,7 @@ function loadApp(): void {
   $app!.component('tl-queue-sections', {
     template: `
       <div class="tl-queue-sections">
-        <a class="heading" :href="linkToPage" target="_blank" rel="nofollow noindex">
+        <a class="heading" :href="linkToPage" :title="$i18n( 'vlw-tl-queue--go-to-tl-page' ).text()" target="_blank" rel="nofollow noindex">
           {{ $i18n( headingMessageName ).text() }}
         </a>
         <cdx-progress-indicator show-label v-if="isLoading">
@@ -350,7 +351,7 @@ function loadApp(): void {
         <div class="error" v-else-if="isError">
           {{ $i18n( 'vlw-tl-queue--error' ).text() }}
         </div>
-        <div v-else>
+        <div class="tl-queue-items" v-else>
           <tl-queue-section  
             headingMessageName="vlw-tl-queue--heading-in-queue" 
             :store="onQueueTls"
@@ -360,6 +361,7 @@ function loadApp(): void {
             headingMessageName="vlw-tl-queue--heading-resolved"  
             :store="resolvedTls"
             :exI="exI+1"
+            :doNotShowLoadMore="true"
           />
         </div>
       </div>
@@ -384,21 +386,19 @@ function loadApp(): void {
   });
   $app!.component('tl-queue-section', {
     template: `
-      <div class="tl-queue-section">
-        <div class="subheading">
-          {{ $i18n( headingMessageName ).text() }}
-        </div>
-        <div class="tl-queue-contents">
-          <span v-if="isEmpty">
-            <i>{{ $i18n( 'vlw-tl-queue--no-items' ).text() }}</i>
-          </span>  
-          <ul v-else>
-            <tl-queue-item 
-              v-for="(item, idx) in renderedData"
-              :item="item"
-            />
-          </ul>
-        </div>
+      <div class="subheading">
+        {{ $i18n( headingMessageName ).text() }}
+      </div>
+      <div v-if="isEmpty">
+        <i>{{ $i18n( 'vlw-tl-queue--no-items' ).text() }}</i>
+      </div>  
+      <template v-else>
+        <tl-queue-item 
+          v-for="(item, idx) in renderedData"
+          :item="item"
+        />
+      </template>
+      <div v-if="!doNotShowLoadMore">
         <a 
           class="toggle" 
           @click="onClickExpand" 
@@ -407,11 +407,12 @@ function loadApp(): void {
         </a>
       </div>
       `,
-    props: ['headingMessageName', 'store', 'exI'],
-    setup: ({ headingMessageName, store, exI }: { headingMessageName: string, store?: TLQueueCollection, exI: number }) => ({
+    props: ['headingMessageName', 'store', 'exI', 'doNotShowLoadMore'],
+    setup: ({ headingMessageName, store, exI, doNotShowLoadMore }: { headingMessageName: string, store?: TLQueueCollection, exI: number, doNotShowLoadMore?: boolean }) => ({
       headingMessageName,
       store,
       exI,
+      doNotShowLoadMore,
       isExpandedStore,
     }),
     computed: {
@@ -436,7 +437,7 @@ function loadApp(): void {
   });
   $app!.component('tl-queue-item', {
     template: `
-    <li>
+    <div class="tl-queue-item">
       <a class="tl-check-req-title" :href="link" target="_blank" rel="nofollow noindex">
         {{ title }}
       </a>
@@ -450,7 +451,7 @@ function loadApp(): void {
           {{ tlAuthor || '' }}
         </div>
       </div>
-    </li>
+    </div>
     `,
     props: ['item'],
     setup: ({ item: { title, link, producer, tlAuthor, isApproved } }: { item: TLQueueItem }) => ({
