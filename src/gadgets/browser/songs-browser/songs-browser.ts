@@ -30,26 +30,26 @@ const dropdownToggleText = mw.msg('songs-browser--dropdown-text');
 
 const DROPDOWN_OPTIONS: ISongBrowserDropdownOption[] = [
 	createSongBrowserDropdownOption({
-		menuLabelId: 'has-eng-tl', 
-		ids: ['has-eng-tl'], 
+		menuLabelId: 'has-eng-tl',
+		ids: ['has-eng-tl'],
 		categoryTitles: ['Pages with English translation']
 	}),
 	createSongBrowserDropdownOption({
 		menuLabelId: 'needs-eng-tl',
-		ids: ['needs-eng-tl'], 
+		ids: ['needs-eng-tl'],
 		categoryTitles: ['Pages in need of English translation']
 	}),
 	createSongBrowserDropdownOption({
 		menuLabelId: 'genai',
-		ids: ['verified-genai', 'suspected-genai'], 
+		ids: ['verified-genai', 'suspected-genai'],
 		categoryTitles: [
 			'Songs with verified AI-generated material',
 			'Songs with suspected AI-generated material'
 		]
 	}),
 	createSongBrowserDropdownOption({
-		menuLabelId: 'consolidation-wip', 
-		ids: ['consolidation-wip'], 
+		menuLabelId: 'consolidation-wip',
+		ids: ['consolidation-wip'],
 		categoryTitles: ['Consolidation WIP']
 	})
 ];
@@ -59,11 +59,11 @@ const LOCALSTORAGE_CACHE_EXPIRATION = 6 * 60 * 60;		// 6 hours
 
 // =================
 //   Definitions
-// =================	
+// =================
 const config = mw.config.get([
 	'wgNamespaceNumber',
 	'wgCategories'
-]); 
+]);
 let selectedOptions: number[] = [];
 let $container: JQuery<HTMLElement>, $dropdown: JQuery<HTMLElement>;
 let albumFetchUtils: IAlbumFetchUtils;
@@ -88,7 +88,7 @@ function setupHooks(): void {
 }
 
 function initToggle(
-	cbOnFirstLoad: (selectedOptionsOnStorage: number[]) => void, 
+	cbOnFirstLoad: (selectedOptionsOnStorage: number[]) => void,
 	cbOnOptionChange: (id: number, isSelected: boolean) => void
 ): void {
 	const selectedOptionsOnStorage = getSelectedOptionsFromSession();
@@ -101,15 +101,15 @@ function initToggle(
 	);
 	$container = $('#songs-browser-container');
 	$dropdown = $('#songs-browser .dropdown-menu ul');
-	
+
 	for (let i = 0; i < DROPDOWN_OPTIONS.length; i++) {
 		const isChecked = selectedOptionsOnStorage.indexOf(i) > -1;
 		$dropdown.append(
 			$('<li>')
 				.append(
-					$('<span>', { 
+					$('<span>', {
 						'class': `faux-checkbox${isChecked ? ' checked': ''}`,
-						'data-id': i, 
+						'data-id': i,
 					})
 				)
 				.append(
@@ -233,10 +233,10 @@ function createSongBrowserDropdownOption(
 
 	for (let i = 0; i < ids.length; i++) {
 		const id = ids[i];
-		const event = `userjs.songs-browser-${id}.init`; 
+		const event = `userjs.songs-browser-${id}.init`;
 		const chipCssClass = `chip ${id}`;
 		const chipSelector = '.'+chipCssClass.replace(/ /g, '.');
-		
+
 		const tooltip = mw.msg(`songs-browser--${id}-tooltip`);
 		const chipText = mw.msg(`songs-browser--${id}-chip-text`);
 
@@ -259,7 +259,7 @@ function createSongBrowserDropdownOption(
 			$(chipSelector).hide();
 		})
 	}
-	
+
 
 	return {
 		name: menuLabel,
@@ -285,7 +285,7 @@ function createSongBrowserDropdownOption(
 // =================
 if (config.wgNamespaceNumber === 0) {
 	if (config.wgCategories.indexOf('Producers') > -1) {
-		$('.mw-parser-output > h2:first-of-type').after(
+		$('.mw-parser-output > .mw-heading2').first().after(
 			$('<div>', { id: "songs-browser-container" })
 		);
 		initToggle(onLoadedProducerPage, onOptionChangeOnProducerPage);

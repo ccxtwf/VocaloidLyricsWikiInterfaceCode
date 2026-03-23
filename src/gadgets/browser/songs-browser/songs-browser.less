@@ -1,6 +1,6 @@
 /*
 * Gadget-songs-browser
-* 
+*
 * CSS Variables:
 *   --songs-browser-toggle-container-bg-color
 *   --songs-browser-toggle-container-text-color
@@ -40,7 +40,7 @@
     background-color: var(--songs-browser-chip-needs-eng-tl-bg-color, #720000);
     color: var(--songs-browser-chip-needs-eng-tl-fg-color, #fff);
   }
-  &.ai-usage, &.ai-usage-suspected {
+  &.verified-genai, &.suspected-genai {
     background: var(--songs-browser-chip-ai-usage-bg-color, #00a800);
     color: var(--songs-browser-chip-ai-usage-fg-color, antiquewhite);
   }
@@ -158,8 +158,8 @@ body.skin-timeless #songs-browser {
       & {
         display: block;
         min-height: 28px;
-        background: none; 
-        border: none; 
+        background: none;
+        border: none;
         border-width: none;
         box-shadow: none;
         padding: 0;
