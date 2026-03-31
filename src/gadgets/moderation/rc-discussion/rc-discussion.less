@@ -1,4 +1,4 @@
-/* 
+/*
 * Gadget-rc-discussion
 *
 * CSS Variables:
@@ -16,6 +16,10 @@
     width: 100%;
   }
 }
+
+@line-height: 1.2rem;
+@n-lines: 3;
+@n-lines-mobile: 5;
 
 #rc-discussion-feeds-articles-container {
   border: solid 1px var(--rc-discussion-container-border-color, #000);
@@ -66,15 +70,15 @@
     border-bottom: solid 1px #d1d1d1;
   }
   .rc-discussion-feed-added-comment {
-    line-height: 1.2rem;
-    max-height: 3.6rem;
+    line-height: @line-height;
+    max-height: @n-lines * @line-height;
     overflow-y: hidden;
     text-overflow: ellipsis;
     word-wrap: break-word;
     width: 100%;
     display: -webkit-box;
-    line-clamp: 3;
-    -webkit-line-clamp: 3;
+    line-clamp: @n-lines;
+    -webkit-line-clamp: @n-lines;
     -webkit-box-orient: vertical;
   }
   .rc-discussion-feed-timestamp {
@@ -93,23 +97,32 @@
     justify-content: center;
     width: 100%;
   }
-}
 
-@media (min-width: 768px) {
-  #rc-discussion-dropdown {
-    .cdx-field {
-      display: flex;
-    }
-    .cdx-label {
-      display: inline-block;
-      width: 300px;
-      flex-shrink: 1;
-    }
-    .cdx-field__control {
-      display: inline-block;
-      flex-grow: 2;
+  @media (min-width: 768px) {
+    #rc-discussion-dropdown {
+      .cdx-field {
+        display: flex;
+      }
+      .cdx-label {
+        display: inline-block;
+        width: 300px;
+        flex-shrink: 1;
+      }
+      .cdx-field__control {
+        display: inline-block;
+        flex-grow: 2;
+      }
     }
   }
+
+  @media (max-width: 500px) {
+    .rc-discussion-feed-added-comment {
+      max-height: @n-lines-mobile * @line-height;
+      line-clamp: @n-lines-mobile;
+      -webkit-line-clamp: @n-lines-mobile;
+    }
+  }
+
 }
 
 @dark-mode-css-definitions: {
