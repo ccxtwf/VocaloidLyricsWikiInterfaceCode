@@ -1,3 +1,4 @@
+//! <pre>
 import type { Reactive, App } from "vue";
 
 interface TLQueueItem {
@@ -83,8 +84,8 @@ function fetchFromCache(forThirdParty: boolean): TLQueueCollection | null {
 
 function saveToCache(res: TLQueueCollection, forThirdParty: boolean): void {
   mw.storage.setObject(
-    getCorrespondentLocalStorageKey(forThirdParty), 
-    res, 
+    getCorrespondentLocalStorageKey(forThirdParty),
+    res,
     LOCALSTORAGE_CACHE_EXPIRATION
   );
 }
@@ -111,7 +112,7 @@ function getListOfTranslations(noCacheMode: boolean, forThirdParty: boolean): Pr
       maxage: '' + (noCacheMode ? 0 : SERVER_RESPONSE_CACHE_EXPIRATION),
       smaxage: '' + (noCacheMode ? 0 : SERVER_RESPONSE_CACHE_EXPIRATION),
     })).promise();
-    
+
     promise
     .then(function (wikitext: string) {
       const resolvedTlRequests: TLQueueItem[] = [];
@@ -124,10 +125,10 @@ function getListOfTranslations(noCacheMode: boolean, forThirdParty: boolean): Pr
         let rTemplate: RegExpMatchArray | string | null = heading.match(/^(.+)\s*\{\{([Aa]ccepted|[Rr]ejected|[Pp]ending)\s*\|?\s*\b([^\}]*)\s*\}\}\s*$/);
         if (rTemplate !== null) {
           heading = rTemplate[1];
-          if (rTemplate[2].match(/^[Aa]ccepted$/) !== null) { 
-            isApproved = true; 
-          } else if (rTemplate[2].match(/^[Rr]ejected$/) !== null) { 
-            isApproved = false; 
+          if (rTemplate[2].match(/^[Aa]ccepted$/) !== null) {
+            isApproved = true;
+          } else if (rTemplate[2].match(/^[Rr]ejected$/) !== null) {
+            isApproved = false;
           }
           rTemplate = (rTemplate[3] === '') ? rTemplate[2] : rTemplate[3];
         }
@@ -264,13 +265,13 @@ function installContainer(): void {
 
 function init(): void {
   $container = $('#'+containerId);
-  
+
   mw.loader.using(['vue', '@wikimedia/codex']).then((require) => {
     const Vue = require('vue');
     const { CdxProgressIndicator } = require('@wikimedia/codex');
     (mw.libs as any).Vue = Vue;
     (mw.libs as any).CdxProgressIndicator = CdxProgressIndicator;
-    
+
     //@ts-ignore
     store = Vue.reactive({
       firstParty: {
@@ -308,7 +309,7 @@ function loadApp(): void {
         {{ $i18n( 'vlw-tl-queue--heading' ).text() }}
       </div>
       <div class="body">
-        <tl-queue-sections 
+        <tl-queue-sections
           headingMessageName="vlw-tl-queue--first-party-section"
           :linkToPage="firstPartyTlCheckingPage"
           :store="firstPartyStore"
@@ -352,13 +353,13 @@ function loadApp(): void {
           {{ $i18n( 'vlw-tl-queue--error' ).text() }}
         </div>
         <div class="tl-queue-items" v-else>
-          <tl-queue-section  
-            headingMessageName="vlw-tl-queue--heading-in-queue" 
+          <tl-queue-section
+            headingMessageName="vlw-tl-queue--heading-in-queue"
             :store="onQueueTls"
             :exI="exI"
           />
-          <tl-queue-section  
-            headingMessageName="vlw-tl-queue--heading-resolved"  
+          <tl-queue-section
+            headingMessageName="vlw-tl-queue--heading-resolved"
             :store="resolvedTls"
             :exI="exI+1"
             :doNotShowLoadMore="true"
@@ -391,17 +392,17 @@ function loadApp(): void {
       </div>
       <div v-if="isEmpty">
         <i>{{ $i18n( 'vlw-tl-queue--no-items' ).text() }}</i>
-      </div>  
+      </div>
       <template v-else>
-        <tl-queue-item 
+        <tl-queue-item
           v-for="(item, idx) in renderedData"
           :item="item"
         />
       </template>
       <div v-if="!doNotShowLoadMore">
-        <a 
-          class="toggle" 
-          @click="onClickExpand" 
+        <a
+          class="toggle"
+          @click="onClickExpand"
         >
           {{ $i18n( isExpanded ? 'vlw-tl-queue--collapse' : 'vlw-tl-queue--expand' ).text() }}
         </a>
@@ -485,7 +486,7 @@ function loadApp(): void {
 }
 
 function populate(noCacheMode: boolean): void {
-  const promises = [false, true].map(function (forThirdParty) { 
+  const promises = [false, true].map(function (forThirdParty) {
     const prop = forThirdParty ? 'thirdParty' : 'firstParty';
     store![prop].isLoading = true;
     return getListOfTranslations(noCacheMode, forThirdParty)
@@ -510,3 +511,4 @@ mw.loader.using( ['mediawiki.util'] ).then(function() {
   init();
   // mw.hook('wikipage.content') fires several times each page (e.g. refreshing recent changes queue)
 });
+//! </pre>
