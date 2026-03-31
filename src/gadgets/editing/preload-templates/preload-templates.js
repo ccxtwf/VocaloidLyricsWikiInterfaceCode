@@ -1,11 +1,11 @@
 //  ================================
 //      Custom preload templates
 //  ================================
-/*  @author Grunny 
+/*  @author Grunny
     From https://harrypotter.wikia.com/wiki/MediaWiki:Wikia.js
     edited by leviathan_89 (version 1.06 - 07/2021)
     edited by CoolMikeHatsune22 (for use on Miraheze)
-    
+
     Original Source Code:
     https://dev.fandom.com/wiki/MediaWiki:PreloadTemplates.js?oldid=208770
 
@@ -17,33 +17,33 @@
 //!<nowiki>
 (function() {
   'use strict';
-	
+
 	// =================
 	//   Configuration
 	// =================
 	var config = {
-		
+
 		// List of boilerplates to be populated into the first (primary) dropdown.
 		primary: 'MediaWiki:Custom-PreloadTemplates',
 		// Primary dropdown placeholder text. Set as null to use default.
 		placeholderPrimary: "(insert boilerplate)",
-		
+
 		// List of boilerplates to be populated into the secondary dropdown. Set as null if unneeded
 		secondary: 'MediaWiki:Custom-PageComponents',
 		// Secondary dropdown placeholder text. Set as null if unneeded
 		placeholderSecondary: "(insert components)",
-		
-		// Suffix of each preload template 
+
+		// Suffix of each preload template
 		subpage: 'preload',
-		
+
 		// Maximum cache age in local storage
 		storageCacheAge: 15 * 60 * 1000,	// 15 minutes
-		
+
 		// Maximum cache age of response from server (when fetching list of preload templates)
 		serverCacheAge: 15 * 60,	// 15 minutes
-		
+
 	};
-	
+
 	// =================
 	//   Run
 	// =================
@@ -65,7 +65,7 @@
 	}
 
 	// =============
-	//   Functions  
+	//   Functions
 	// =============
 
 	// Parse MediaWiki code to allow the use of includeonly and noninclude tags in the preload page
@@ -77,26 +77,26 @@
 	function notFound(page){
 		alert("Page not found: " + '"' + page + '"');
 	}
-    
+
 	// Save list of templates to local cache
 	function saveListOfTemplatesToCache(primaryList, secondaryList) {
 		localStorage.setItem(LC_PREFIX_PRIMARY_PLTEMPLATES, primaryList);
 		localStorage.setItem(LC_PREFIX_SECONDARY_PLTEMPLATES, secondaryList);
 		if (config.storageCacheAge > 0) {
 			localStorage.setItem(
-				LC_PREFIX_EXPIRATION_PLTEMPLATES, 
+				LC_PREFIX_EXPIRATION_PLTEMPLATES,
 				new Date(Date.now() + config.storageCacheAge).getTime()
 			);
 		}
 	}
-    
+
 	// Clear list of templates from cache
 	function clearListOfTemplatesCache() {
 		localStorage.removeItem(LC_PREFIX_PRIMARY_PLTEMPLATES);
 		localStorage.removeItem(LC_PREFIX_SECONDARY_PLTEMPLATES);
 		localStorage.removeItem(LC_PREFIX_EXPIRATION_PLTEMPLATES);
 	}
-    
+
 	// Fetch list of templates to local cache
 	function getListOfTemplatesFromCache() {
 		var cacheExpiredTime = localStorage.getItem(LC_PREFIX_EXPIRATION_PLTEMPLATES);
@@ -166,7 +166,8 @@
 				textbox = document.getElementById('wpTextbox1'),
 				cm5 = $('.CodeMirror').get(0),
 				cm6 = $('.cm-editor').get(0);
-			if (window.ve && ve.init && ve.init.target && ve.init.target.active) {
+
+      if (window.ve && ve.init && ve.init.target && ve.init.target.active) {
 				// UCP Visual Editor (Source mode)
 				ve.init.target
 					.getSurface()
@@ -176,29 +177,12 @@
 			} else if (cke.length) {
 				// Visual editor
 				insertAtCursor(cke[0], preloadDataParsed);
-			} else if (cm5){
-				// CodeMirrorV5 [legacy]: text editor with syntax highlight
-				var cmEditor = cm5.CodeMirror;
-				var cmdDoc = cmEditor.getDoc();
-				cmdDoc.replaceRange(preloadDataParsed, cmdDoc.getCursor());
-			} else if (cm6){
-				// CodeMirrorV6: text editor with syntax highlight (only way to interact with editor is through a hook return)
-				var cm6Edit = function(_, cmEditor) {
-					var cmCursor = (cmEditor.view.state && cmEditor.view.state.selection && cmEditor.view.state.selection.ranges && cmEditor.view.state.selection.ranges[0]) || {from:0, to:0};
-					cmEditor.view.dispatch({
-						changes: {
-							from: cmCursor.from,
-							to: cmCursor.to,
-							insert: preloadDataParsed
-						},
-						selection: {anchor: cmCursor.from}
-					});
-					cmEditor.view.focus();
-					mw.hook('ext.CodeMirror.ready').remove(cm6Edit);
-				};
-				mw.hook('ext.CodeMirror.ready').add(cm6Edit);
-			} else if(textbox) {
-				insertAtCursor(textbox, preloadDataParsed);
+			} else if (cm5) {
+				insertCursorCodeMirror5(cm5, preloadDataParsed);
+			} else if (cm6) {
+				insertCursorCodeMirror6(cm6, textbox, preloadDataParsed);
+			} else if (textbox) {
+				insertCursorVanillaTextbox(textbox, preloadDataParsed);
 			} else {
 				console.warn('[PreloadTemplates] Could not find textbox to bind to');
 			}
@@ -207,14 +191,64 @@
 		});
 	}
 
+  function insertCursorCodeMirror5(cm5, preloadDataParsed) {
+		/**
+		 * CodeMirrorV5 [legacy]: text editor with syntax highlight
+		 **/
+		var cmEditor = cm5.CodeMirror;
+		var cmdDoc = cmEditor.getDoc();
+		cmdDoc.replaceRange(preloadDataParsed, cmdDoc.getCursor());
+	}
+
+	function insertCursorCodeMirror6(cm6, textbox, preloadDataParsed) {
+		/**
+		 * CodeMirrorV6: text editor with syntax highlight
+		 * (only way to interact with editor is through a hook return)
+		 **/
+		var cm6Edit = function(a, b) {
+			// Wikis using earlier versions of CodeMirror v6 will have to use the
+			// second argument in this hook handle rather than the first argument
+			// Relevant change: https://phabricator.wikimedia.org/rECMI7f6c03984a6fe8d2e48e527ded7325b04bb13b28
+			var cmEditor = typeof b === 'undefined' ? a : b;
+
+			// The CodeMirror6 wrapper does not unload from the DOM once it is
+			// initialized
+			if (!cmEditor.isActive) {
+				if (textbox) {
+					insertCursorVanillaTextbox(textbox, preloadDataParsed);
+				} else {
+					console.warn('[PreloadTemplates] Could not find textbox to bind to');
+				}
+			}
+
+			var cmCursor = (cmEditor.view.state && cmEditor.view.state.selection && cmEditor.view.state.selection.ranges && cmEditor.view.state.selection.ranges[0]) || {from:0, to:0};
+			cmEditor.view.dispatch({
+				changes: {
+					from: cmCursor.from,
+					to: cmCursor.to,
+					insert: preloadDataParsed
+				},
+				selection: {anchor: cmCursor.from}
+			});
+			cmEditor.view.focus();
+			mw.hook('ext.CodeMirror.ready').remove(cm6Edit);
+
+		};
+		mw.hook('ext.CodeMirror.ready').add(cm6Edit);
+	}
+
+	function insertCursorVanillaTextbox(textbox, preloadDataParsed) {
+		insertAtCursor(textbox, preloadDataParsed);
+	}
+
 	function appendModule(vsEditor) {
 		if (vsEditor === true) {
 			$(visualEditorSelector).after($main);
 		} else {
 			// Appending HTML to editor
-			if ( $module.length ) { 
+			if ( $module.length ) {
 				$module.after($main);
-			} else if ( $moduleOld.length ) { 
+			} else if ( $moduleOld.length ) {
 				$moduleOld.append($main);
 			}
 		}
@@ -237,7 +271,7 @@
 		}));
 		appendModule();
 	}
-		
+
 	function listHTML(parsed, placeholder) {
 		return mw.html.element('option', {
 			selected: true,
@@ -272,13 +306,13 @@
 	}
 
 	// =================
-	//   Initialization  
+	//   Initialization
 	// =================
 
 	// If the initialization failed
 	function initFail() {
 		$main.append(
-			mw.html.element('span', { class: 'error' }, 
+			mw.html.element('span', { class: 'error' },
 				mw.html.element('a', {
 					href: mw.util.getUrl(config.primary)
 				}, "Syntax failure: " + config.primary)
@@ -286,7 +320,7 @@
 			$help
 		);
 	}
-	
+
 	function init() {
 		if ($main.find('#pt-list').length > 0) {
 			return; // Initialize only once
@@ -314,7 +348,7 @@
 					populateDropdowns(listData, listSecondary);
 					saveListOfTemplatesToCache(listData, listSecondary);
 				}).fail(function() {
-					// Continue even when failed to fetch the secondary list 
+					// Continue even when failed to fetch the secondary list
 					populateDropdowns(listData, '');
 				});
 			} else {
@@ -323,7 +357,7 @@
 			}
 		}).fail(initFail);
 	}
-	
+
 	function populateDropdowns(listPrimary, listSecondary) {
 		var parsedPrimary = parseMW(listPrimary); // Parse data for MediaWiki tags
 		var parsedSecondary = parseMW(listSecondary); // Parse data for MediaWiki tags
@@ -333,7 +367,7 @@
 			initFail();
 			return;
 		}
-		
+
 		// Create preload templates dropdown
 		var dropdown = $('<select>', {
 			id: 'pt-list',
@@ -349,7 +383,7 @@
 			// Preload the template on click
 			getPreloadPage(val);
 		});
-		
+
 		// Create secondaryDropdown
 		var dropdownSecondary = $('<select>', {
 			id: 'pt-list-secondary',
@@ -374,7 +408,7 @@
 			$help
 		);
 	}
-	
+
 	mw.loader.using('mediawiki.util', function() {
 		preInit();
 		// Doesn't work for Visual Editor, disabled
