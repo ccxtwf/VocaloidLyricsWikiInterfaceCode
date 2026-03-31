@@ -22,3 +22,18 @@ $('#p-logo .mw-hamb').on('click', function () {
   document.body.scrollTop = 0;
   document.documentElement.scrollTop = 0;
 });
+
+/* Adjust the left position of the dropdown menus on the top action bar */
+function _onWidthChange() {
+  $('.d-flex.flex-row > .dropdown').each(function() {
+    //@ts-ignore
+    const isOnLeftSide = ($(this).position().left + $(this).width()) < 165;
+    $(this).find('.dropdown-menu').removeClass(
+      `dropdown-menu-${isOnLeftSide ? 'end' : 'start'}`
+    ).addClass(
+      `dropdown-menu-${isOnLeftSide ? 'start' : 'end'}`
+    );
+  });
+}
+$(_onWidthChange);
+$(window).on('resize', _onWidthChange);

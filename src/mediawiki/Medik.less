@@ -76,8 +76,8 @@ a:not(.new):visited, a.external:visited {
 #p-namespaces .mw-list-item.selected {
   font-weight: 600;
 }
-#p-namespaces .mw-list-item > a:not(.new), 
-.dropdown > a:not(.new), 
+#p-namespaces .mw-list-item > a:not(.new),
+.dropdown > a:not(.new),
 .dropdown-menu .mw-list-item > a:not(.new) {
   color: #323232 !important;
 }
@@ -108,7 +108,7 @@ a:not(.new):visited, a.external:visited {
 #mw-navigation li.mw-list-item .nav-link {
   color: #c0c0c0 !important;
 }
-#mw-navigation li.mw-list-item .nav-link:hover, 
+#mw-navigation li.mw-list-item .nav-link:hover,
 #mw-navigation li.mw-list-item .nav-link:active {
   color: #e6e6e6 !important;
 }
@@ -186,15 +186,15 @@ ol, ul {
   color: var(--color-base,#202122);
   border: 1px solid var(--border-color-base,#a2a9b1);
 }
-.wikitable > tr > th, 
+.wikitable > tr > th,
 .wikitable > * > tr > th {
   background-color: var(--background-color-neutral,#eaecf0);
   color: var(--color-base,#202122);
   text-align: center;
 }
-.wikitable > tr > th, 
-.wikitable > tr > td, 
-.wikitable > * > tr > th, 
+.wikitable > tr > th,
+.wikitable > tr > td,
+.wikitable > * > tr > th,
 .wikitable > * > tr > td {
   border: 1px solid var(--border-color-base,#a2a9b1);
   padding: 0.2em 0.4em;
@@ -285,36 +285,48 @@ ol.references li:target, sup.reference:target {
 }
 
 /* Medik Workaround */
-.mw-body-content .mw-heading {
-  h2, h3, h4, h5, h6 {
-    font-size: 100%;    
-  }
+.mw-heading1,
+.mw-heading2,
+.mw-heading3,
+.mw-heading4,
+.mw-heading5,
+.mw-heading6 {
+  font-size: 100%;
+  font-weight: 500;
+}
+.d-flex.flex-row {
+  flex-wrap: wrap !important
 }
 
-/* 
- * We do this to vary the scroll offset when working with a fixed header 
- * Idea: https://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header
+/* Syntaxhighlight Copy */
+.mw-highlight-copy--bound {
+	position: relative;
+
+	pre {
+		padding-top: 1.5em;
+	}
+
+	button {
+		position: absolute;
+		top: 0.2rem;
+		right: 0.2rem;
+		line-height: 1rem;
+	}
+}
+
+/*
+ * We do this to vary the scroll offset when working with a fixed header
+ * Idea:
+ * https://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header
+ * https://stackoverflow.com/questions/11386807/adding-an-automatic-offset-to-the-scroll-position-for-all-hash-links-calls
  */
 @medik-scroll-offset-desktop: 60px;
 @medik-scroll-offset-mobile: 120px;
-.mw-heading {
-  h1, h2, h3, h4, h5, h6 {
-    &::before {
-      content: '';
-      display: block;
-      height: @medik-scroll-offset-desktop;
-      margin-top: -1 * @medik-scroll-offset-desktop;
-      visibility: hidden;
-    }
-  }
+:target {
+  scroll-margin-top: @medik-scroll-offset-desktop;
 }
 @media (max-width: 768px) {
-  .mw-heading {
-    h1, h2, h3, h4, h5, h6 {
-      &::before {
-        height: @medik-scroll-offset-mobile;
-        margin-top: -1 * @medik-scroll-offset-mobile;
-      }
-    }
+  :target {
+    scroll-margin-top: @medik-scroll-offset-mobile;
   }
 }
