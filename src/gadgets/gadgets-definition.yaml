@@ -31,7 +31,7 @@ gadgets:
           - oojs-ui-widgets
     vlw-tl-queue-display:
       description: "Adds a list to the sidebar/footer of the wiki that shows the translations on queue for checking/verification on the wiki."
-      authors: 
+      authors:
         - CoolMikeHatsune22
       code:
         - vlw-tl-queue-display.ts
@@ -54,7 +54,7 @@ gadgets:
           - view
           - edit
         namespaces: "0"
-  
+
   browser:
     songs-browser-utils-category:
       description: "Utility module for songs-browser"
@@ -88,18 +88,18 @@ gadgets:
           - view
         dependencies:
           - mediawiki.storage
-  
+
   moderation:
     real-time-recent-changes:
       description: "This gadget improves patrolling by monitoring the recent changes feed in real-time, with various filtering and automation capabilities to help scale quality control efforts."
       authors:
         - Krinkle
-      code: 
+      code:
         - real-time-recent-changes.js
         - real-time-recent-changes.less
       resourceLoader:
         namespaces: "-1"
-        actions: 
+        actions:
           - view
     rc-discussion:
       description: "Reads from the Recent Changes feed to generate a list of recent posts & replies made using DiscussionTools."
@@ -130,7 +130,7 @@ gadgets:
         default: true
         namespaces: "13"
         supportsUrlLoad: "true"
-  
+
   editing:
     in-page-edit:
       description: "A powerful frontend JavaScript Plugin for MediaWiki. Adds a small menu at the bottom of the screen for quick editing of pages, e.g. quick addition of redirects, quick page renames, quick deletion."
@@ -147,7 +147,7 @@ gadgets:
           - edit
     preload-templates:
       description: "This gadget adds a dropdown box at the bottom of WikiEditor (AKA Source Editor) that allows the preloading of various templates. Adapted from FANDOM Developers Wiki."
-      authors: 
+      authors:
         - Grunny (original code)
         - leviathan_89 (modifications)
         - CoolMikeHatsune22 (porting to Miraheze)
@@ -159,7 +159,7 @@ gadgets:
         - preload-templates.less
       resourceLoader:
         default: true
-        actions: 
+        actions:
           - edit
         namespaces: "0,1,2,3,6,12,13,14,500,501"
     lyrics-editor:
@@ -180,7 +180,7 @@ gadgets:
           - edit
     view-source:
       description: "This gadget adds a 'View Source' toggle option that lets you peek at the raw wiki source code. Useful for editors. Adapted from FANDOM Developers Wiki."
-      authors: 
+      authors:
         - Pecoes (original code)
         - CoolMikeHatsune22 (porting to Miraheze)
       links:
@@ -203,9 +203,9 @@ gadgets:
         - hotcat.js
         - hotcat-check.js
       resourceLoader:
-        rights: 
+        rights:
           - edit
-  
+
   module:
     countdown:
       description: "This script creates a countdown clock where specified. Adapted from FANDOM Developers Wiki."
@@ -213,7 +213,7 @@ gadgets:
         - Pecoes & Asaba (original code)
         - Splarka & Eladkse (modifications)
         - CoolMikeHatsune22 (porting to Miraheze)
-      links: 
+      links:
         - https://dev.fandom.com/wiki/Countdown
         - https://dev.miraheze.org/wiki/Countdown
       code:
@@ -222,7 +222,7 @@ gadgets:
         default: true
     ReferenceTooltips:
       description: "Hover over inline citations to see reference information without moving away from the article text."
-      authors: 
+      authors:
         - Wikimedia Foundation
       links:
         - https://en.wikipedia.org/wiki/MediaWiki:Gadget-ReferenceTooltips.js
@@ -254,7 +254,7 @@ gadgets:
       resourceLoader:
         default: true
         namespaces: "2"
-        actions: 
+        actions:
           - view
       disabled: true
 
@@ -316,6 +316,7 @@ gadgets:
           - timeless
           - medik
           - monobook
+          - apioutput
     dark-mode-medik:
       description: "CSS stylesheet for Dark Mode on Medik."
       authors:
@@ -340,6 +341,18 @@ gadgets:
         type: "styles"
         skins:
           - timeless
+    dark-mode-apioutput:
+      description: "CSS stylesheet for Dark Mode on the API Output pages."
+      authors:
+        - CoolMikeHatsune22
+      code:
+        - dark-mode-apioutput.less
+      resourceLoader:
+        default: true
+        hidden: true
+        type: "styles"
+        skins:
+          - apioutput
     recent-changes-on-mobile:
       description: "CSS stylesheet for Special:RecentChanges."
       authors:
@@ -357,7 +370,7 @@ gadgets:
           - vector-2022
     mobile-collapsible-lyrics:
       description: "When this gadget is turned on, the lyrics rows will collapse responsively on mobile, making the original lyrics, romanized lyrics, and English translated lyrics easier to read. If turned off, then the lyrics will simply display as a normal grid."
-      authors: 
+      authors:
         - CoolMikeHatsune22
       code:
         - mobile-collapsible-lyrics.css
