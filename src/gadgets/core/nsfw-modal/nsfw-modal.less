@@ -1,6 +1,6 @@
 /*
 * Gadget-nsfw-modal
-* 
+*
 * CSS Variables:
 *   --nsfw-modal-msg-container-bg-color
 *   --nsfw-modal-msg-container-border-color
@@ -101,7 +101,7 @@
       justify-content: center;
       align-items: center;
     }
-    
+
     & > input + span {
       text-align: left;
       width: fit-content;
@@ -112,44 +112,44 @@
     margin-right: 6px;
     height: 1.1rem;
   }
-}
 
-@media (max-width: 1000px) {
-  #cw-modal-box {
-    width: 700px;
-    margin-left: -350px;
+  @media (max-width: 1000px) {
+    #cw-modal-box {
+      width: 700px;
+      margin-left: -350px;
+    }
   }
-}
 
-@media (max-width: 800px) {
-  #cw-modal-box {
-    width: 500px;
-    margin-left: -250px;
+  @media (max-width: 800px) {
+    #cw-modal-box {
+      width: 500px;
+      margin-left: -250px;
+    }
+    .cw-action-button {
+      margin-bottom: 10px;
+    }
   }
-  #cw-modal .cw-action-button {
-    margin-bottom: 10px;
-  }
-}
 
-@media (max-width: 500px) {
-  #cw-modal-box {
-    top: 20%;
-    left: 10%;
-    width: 80%;
-    margin-top: 0;
-    margin-left: 0;
-    padding: 20px 15px;
-    box-sizing: border-box;
-    overflow-x: hidden;
-    overflow-y: scroll;
-  }
-  #cw-more-actions label > input + span {
-    max-width: 200px;
-  }
-  #cw-modal .cw-action-button {
-    margin-left: 0;
-    width: 220px;
-    font-size: 0.85rem;
+  @media (max-width: 500px) {
+    #cw-modal-box {
+      top: 20%;
+      left: 10%;
+      width: 80%;
+      margin-top: 0;
+      margin-left: 0;
+      padding: 20px 15px;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      overflow-y: scroll;
+    }
+    #cw-more-actions label > input + span {
+      max-width: 200px;
+    }
+    .cw-action-button {
+      margin-left: 0;
+      width: 220px;
+      font-size: 0.85rem;
+    }
   }
 }
 
