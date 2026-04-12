@@ -2,12 +2,12 @@
  * Adds a special page to browse through recent posts and replies made using the DiscussionTools extension.
  * Authored by [[User:CoolMikeHatsune22]]
  */
-import type {  
-  IParsedRssRcFeed, 
-  IParsedApiQueryRc, 
+import type {
+  IParsedRssRcFeed,
+  IParsedApiQueryRc,
   IGroupedParsedApiQueryRc,
-  IExpectedApiQueryRcResponse, 
-  IExpectedApiQueryRvResponse, 
+  IExpectedApiQueryRcResponse,
+  IExpectedApiQueryRvResponse,
   IExpectedApiQueryCompareResponse
 } from "./types.js";
 
@@ -20,19 +20,19 @@ function getParamValue(param: string, url: string): string | null {
 
 /**
  * Parses the response from `api.php?action=feedrecentchanges`
- * 
+ *
  * `rc-discussion` will always prioritize extracting diffs from `feedrecentchanges`,
- * unless if a talk page on the wiki has multiple DiscussionTools-tagged edits 
+ * unless if a talk page on the wiki has multiple DiscussionTools-tagged edits
  * associated with it.
  *
  * Because `feedrecentchanges` groups multiple edits associated with a page into one
- * RSS feed item, we are unable to separate intermediary edits (i.e. each separate 
- * topic addition or reply addition) from the results of `feedrecentchanges`. We'd 
- * like to defer to MediaWiki's query API in such cases (see `parseRvApiQuery()`).  
- * 
- * @param parser 
- * @param rss 
- * @returns 
+ * RSS feed item, we are unable to separate intermediary edits (i.e. each separate
+ * topic addition or reply addition) from the results of `feedrecentchanges`. We'd
+ * like to defer to MediaWiki's query API in such cases (see `parseRvApiQuery()`).
+ *
+ * @param parser
+ * @param rss
+ * @returns
  */
 export function parseRcFeeds(parser: DOMParser, rss: string): IParsedRssRcFeed[] {
   const data = parser.parseFromString(rss, "application/xml");
@@ -45,15 +45,15 @@ export function parseRcFeeds(parser: DOMParser, rss: string): IParsedRssRcFeed[]
     const rTimestamp = item.querySelector("pubDate")?.innerHTML;
     const timestamp = (!rTimestamp) ? null : Date.parse(rTimestamp);
     const link = decodeXmlContents(item.querySelector("link")?.innerHTML);
-    
+
     const doc = parser.parseFromString(`<html>${xmlString}</html>`, 'application/xml');
-    
+
     const fromRev = +(getParamValue("oldid", link) || 0);
     const toRev = +(getParamValue("diff", link) || 0);
     const isNewPage = (fromRev === 0);
-    
+
     const hasMultipleRevs = doc.querySelector('td.diff-multi') !== null;
-    
+
     const summaryNode = doc.querySelector('p:first-child');
     const commentHeadingNode = summaryNode?.querySelector('span.autocomment') || null;
     let commentHeading = null;
@@ -64,7 +64,7 @@ export function parseRcFeeds(parser: DOMParser, rss: string): IParsedRssRcFeed[]
       commentType = (summaryNode?.textContent || '').replace((commentHeadingNode as Element).textContent, '').trim();
       if (commentType === 'Reply') { isReply = true; }
     }
-    
+
     let textAdditions: string[] | null = null;
     if (isNewPage) {
       textAdditions = [];
@@ -77,17 +77,17 @@ export function parseRcFeeds(parser: DOMParser, rss: string): IParsedRssRcFeed[]
     } else if (!hasMultipleRevs) {
       textAdditions = parseNewAdditionDiffs(doc);
     }
-    
-    return { 
-      author, 
-      pageTitle: pageTitle!, 
+
+    return {
+      author,
+      pageTitle: pageTitle!,
       heading: commentHeading,
       textAdditions,
-      timestamp, 
+      timestamp,
       isReply,
-      fromRev, 
-      toRev, 
-      isNewPage, 
+      fromRev,
+      toRev,
+      isNewPage,
       hasMultipleRevs
     };
   });
@@ -95,22 +95,22 @@ export function parseRcFeeds(parser: DOMParser, rss: string): IParsedRssRcFeed[]
 
 /**
  * Parses the response from `api.php?action=query&list=recentchanges`
- * 
- * Unlike `feedrecentchanges`, MediaWiki's Query API (list=recentchanges) is 
- * not able to fetch the MediaWiki page diffs associated with each topic/reply 
+ *
+ * Unlike `feedrecentchanges`, MediaWiki's Query API (list=recentchanges) is
+ * not able to fetch the MediaWiki page diffs associated with each topic/reply
  * addition.
- * 
- * @param res 
- * @returns 
+ *
+ * @param res
+ * @returns
  */
 export function parseRcApiQuery(res: IExpectedApiQueryRcResponse): IParsedApiQueryRc[] {
   const discussions = (res.query.recentchanges || []).map((curComment) => {
-    let { 
-      title: pageTitle, 
-      pageid: pageId, 
-      'old_revid': fromRev, 
-      revid: toRev, 
-      comment: revSummary, 
+    let {
+      title: pageTitle,
+      pageid: pageId,
+      'old_revid': fromRev,
+      revid: toRev,
+      comment: revSummary,
       user: username
     } = curComment;
     const isAnon = (curComment.anon !== undefined);
@@ -145,15 +145,15 @@ export function parseRcApiQuery(res: IExpectedApiQueryRcResponse): IParsedApiQue
 /**
  * Normalizes the results of `parseRcFeeds` and `parseRcApiQuery` into one output.
  * Modifies `parsedApiQuery` in-place.
- * 
- * Also determines the intermediary revisions which `parseRcFeeds` is not able 
- * to get the (separated) contents of. In such cases, a third API request to the 
- * wiki will be made and the fetched API response will be passed onto `parseRvApiQuery`. 
- * 
- * @param parser 
+ *
+ * Also determines the intermediary revisions which `parseRcFeeds` is not able
+ * to get the (separated) contents of. In such cases, a third API request to the
+ * wiki will be made and the fetched API response will be passed onto `parseRvApiQuery`.
+ *
+ * @param parser
  * @param parsedFeeds
- * @param parsedApiQuery 
- * @returns 
+ * @param parsedApiQuery
+ * @returns
  */
 export function compareParsedRcs(parser: DOMParser, parsedFeeds: IParsedRssRcFeed[], parsedApiQuery: IParsedApiQueryRc[]): [IParsedApiQueryRc[], Map<number, number>] {
   let idxApiQuery = 0;
@@ -162,7 +162,7 @@ export function compareParsedRcs(parser: DOMParser, parsedFeeds: IParsedRssRcFee
   const fetchMidRevs: number[] = [];
   while (idxApiQuery < parsedApiQuery.length) {
 
-    // Reached end of parsedFeeds, let the remaining parsedApiQuery items be 
+    // Reached end of parsedFeeds, let the remaining parsedApiQuery items be
     // passed onto the next API request (to fetch text contents)
     if (idxFeeds >= parsedFeeds.length) {
       atIndexes.push(idxApiQuery);
@@ -172,14 +172,14 @@ export function compareParsedRcs(parser: DOMParser, parsedFeeds: IParsedRssRcFee
     }
 
     if (
-      parsedApiQuery[idxApiQuery].fromRev === parsedFeeds[idxFeeds].fromRev && 
+      parsedApiQuery[idxApiQuery].fromRev === parsedFeeds[idxFeeds].fromRev &&
       parsedApiQuery[idxApiQuery].toRev === parsedFeeds[idxFeeds].toRev
     ) {
       // Matching single edit
       parsedApiQuery[idxApiQuery].contents = buildStringFromDiffs(
         parser,
-        parsedFeeds[idxFeeds].textAdditions || [], 
-        parsedFeeds[idxFeeds].heading, 
+        parsedFeeds[idxFeeds].textAdditions || [],
+        parsedFeeds[idxFeeds].heading,
         parsedFeeds[idxFeeds].isReply
       );
       idxApiQuery++;
@@ -211,16 +211,16 @@ export function compareParsedRcs(parser: DOMParser, parsedFeeds: IParsedRssRcFee
 }
 
 /**
- * For intermediary revs (between multiple edits on a single page) for which 
- * `parseRcFeeds` is not able to get the separated diff contents, a third API 
- * request is made to MediaWiki's Query API (prop=revisions), to fetch the associated 
- * diffs of each intermediary edit. This function then processes the returned 
+ * For intermediary revs (between multiple edits on a single page) for which
+ * `parseRcFeeds` is not able to get the separated diff contents, a third API
+ * request is made to MediaWiki's Query API (prop=revisions), to fetch the associated
+ * diffs of each intermediary edit. This function then processes the returned
  * API response and modifies the output of `compareParsedRcs` directly.
- * 
- * @param parser 
+ *
+ * @param parser
  * @param res           API Response
  * @param parsedApiRcs  Output from `compareParsedRcs`
- * @param revToIdx      Map of MW Revision ID -> Position index on parsedApiRcs  
+ * @param revToIdx      Map of MW Revision ID -> Position index on parsedApiRcs
  */
 export function parseRvApiQuery(parser: DOMParser, res: IExpectedApiQueryRvResponse, parsedApiRcs: IParsedApiQueryRc[], revToIdx: Map<number, number>): void {
   const objs = Object.values(res.query.pages || {});
@@ -236,8 +236,8 @@ export function parseRvApiQuery(parser: DOMParser, res: IExpectedApiQueryRvRespo
           const arrd = parseNewAdditionDiffs(d);
           const comment = buildStringFromDiffs(
             parser,
-            arrd, 
-            parsedApiRcs[atIndex].heading, 
+            arrd,
+            parsedApiRcs[atIndex].heading,
             parsedApiRcs[atIndex].isReply
           );
           return comment;
@@ -248,11 +248,11 @@ export function parseRvApiQuery(parser: DOMParser, res: IExpectedApiQueryRvRespo
 }
 
 /**
- * For comments that have failed to load, use `action=compare` of the MediaWiki Action API to 
- * parse the added comment. One request is made for one comment, so this is only done on request. 
- * 
- * @param parser 
- * @param res 
+ * For comments that have failed to load, use `action=compare` of the MediaWiki Action API to
+ * parse the added comment. One request is made for one comment, so this is only done on request.
+ *
+ * @param parser
+ * @param res
  */
 export function parseCompareApiQuery({ parser, res, heading, isReply }: {parser: DOMParser, res: IExpectedApiQueryCompareResponse, heading: string, isReply: boolean }): string {
   const diffs = res.compare['*'];
@@ -260,8 +260,8 @@ export function parseCompareApiQuery({ parser, res, heading, isReply }: {parser:
   const arrd = parseNewAdditionDiffs(d);
   const comment = buildStringFromDiffs(
     parser,
-    arrd, 
-    heading, 
+    arrd,
+    heading,
     isReply
   );
   return comment;
@@ -269,9 +269,9 @@ export function parseCompareApiQuery({ parser, res, heading, isReply }: {parser:
 
 /**
  * Groups the parsed edits by date using local time
- * 
- * @param items 
- * @returns 
+ *
+ * @param items
+ * @returns
  */
 export function groupDiscussionsByDate(items: IParsedApiQueryRc[]): IGroupedParsedApiQueryRc {
   const res: IGroupedParsedApiQueryRc = {};
@@ -299,24 +299,24 @@ export function groupDiscussionsByDate(items: IParsedApiQueryRc[]): IGroupedPars
 }
 
 /**
- * 
- * @param text 
- * @returns 
+ *
+ * @param text
+ * @returns
  */
 function decodeXmlContents(text: string | null | undefined): string {
   if (!text) return '';
   return text.replace(/&(lt|gt|amp|#039|quot|apos);/g, (_: string, t: string): string => {
     switch (t) {
-      case 'lt': 
+      case 'lt':
         return '<';
-      case 'gt': 
+      case 'gt':
         return '>';
-      case 'amp': 
+      case 'amp':
         return '&';
-      case 'quot': 
+      case 'quot':
         return '"';
       case '#039':
-      case 'apos': 
+      case 'apos':
         return '\'';
     }
     return '';
@@ -324,9 +324,9 @@ function decodeXmlContents(text: string | null | undefined): string {
 }
 
 /**
- * 
- * @param string 
- * @returns 
+ *
+ * @param string
+ * @returns
  */
 function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -334,9 +334,9 @@ function escapeRegExp(string: string): string {
 
 /**
  * Removes links that are written in wikitext syntax from a string
- * 
- * @param text 
- * @returns 
+ *
+ * @param text
+ * @returns
  */
 function stripLinks(text: string): string {
   text = text.replace(/\[\[([^\|\]]+)\]\]/g, '$1');
@@ -347,9 +347,9 @@ function stripLinks(text: string): string {
 
 /**
  * Strips common wikitext tags
- * 
- * @param text 
- * @returns 
+ *
+ * @param text
+ * @returns
  */
 function stripTags(text: string): string {
   text = text.replace(/<(nowiki|includeonly|noinclude|mobileonly|nomobile|code|blockquote)>(.*?)<\/\1>/g, "$2");
@@ -358,9 +358,9 @@ function stripTags(text: string): string {
 
 /**
  * Fetches new text addition from MediaWiki diffs.
- * 
- * @param doc 
- * @returns 
+ *
+ * @param doc
+ * @returns
  */
 function parseNewAdditionDiffs(doc: Document): string[] {
   const diffRows = Array.from(doc.querySelectorAll('table > tr:not(.diff-title)'));
@@ -371,8 +371,8 @@ function parseNewAdditionDiffs(doc: Document): string[] {
     .map((tr: Element) => {
       return tr.querySelector('td:not(.diff-empty):not(.diff-side-deleted):not(.diff-marker)');
     })
-    .map((td: Element | null) => { 
-      return td?.textContent.trim() || ''; 
+    .map((td: Element | null) => {
+      return td?.textContent.trim() || '';
     });
   return diffs;
 }
@@ -380,19 +380,19 @@ function parseNewAdditionDiffs(doc: Document): string[] {
 /**
  * Processes the results returned from `parseNewAdditionDiffs` and build the string
  * representing the associated text content.
- * 
+ *
  * Does a few other things like removing formatting.
- * 
- * @param parser 
- * @param diffs 
- * @param filterHeading 
- * @param isReply 
- * @returns 
+ *
+ * @param parser
+ * @param diffs
+ * @param filterHeading
+ * @param isReply
+ * @returns
  */
 function buildStringFromDiffs(parser: DOMParser, diffs: string[], filterHeading: string | null, isReply: boolean): string {
   const rxTaggedSignature = /\s*(?:\[\[User:[^\]]+?\]\]\s+\(\[\[User[ _]talk:[^\]\|]+?\|talk\]\]\)|\[\[Special:Contributions\/[^\]]+?\]\])\s+\d{1,2}:\d{1,2},\s+\d{1,2}\s+[a-zA-Z]+\s+\d{4}\s+\(UTC\)\s*$/;
-  const rxHeadingWikitext = new RegExp("(?<=^|\\n|<br\\s?\\/?>)={2}\\s*" + escapeRegExp(filterHeading || '').replace(/[ _]/g, '[ _]') + "\\s*={2}(?=\\n|<br\\s?\/?>|$)");
-  
+  const rxHeadingWikitext = new RegExp("(?<=^|\\n|<br\\s?\\/?>)={2}\\s*" + escapeRegExp(filterHeading || '').replace(/[ _]+/g, '[ _]+') + "\\s*={2}(?=\\n|<br\\s?\/?>|$)");
+
   // Get pure text content
   diffs = diffs
     .map(txt => (
