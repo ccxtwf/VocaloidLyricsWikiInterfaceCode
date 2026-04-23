@@ -60,10 +60,6 @@
 		LC_PREFIX_SECONDARY_PLTEMPLATES = 'wiki_preload_templates_list_secondary',
 		LC_PREFIX_EXPIRATION_PLTEMPLATES = 'wiki_preload_templates_expiration';
 
-	if (mwc.wgAction !== 'edit') {
-		return;
-	}
-
 	// =============
 	//   Functions
 	// =============
@@ -322,9 +318,6 @@
 	}
 
 	function init() {
-		if ($main.find('#pt-list').length > 0) {
-			return; // Initialize only once
-		}
 		var fetchedFromCache = getListOfTemplatesFromCache();
 		if (fetchedFromCache !== null) {
 			populateDropdowns(fetchedFromCache[0], fetchedFromCache[1]);
@@ -356,6 +349,8 @@
 				saveListOfTemplatesToCache(listData, '');
 			}
 		}).fail(initFail);
+    // Initialize once only
+		mw.hook( 'wikipage.content' ).remove(init);
 	}
 
 	function populateDropdowns(listPrimary, listSecondary) {
@@ -415,9 +410,7 @@
 		//mw.hook('ve.activationComplete').add(function () { // Visual Editor
 		//  appendModule(true);
 		//});
-		if (mwc.wgAction === 'edit') {
-			mw.hook( 'wikipage.content' ).add(init);
-		}
+		mw.hook( 'wikipage.content' ).add(init);
 	});
 })();
 //!</nowiki>
