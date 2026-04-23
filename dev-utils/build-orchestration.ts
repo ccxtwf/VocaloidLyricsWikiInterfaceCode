@@ -3,12 +3,12 @@ import { readFile } from 'fs/promises';
 import { parse } from 'yaml';
 import * as crypto from 'crypto';
 import { Target } from 'vite-plugin-static-copy';
-import { transformWithEsbuild } from 'vite';
-import { OutputBundle } from 'rollup';
+import { transformWithOxc } from 'vite';
+import { OutputBundle } from 'rolldown';
 import type { GadgetDefinition, GadgetsDefinition } from './types.js';
-import { 
-  getFileType, 
-  removeFileExtension, 
+import {
+  getFileType,
+  removeFileExtension,
   resolveFileExtension,
   resolveSrcGadgetsPath,
   resolveSrcMediawikiCodePath,
@@ -21,13 +21,13 @@ import {
 
 let viteServerOrigin: string;
 
-// Defines the prefix of the name of the gadget/script when registered onto MW via mw.loader.impl 
+// Defines the prefix of the name of the gadget/script when registered onto MW via mw.loader.impl
 // e.g. When this variable is set as "ext.gadget", a gadget named "hello-world" will
-//      be registered under the name "ext.gadget.hello-world" 
+//      be registered under the name "ext.gadget.hello-world"
 let namespace = 'ext.gadget';
 
 
-/** 
+/**
  * @param _origin
  * @returns
  */
@@ -35,7 +35,7 @@ export function setViteServerOrigin(_origin: string): void {
   viteServerOrigin = _origin;
 }
 
-/** 
+/**
  * @param _origin
  * @returns
  */
@@ -45,7 +45,7 @@ export function setGadgetNamespace(_gadgetNamespace: string): void {
 
 /**
  * Get the JS scripts to load for each gadget
- * 
+ *
  * @param gadgetDefinition
  * @returns
  */
@@ -55,7 +55,7 @@ function getScriptsToLoadFromGadgetDefinition(gadgetDefinition: GadgetDefinition
 
 /**
  * Get the CSS stylesheets to load for each gadget
- * 
+ *
  * @param gadgetDefinition
  * @returns
  */
@@ -65,9 +65,9 @@ function getStylesheetsToLoadFromGadgetDefinition(gadgetDefinition: GadgetDefini
 
 /**
  * Resolve the static URL to the file in the specified gadget directory.
- * This is passed in the entrypoint file (load.js) to mw.loader.impl, 
+ * This is passed in the entrypoint file (load.js) to mw.loader.impl,
  * and is used by the MediaWiki client to load and execute/apply the JS/CSS files.
- * 
+ *
  * @param filepath
  * @param gadgetSubdir
  * @param isMediawikiInterfaceCode
@@ -84,7 +84,7 @@ function getStaticUrlToFile(filepath: string, { gadgetSubdir = '', isMediawikiIn
 
 /**
  * Reads and parses the contents of /src/gadgets/gadgets-definition.yaml
- * 
+ *
  * @returns
  */
 export async function readGadgetsDefinition(): Promise<GadgetsDefinition> {
@@ -101,13 +101,13 @@ interface GadgetPremCheck {
 
 /**
  * Processes the parsed gadgets definition and does the following:
- *  1) It selects which gadgets to include/exclude when serving/building, based 
+ *  1) It selects which gadgets to include/exclude when serving/building, based
  *     on the "workspace.enable_all", "workspace.enable", and/or "workspace.disable" properties, or
  *     on the "gadgets.<GADGET-NAME>.disabled" property of each gadget
  *  2) It excludes the gadgets with unresolved directories
  *  3) It sets the gadget build order so gadgets with no required dependencies are loaded first
  *  4) It excludes gadgets with unknown dependencies
- * 
+ *
  *  @param gadgetsDefinition
  *  @returns
  */
@@ -115,20 +115,20 @@ export function getGadgetsToBuild(gadgetsDefinition: GadgetsDefinition): GadgetD
   const { 'enable_all': enableAll = false, enable: arrEnabledGs = [], disable: arDisabledGs = [] } = gadgetsDefinition?.workspace || {};
   const enabledGadgets = new Set(arrEnabledGs);
   const disabledGadgets = new Set(arDisabledGs);
-  
+
   // Determine which gadgets to include/exclude
   let gadgetsToBuild: GadgetDefinition[] = [];
   for (const [gadgetSection, gadgetSectionDefinition] of Object.entries(gadgetsDefinition?.gadgets || {})) {
     for (const [gadgetName, gadgetDefinition] of Object.entries(gadgetSectionDefinition || {})) {
       const gadgetId = `${gadgetSection}/${gadgetName}`;
-      // Always return early (i.e. do not build the gadget) if 
-      // "gadgets.<GADGET-NAME>.disabled" is set on the gadget definition 
-      if (gadgetDefinition?.disabled === true) { continue; } 
-      // Otherwise defer to "workspace.enable_all", "workspace.enable", "workspace.disable" 
+      // Always return early (i.e. do not build the gadget) if
+      // "gadgets.<GADGET-NAME>.disabled" is set on the gadget definition
+      if (gadgetDefinition?.disabled === true) { continue; }
+      // Otherwise defer to "workspace.enable_all", "workspace.enable", "workspace.disable"
       if (enableAll ? !disabledGadgets.has(gadgetId) : enabledGadgets.has(gadgetId)) {
         gadgetsToBuild.push({
           ...gadgetDefinition,
-          section: gadgetSection, 
+          section: gadgetSection,
           name: gadgetName,
         });
       }
@@ -162,8 +162,8 @@ export function getGadgetsToBuild(gadgetsDefinition: GadgetsDefinition): GadgetD
       (file) => !checkGadgetExists(section, name, file)
     ) || [];
     if (missingCodeFiles.length > 0) {
-      gadgetsWithMissingFiles.push({ 
-        section, 
+      gadgetsWithMissingFiles.push({
+        section,
         name,
         missing: missingCodeFiles
       });
@@ -181,7 +181,7 @@ export function getGadgetsToBuild(gadgetsDefinition: GadgetsDefinition): GadgetD
         .join('\n')
     );
   }
-  
+
   // Determine gadget load order
   let gadgetsToBuildInOrder: GadgetDefinition[] = [];
   const loadedDeps: Set<string> = new Set();
@@ -227,9 +227,9 @@ export function getGadgetsToBuild(gadgetsDefinition: GadgetsDefinition): GadgetD
 }
 
 /**
- * Trawls through `/src/mediawiki` to determine the code files to build & compile as the wiki's global 
+ * Trawls through `/src/mediawiki` to determine the code files to build & compile as the wiki's global
  * interface code
- * 
+ *
  *  @returns
  */
 export function getMediaWikiInterfaceCodeToBuild(): GadgetDefinition[] {
@@ -259,17 +259,17 @@ export function getMediaWikiInterfaceCodeToBuild(): GadgetDefinition[] {
 }
 
 /**
- * Builds the entrypoint file (`load.js`) to be served by the Vite server and to be 
+ * Builds the entrypoint file (`load.js`) to be served by the Vite server and to be
  * loaded on the MediaWiki client.
- * 
+ *
  * @param gadgetsToBuild
  * @param mediawikiInterfaceCodeToBuild
- * @param useRolledUpImplementation     If set to true, then `load.js` will load the gadget-impl.js files. 
+ * @param useRolledUpImplementation     If set to true, then `load.js` will load the gadget-impl.js files.
  *                                      Otherwise, it will lazily load and execute the individual scripts and stylesheets.
  * @returns
  */
 export async function serveGadgets(
-  gadgetsToBuild: GadgetDefinition[], 
+  gadgetsToBuild: GadgetDefinition[],
   mediawikiInterfaceCodeToBuild: GadgetDefinition[],
   useRolledUpImplementation: boolean
 ): Promise<void> {
@@ -280,8 +280,8 @@ export async function serveGadgets(
       const writeScriptLoadingStatement = (gadget: GadgetDefinition) => {
         return writeStream.write(
           `mw.loader.load("${
-            getStaticUrlToFile('gadget-impl.js', { 
-              gadgetSubdir: `${gadget.section}/${gadget.name}`, 
+            getStaticUrlToFile('gadget-impl.js', {
+              gadgetSubdir: `${gadget.section}/${gadget.name}`,
               isMediawikiInterfaceCode: gadget.section === 'mediawiki'
             })
           }");\n`
@@ -318,15 +318,15 @@ export async function serveGadgets(
 
 /**
  * Used to simulate ResourceLoader's conditional loading
- * 
+ *
  * @param resourceLoader        conditions to load
  * @returns
  */
 function generateGadgetImplementationLoadConditionsWrapperCode(
-  { resourceLoader: { 
-    dependencies = null, rights = null, skins = null, 
-    actions = null, categories = null, namespaces = null, 
-    contentModels = null 
+  { resourceLoader: {
+    dependencies = null, rights = null, skins = null,
+    actions = null, categories = null, namespaces = null,
+    contentModels = null
   } = {} }: GadgetDefinition
 ): [string[], string[]] {
   if ([dependencies, rights, skins, actions, categories, namespaces, contentModels].every((v) => v === null)) {
@@ -362,8 +362,8 @@ function generateGadgetImplementationLoadConditionsWrapperCode(
     if (!!v) {
       v = normalizeVariable(v);
       const fn = (
-        configIsListOfValues ? 
-        generateCodeConditionForComparingLists : 
+        configIsListOfValues ?
+        generateCodeConditionForComparingLists :
         generateCodeConditionForComparingValues
       );
       conditions.push(fn(v, configKey, valueIsNumeric));
@@ -392,21 +392,21 @@ function generateGadgetImplementationLoadConditionsWrapperCode(
 
 /**
  * Creates an `mw.loader.impl` implementation with direct execution of each script and stylesheet.
- * 
+ *
  * @param gadgetImplementationFilePath
  * @param writeBundle
  * @param gadget
  * @param minify
  * @returns
  */
-export async function createRolledUpGadgetImplementation( 
+export async function createRolledUpGadgetImplementation(
   gadgetImplementationFilePath: string,
   writeBundle: OutputBundle,
-  gadget: GadgetDefinition, 
+  gadget: GadgetDefinition,
   minify: boolean
 ): Promise<string> {
   const { section, name } = gadget;
-  
+
   if (!checkGadgetExists(section, name)) {
     throw new Error(`Cannot resolve gadget ${section}/${name}`);
   }
@@ -458,17 +458,16 @@ export async function createRolledUpGadgetImplementation(
 
   body.push(`]}, {}, {}, null];`);
   body.push(`});`);
-  
-  return (await transformWithEsbuild(
+
+  return (await transformWithOxc(
     [
       `(function (mw) {`,
       ...rsCondHead,
       ...body,
       ...rsCondTail,
       `})(mediaWiki);`,
-    ].join(''), 
-    gadgetImplementationFilePath, 
-    { minify }
+    ].join(''),
+    gadgetImplementationFilePath,
   )).code;
 
 }
@@ -476,8 +475,8 @@ export async function createRolledUpGadgetImplementation(
 /**
  * Generates an `mw.loader.impl` implementation that executes code and applies stylesheets
  * by lazy loading.
- * 
- * @param gadget 
+ *
+ * @param gadget
  */
 export async function createRolledUpGadgetImplementationByLazyLoading(gadget: GadgetDefinition): Promise<string> {
   const { section, name } = gadget;
@@ -490,7 +489,7 @@ export async function createRolledUpGadgetImplementationByLazyLoading(gadget: Ga
   const hash = crypto.randomBytes(4).toString('hex');
 
   const scriptsToLoad = getScriptsToLoadFromGadgetDefinition(gadget).map((script) => {
-    const scriptUrl = getStaticUrlToFile(script, { 
+    const scriptUrl = getStaticUrlToFile(script, {
       gadgetSubdir: `${section}/${name}`, isMediawikiInterfaceCode: isMwInterfaceCode
     }).replaceAll(/"/g, '\\"');
     return `loadLazily("${scriptUrl}");`;
@@ -517,7 +516,7 @@ export async function createRolledUpGadgetImplementationByLazyLoading(gadget: Ga
   ];
 
   const [rsCondHead, rsCondTail] = generateGadgetImplementationLoadConditionsWrapperCode(gadget);
-  return (await transformWithEsbuild(
+  return (await transformWithOxc(
     [
       `(function (mw) {`,
       ...rsCondHead,
@@ -526,7 +525,6 @@ export async function createRolledUpGadgetImplementationByLazyLoading(gadget: Ga
       `})(mediaWiki);`
     ].join(''),
     resolveEntrypointFilepath(),
-    { minify: false }
   )).code;
 }
 
@@ -559,10 +557,10 @@ export function mapWikicodeSourceFiles(gadgetsToBuild: GadgetDefinition[], mwInt
     getStylesheetsToLoadFromGadgetDefinition(definition).forEach(loadFile);
     getScriptsToLoadFromGadgetDefinition(definition).forEach(loadFile);
     (definition.i18n || []).forEach((i18nFile) => {
-      assets.push({ 
-        src: resolveSrcGadgetsPath(section, name, i18nFile), 
-        dest: `${section}/${name}`, 
-        overwrite: true 
+      assets.push({
+        src: resolveSrcGadgetsPath(section, name, i18nFile),
+        dest: `${section}/${name}`,
+        overwrite: true
       });
     });
   });
