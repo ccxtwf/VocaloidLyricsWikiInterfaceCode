@@ -16,11 +16,12 @@
     "outDir": "build",
 
     "typeRoots": [
-      "./node_modules/@types", 
-      "./node_modules/types-mediawiki", 
+      "./node_modules/@types",
+      "./node_modules/types-mediawiki",
+      "./node_modules/types-mediawiki-api",
       "./node_modules/@vue"
     ],
-    
+
     /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
