@@ -161,7 +161,9 @@ gadgets:
         default: true
         actions:
           - edit
-        namespaces: "0,1,2,3,6,12,13,14,500,501"
+          - submit
+        contentModels:
+          - wikitext
     lyrics-editor:
       description: "This gadget adds an \"Edit Lyrics Table\" action button on WikiEditor (AKA Source Editor) that allows easier editing of lyrics tables throughout the VOCALOID Lyrics Wiki."
       authors:

@@ -108,24 +108,24 @@ html.theme-dark {
   --border-color-content-removed: #987027;
 
   // OOUI icons
-  .oo-ui-iconElement-icon:not(.oo-ui-image-progressive):not(.oo-ui-image-invert), 
+  .oo-ui-iconElement-icon:not(.oo-ui-image-progressive):not(.oo-ui-image-invert),
   .oo-ui-indicatorElement-indicator:not(.oo-ui-image-progressive):not(.oo-ui-image-invert) {
     .invert();
   }
-  
+
   textarea, input {
     background-color: #1b1b1b;
     color: #ccc;
     border: solid 1px #777;
   }
-  
+
   // jQuery Spinner
   .mw-spinner {
     .invert();
   }
-  
+
   // Tabber
-  .tabber__header__prev:after, 
+  .tabber__header__prev:after,
   .tabber__header__next:after {
     .invert();
   }
@@ -144,7 +144,7 @@ html.theme-dark {
   .profile-externalLinks {
     .invert();
   }
-  
+
   // Default WikiEditor
   #wpTextbox1 {
     background: #000;
@@ -154,7 +154,7 @@ html.theme-dark {
   .editCheckboxes .oo-ui-iconWidget {
     .no-invert();
   }
-  
+
   // WikiEditor Toolbar
   .wikiEditor-ui-toolbar .tabs span.tab a {
     color: #93a5ff;
@@ -203,7 +203,7 @@ html.theme-dark {
   .ext-WikiEditor-realtimepreview-button:hover {
     background-color: #4d4d4d;
   }
-  
+
   // MSUpload Dialog
   #msupload-div {
     background: #202122;
@@ -213,73 +213,73 @@ html.theme-dark {
   #msupload-dropzone {
     color: #ccc;
   }
-  
+
   // CodeMirror
   .CodeMirror-gutters {
     background-color: #202122;
     border-right-color: #666;
   }
-  .CodeMirror-line::selection, 
-  .CodeMirror-line > span::selection, 
+  .CodeMirror-line::selection,
+  .CodeMirror-line > span::selection,
   .CodeMirror-line > span > span::selection {
     background: #4b0808;
   }
   .cm-mw-matchingbracket {
     background-color: #4b0808;
   }
-  .cm-mw-template-name, 
-  .cm-mw-template-argument-name, 
-  .cm-mw-template-delimiter, 
+  .cm-mw-template-name,
+  .cm-mw-template-argument-name,
+  .cm-mw-template-delimiter,
   .cm-mw-template-bracket {
     color: #cd91ec;
   }
   .cm-mw-template {
     color: #cd91ec;
   }
-  .cm-mw-link-pagename, 
-  .cm-mw-link-bracket, 
-  .cm-mw-link-delimiter, 
-  .cm-mw-extlink, 
+  .cm-mw-link-pagename,
+  .cm-mw-link-bracket,
+  .cm-mw-link-delimiter,
+  .cm-mw-extlink,
   .cm-mw-free-extlink {
     color: #00bdff;
   }
-  .cm-mw-exttag-name, 
+  .cm-mw-exttag-name,
   .cm-mw-htmltag-name {
     color: #63d3bb;
   }
-  .cm-mw-apostrophes-bold, 
+  .cm-mw-apostrophes-bold,
   .cm-mw-apostrophes-italic {
     color: #00bdff;
   }
-  .cm-mw-exttag-bracket, 
-  .cm-mw-exttag-attribute, 
-  .cm-mw-htmltag-bracket, 
+  .cm-mw-exttag-bracket,
+  .cm-mw-exttag-attribute,
+  .cm-mw-htmltag-bracket,
   .cm-mw-htmltag-attribute {
     color: #63d3bb;
   }
-  .cm-mw-link, 
-  .cm-mw-link-tosection, 
+  .cm-mw-link,
+  .cm-mw-link-tosection,
   .cm-mw-section-header {
     color: #33b8e6;
   }
-  .cm-mw-extlink-protocol, 
-  .cm-mw-free-extlink-protocol, 
+  .cm-mw-extlink-protocol,
+  .cm-mw-free-extlink-protocol,
   .cm-mw-extlink-bracket {
     color: #33b8e6;
   }
-  .cm-mw-list, 
+  .cm-mw-list,
   .cm-mw-indenting {
     color: #285bff;
     font-weight: bold;
   }
-  .cm-mw-doubleUnderscore, 
-  .cm-mw-double-underscore, 
-  .cm-mw-signature, 
+  .cm-mw-doubleUnderscore,
+  .cm-mw-double-underscore,
+  .cm-mw-signature,
   .cm-mw-hr {
     color: #8a9099;
     background-color: #000000;
   }
-  .cm-mw-mnemonic, 
+  .cm-mw-mnemonic,
   .cm-mw-html-entity {
     color: #8eb544;
   }
@@ -304,42 +304,48 @@ html.theme-dark {
       background-color: #454545;
     }
   }
-  
+
   #mw-editbutton-codemirror .oo-ui-toggleWidget-on .oo-ui-labelElement-label {
     color: #f7b947;
   }
-  
+
+  // CodeMirror
   .cm-gutters {
     background-color: #202122;
     border-right-color: #666;
     .cm-gutter.cm-lineNumbers {
       .cm-gutterElement {
-        color: #909494;    
+        color: #909494;
       }
     }
   }
-
   .cm-editor .cm-tooltip {
     background-color: var(--background-color-neutral-subtle);
     border-color: var(--border-color-base);
   }
-
-  .cm-matchingBracket, 
+  .cm-matchingBracket,
   .cm-focused .cm-matchingBracket {
     background-color: #1b1b1b;
   }
-
-  .cm-mw-exttag-attribute-value, 
-  .cm-mw-htmltag-attribute-value, 
-  .cm-mw-table-definition-value, 
+  .cm-mw-exttag-attribute-value,
+  .cm-mw-htmltag-attribute-value,
+  .cm-mw-table-definition-value,
   .cm-mw-image-parameter {
     color: #9088ff;
   }
-
-  .cm-editor .cm-cursor {
-    border-left: 2px solid #cdd2d8;
+  .cm-editor {
+    .cm-cursor {
+      border-left: 2px solid #cdd2d8;
+    }
+    .cm-panels {
+      background-color: var(--background-color-neutral-subtle, #f8f9fa);
+      color: var(--color-base, #202122);
+      .cdx-icon {
+        background-color: var(--color-base, #202122);
+      }
+    }
   }
-  
+
   // WikiEditor / CodeEditor
   .wikiEditor-ui-toolbar {
     background-color: #202122;
@@ -400,11 +406,11 @@ html.theme-dark {
   .ace-tm .ace_constant {
     color: #a04566;
   }
-  .ace-tm .ace_support.ace_type, 
+  .ace-tm .ace_support.ace_type,
   .ace-tm .ace_support.ace_class {
     color: #51a3b3;
   }
-  .ace-tm .ace_storage, 
+  .ace-tm .ace_storage,
   .ace-tm .ace_keyword {
     color: #ae81ff;
   }
@@ -422,7 +428,7 @@ html.theme-dark {
   .ace_button {
     color: var(--color-subtle);
   }
-  
+
   // VisualEditor
   .oo-ui-window-content.oo-ui-dialog-content.oo-ui-processDialog-content.oo-ui-window-content-setup.oo-ui-window-content-ready {
     color: #bbb !important;
@@ -433,7 +439,7 @@ html.theme-dark {
   .ve-ui-mwTransclusionOutlineParameterSelectWidget .oo-ui-labelElement:hover .oo-ui-labelElement-label {
     color: #eee !important;
   }
-  .ve-ui-mwTransclusionOutlineTemplateWidget .ve-ui-mwTransclusionOutlineParameterWidget.ve-ui-mwTransclusionOutlineParameterWidget-activePage, 
+  .ve-ui-mwTransclusionOutlineTemplateWidget .ve-ui-mwTransclusionOutlineParameterWidget.ve-ui-mwTransclusionOutlineParameterWidget-activePage,
   .ve-ui-mwTransclusionOutlineTemplateWidget .ve-ui-mwTransclusionOutlineParameterWidget.ve-ui-mwTransclusionOutlineParameterWidget-activePage.oo-ui-optionWidget-highlighted {
     color: #77a3eb !important;
   }
@@ -450,11 +456,11 @@ html.theme-dark {
     background-color: var(--background-color-base);
     border-color: var(--border-color-base);
   }
-  
+
   // ToC
-  ul#filetoc, 
-  .toc, 
-  .toccolours, 
+  ul#filetoc,
+  .toc,
+  .toccolours,
   .mw-warning {
     background: #262626;
     border-color: #777777;
@@ -466,10 +472,10 @@ html.theme-dark {
   .toctogglelabel {
     color: #7e96a6;
   }
-  
+
   // Code blocks syntax highlighting
-  code, 
-  pre, 
+  code,
+  pre,
   .mw-code {
     background-color: #333;
     color: #b3999f;
@@ -480,7 +486,7 @@ html.theme-dark {
     border-color: #444;
     color: #bbb;
   }
-  .mw-content-ltr.mw-highlight-lines pre, 
+  .mw-content-ltr.mw-highlight-lines pre,
   .mw-content-ltr.content .mw-highlight-lines pre {
     box-shadow: inset 2.75em 0 0 #1d1d1d;
     border-color: #3c3c3c;
@@ -733,7 +739,7 @@ html.theme-dark {
       color: #e2e2e2;
     }
   }
-  
+
   // Diffs
   #pagehistory li.selected {
     background-color: #303536;
@@ -745,20 +751,20 @@ html.theme-dark {
     border-color: #444;
   }
   .diff-deletedline .diffchange,
-  .mw-diff-inline-deleted del, 
-  .mw-diff-inline-changed del, 
+  .mw-diff-inline-deleted del,
+  .mw-diff-inline-changed del,
   .mw-diff-inline-moved del,
   .mw-diff-table-prefix .mw-diff-inline-legend .mw-diff-inline-legend-del {
     color: #910000;
   }
   .diff-addedline .diffchange,
-  .mw-diff-inline-added ins, 
-  .mw-diff-inline-changed ins, 
+  .mw-diff-inline-added ins,
+  .mw-diff-inline-changed ins,
   .mw-diff-inline-moved ins,
   .mw-diff-table-prefix .mw-diff-inline-legend .mw-diff-inline-legend-ins {
     color: #3f0091;
   }
-  
+
   // Recent Changes
   .mw-plusminus-pos {
     color: #14af14;
@@ -786,8 +792,8 @@ html.theme-dark {
     background-color: var(--background-color-interactive);
     color: var(--color-emphasized);
   }
-  .oo-ui-menuOptionWidget.oo-ui-optionWidget-selected, 
-  .oo-ui-menuOptionWidget.oo-ui-optionWidget-selected.oo-ui-menuOptionWidget.oo-ui-optionWidget-highlighted, 
+  .oo-ui-menuOptionWidget.oo-ui-optionWidget-selected,
+  .oo-ui-menuOptionWidget.oo-ui-optionWidget-selected.oo-ui-menuOptionWidget.oo-ui-optionWidget-highlighted,
   .oo-ui-menuOptionWidget.oo-ui-optionWidget-pressed.oo-ui-menuOptionWidget.oo-ui-optionWidget-highlighted {
     background-color: var(--background-color-progressive-subtle);
     color: var(--color-progressive);
@@ -799,7 +805,7 @@ html.theme-dark {
     background-color: #000;
     color: #ffffff;
   }
-  .oo-ui-floatableElement-floatable, 
+  .oo-ui-floatableElement-floatable,
   .oo-ui-clippableElement-clippable {
     background-color: #202122;
   }
@@ -824,7 +830,7 @@ html.theme-dark {
   .mw-rcfilters-ui-itemMenuOptionWidget-label-desc {
     color: #bcbcbc;
   }
-  .mw-rcfilters-ui-filterMenuOptionWidget.oo-ui-flaggedElement-muted .mw-rcfilters-ui-itemMenuOptionWidget-label-title, 
+  .mw-rcfilters-ui-filterMenuOptionWidget.oo-ui-flaggedElement-muted .mw-rcfilters-ui-itemMenuOptionWidget-label-title,
   .mw-rcfilters-ui-filterMenuOptionWidget.oo-ui-flaggedElement-muted .mw-rcfilters-ui-itemMenuOptionWidget-label-desc {
     color: #838383;
   }
@@ -837,7 +843,7 @@ html.theme-dark {
   .mw-rcfilters-container .mw-rcfilters-ui-filterTagMultiselectWidget-views-select-widget.oo-ui-widget {
     border-color: #888;
   }
-  
+
   // MW Notifications
   .mw-notification {
     border: 1px solid var(--border-color-notice, #54595d);
@@ -859,7 +865,7 @@ html.theme-dark {
   .mw-notification-content .oo-ui-iconElement-icon {
     .no-invert() !important;
   }
-  
+
   // Echo Notifications
   .mw-echo-ui-placeholderItemWidget {
     background-color: #282828;
@@ -879,7 +885,7 @@ html.theme-dark {
   .mw-echo-ui-menuItemWidget .mw-echo-ui-actionMenuPopupWidget-menu:hover{
     background-color:#323232;
   }
-  .mw-echo-ui-crossWikiNotificationItemWidget-group, 
+  .mw-echo-ui-crossWikiNotificationItemWidget-group,
   .mw-echo-ui-bundleNotificationItemWidget-group {
     background-color: #1a1a1a;
   }
@@ -910,9 +916,9 @@ html.theme-dark {
   .oo-ui-optionWidget-selected .mw-echo-ui-pageNotificationsOptionWidget-label-count {
     color: #98bfb9;
   }
-  
+
   // DiscussionTools
-  &.ext-discussiontools-visualenhancements-enabled .ext-discussiontools-init-section.mw-heading2-metaitem, 
+  &.ext-discussiontools-visualenhancements-enabled .ext-discussiontools-init-section.mw-heading2-metaitem,
   &.ext-discussiontools-visualenhancements-enabled .ext-discussiontools-init-section-metaitem {
     color: #979797;
   }
@@ -931,20 +937,20 @@ html.theme-dark {
   .ext-discussiontools-init-publishedcomment {
     background-color: #065342;
   }
-  
+
   // Misc MW Elements
   .mw-changeslist-legend {
     background-color: #000;
     border-color: #444;
   }
-  
+
   // Extension:ReplaceText
   .ext-replacetext-searchoptions {
     background-color: #1b1b1b;
   }
-  
+
   // ManageWiki
-  .ext-managewiki-search.oo-ui-fieldLayout, 
+  .ext-managewiki-search.oo-ui-fieldLayout,
   .ext-managewiki-submit-formfields {
     background: transparent;
   }
@@ -952,7 +958,7 @@ html.theme-dark {
     background: #373737 !important;
     outline: 2px solid #686868 !important;
   }
-  
+
   // AdvancedSearch
   .mw-advancedSearch-fieldContainer {
     background: var(--background-color-neutral) !important;
@@ -976,7 +982,7 @@ html.theme-dark {
     background: var(--background-color-neutral) !important;
     border-color: var(--border-color-base) !important;
   }
-  
+
   // Scribunto
   #mw-scribunto-input {
     background-color: #1b1b1b;

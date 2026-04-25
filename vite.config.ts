@@ -6,20 +6,20 @@ import {
 } from './plugins';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
-import { 
-  readGadgetsDefinition, 
+import {
+  readGadgetsDefinition,
   getGadgetsToBuild,
   getMediaWikiInterfaceCodeToBuild,
-  mapWikicodeSourceFiles, 
+  mapWikicodeSourceFiles,
   setViteServerOrigin,
   setGadgetNamespace,
 } from './dev-utils/build-orchestration.js';
 import { generateScriptBanner } from './dev-utils/generate-banner.js';
 import { resolveCommandLineArgumentsPassedToVite } from './dev-utils/resolve-env.js';
-import { 
-  ConfigEnv, 
-  defineConfig, 
-  UserConfig, 
+import {
+  ConfigEnv,
+  defineConfig,
+  UserConfig,
   loadEnv
 } from 'vite';
 
@@ -29,25 +29,25 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
   console.log(`Loading profile: '${envProfile || 'default'}'\n`);
   const env = loadEnv(envProfile || mode, process.cwd(), '');
 
-  const { 
+  const {
     GADGET_NAMESPACE: gadgetNamespace = 'ext.gadget',
-    GIT_REPOSITORY_URL: ghUrl = '', 
+    GIT_REPOSITORY_URL: ghUrl = '',
     GIT_REPOSITORY_BRANCH: ghBranch = 'development',
     SERVER_DEV_ORIGIN: serverDevOrigin = 'http://localhost:5173',
     SERVER_PREVIEW_ORIGIN: serverPreviewOrigin = 'http://localhost:4173',
   } = env;
-  
+
   const isDev = mode === 'development';
   const isOnBuildWatch = customArgs.cmd === 'watch-build';
   const createRolledUpImplementation = customArgs.cmd === 'rollup';
-  
-  if (isDev) { 
-    setViteServerOrigin(serverDevOrigin); 
+
+  if (isDev) {
+    setViteServerOrigin(serverDevOrigin);
   } else {
     setViteServerOrigin(serverPreviewOrigin);
   }
   setGadgetNamespace(gadgetNamespace);
-  
+
   const gadgetsDefinition = await readGadgetsDefinition();
   const gadgetsToBuild = getGadgetsToBuild(gadgetsDefinition);
   const mwInterfaceCodeToBuild = getMediaWikiInterfaceCodeToBuild();
@@ -59,18 +59,18 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
     plugins: [
 
       // On Vite Build, watch changes made to files in gadgets/ subdirectory
-      // and generate the load.js entrypoint file 
+      // and generate the load.js entrypoint file
       autogenerateEntrypoint(gadgetsToBuild, mwInterfaceCodeToBuild, createRolledUpImplementation),
 
       // On Vite Build, generate the contents of MediaWiki:Gadgets-definition
       generateGadgetsDefinitionWikitext(gadgetsDefinition),
 
       // Create the rolled up gadget implementation if prompted to
-      createRolledUpImplementation && 
+      createRolledUpImplementation &&
         createMwGadgetImplementation(
           gadgetsToBuild, minify
         ),
-      
+
       // On Vite Build, copy the i18n.json files to dist/
       viteStaticCopy({
         targets: bundleAssets,
@@ -78,7 +78,7 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
       }),
 
       // On Vite Build, automatically add banner to each CSS file
-      !minify && 
+      !minify &&
         generateCssBanner(ghUrl, ghBranch, gadgetsDefinition)
     ],
     build: {
@@ -109,16 +109,16 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
           },
           globals: {
             /**
-             * Pass this to ensure that Vite/Rollup does not use $ as a 
+             * Pass this to ensure that Vite/Rollup does not use $ as a
              * minification symbol
              */
-            'jquery': '$',
-            'mediawiki': 'mw',
+            'jQuery': '$',
+            'mediaWiki': 'mw',
           },
-          banner: minify ? undefined : 
+          banner: minify ? undefined :
             generateScriptBanner({ ghUrl, ghBranch, gadgetsDefinition })
         },
-        external: ['jquery', 'mediawiki']
+        external: ['jQuery', 'mediaWiki']
       },
       outDir: 'dist',
       emptyOutDir: true,
