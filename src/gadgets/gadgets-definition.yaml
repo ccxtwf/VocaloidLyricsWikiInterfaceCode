@@ -14,6 +14,7 @@ gadgets:
         default: true
         hidden: true
         namespaces: "0"
+        categories: ["Songs with NSFW content"]
         actions:
           - view
     lyrics-options:
