@@ -67,7 +67,7 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
         generateCssBanner(ghUrl, ghBranch, gadgetsDefinition)
     ],
     build: {
-      target: 'es2022',
+      target: 'es2019',
       minify: minify,
       cssMinify: minify,
       rolldownOptions: {
@@ -86,6 +86,11 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
           },
           banner: minify ? undefined :
             generateScriptBanner({ ghUrl, ghBranch, gadgetsDefinition }),
+        },
+        transform: {
+          assumptions: {
+            setPublicClassFields: true,
+          },
         },
         moduleTypes: {
           ".yaml": "text",
