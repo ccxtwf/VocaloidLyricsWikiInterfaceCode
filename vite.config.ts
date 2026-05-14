@@ -109,9 +109,6 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
           // Add any Less-specific options here
         }
       },
-    },
-    preview: {
-      open: '/load.js'
     }
   }
 });
