@@ -3,20 +3,21 @@ import { PluginOption } from 'vite';
 import type { GadgetDefinition } from '../dev-utils/types.js';
 
 /**
- * A Vite plugin that automatically generates the entrypoint (dist/load.js) 
+ * A Vite plugin that automatically generates the entrypoint (dist/load.js)
  * to be loaded on the MediaWiki client.
- * 
- * @param gadgetsToBuildAtIntialState 
+ *
+ * @param gadgetsToBuildAtIntialState
  * @param mediawikiInterfaceCodeToBuildAtInitialState
  * @param useRolledUpImplementation
- * @returns 
+ * @returns
+ * @deprecated
  */
 export default function autogenerateEntrypoint(
-  gadgetsToBuildAtIntialState: GadgetDefinition[], 
+  gadgetsToBuildAtIntialState: GadgetDefinition[],
   mediawikiInterfaceCodeToBuildAtInitialState: GadgetDefinition[],
   useRolledUpImplementation: boolean
 ): PluginOption {
-  
+
   return {
     name: 'autogenerate-entrypoint',
     enforce: 'post', // Enforce after Vite build plugins

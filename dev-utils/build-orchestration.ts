@@ -267,6 +267,7 @@ export function getMediaWikiInterfaceCodeToBuild(): GadgetDefinition[] {
  * @param useRolledUpImplementation     If set to true, then `load.js` will load the gadget-impl.js files.
  *                                      Otherwise, it will lazily load and execute the individual scripts and stylesheets.
  * @returns
+ * @deprecated
  */
 export async function serveGadgets(
   gadgetsToBuild: GadgetDefinition[],
@@ -321,6 +322,7 @@ export async function serveGadgets(
  *
  * @param resourceLoader        conditions to load
  * @returns
+ * @deprecated
  */
 function generateGadgetImplementationLoadConditionsWrapperCode(
   { resourceLoader: {
@@ -398,6 +400,7 @@ function generateGadgetImplementationLoadConditionsWrapperCode(
  * @param gadget
  * @param minify
  * @returns
+ * @deprecated
  */
 export async function createRolledUpGadgetImplementation(
   gadgetImplementationFilePath: string,
@@ -477,6 +480,7 @@ export async function createRolledUpGadgetImplementation(
  * by lazy loading.
  *
  * @param gadget
+ * @deprecated
  */
 export async function createRolledUpGadgetImplementationByLazyLoading(gadget: GadgetDefinition): Promise<string> {
   const { section, name } = gadget;

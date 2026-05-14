@@ -39,7 +39,6 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
 
   const isDev = mode === 'development';
   const isOnBuildWatch = customArgs.cmd === 'watch-build';
-  const createRolledUpImplementation = customArgs.cmd === 'rollup';
 
   if (isDev) {
     setViteServerOrigin(serverDevOrigin);
@@ -57,19 +56,8 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
 
   return {
     plugins: [
-
-      // On Vite Build, watch changes made to files in gadgets/ subdirectory
-      // and generate the load.js entrypoint file
-      autogenerateEntrypoint(gadgetsToBuild, mwInterfaceCodeToBuild, createRolledUpImplementation),
-
       // On Vite Build, generate the contents of MediaWiki:Gadgets-definition
       generateGadgetsDefinitionWikitext(gadgetsDefinition),
-
-      // Create the rolled up gadget implementation if prompted to
-      createRolledUpImplementation &&
-        createMwGadgetImplementation(
-          gadgetsToBuild, minify
-        ),
 
       // On Vite Build, copy the i18n.json files to dist/
       viteStaticCopy({ targets: bundleAssets }),

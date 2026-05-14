@@ -9,6 +9,7 @@ import type { GadgetDefinition } from '../dev-utils/types.js';
  * built, and placed in the `dist/` directory.
  *
  * @returns
+ * @deprecated
  */
 export default function createMwGadgetImplementation(gadgetsToBuild: GadgetDefinition[], minify: boolean): PluginOption {
 
