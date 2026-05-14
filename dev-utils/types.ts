@@ -1,5 +1,5 @@
 /**
- * Schema for gadgets-definition.yaml 
+ * Schema for gadgets-definition.yaml
  */
 export interface GadgetsDefinition {
   workspace: {
@@ -21,26 +21,26 @@ export interface GadgetsDefinition {
  */
 export interface GadgetDefinition {
   /**
-   * Purely informational metadata 
-   */ 
+   * Purely informational metadata
+   */
   description?: string
   /**
-   * Purely informational metadata 
-   */ 
+   * Purely informational metadata
+   */
   authors?: string[]
   /**
-   * Purely informational metadata 
-   */ 
+   * Purely informational metadata
+   */
   links?: string[]
   /**
-   * Purely informational metadata 
-   */ 
+   * Purely informational metadata
+   */
   version?: string
 
   /**
    * Specify this parameter if the module needs other modules on this project to be registered first.
    * The required module just needs to have `state=registered` on `mw.loader`, not `state=ready`
-   */ 
+   */
   requires?: string[]
 
   /**
@@ -52,23 +52,23 @@ export interface GadgetDefinition {
    * List of i18n messages. Currently unused.
    */
   i18n?: string[]
- 
+
   /**
    * The gadget section name is automatically set during the build process
-   */ 
+   */
   section: string
 
   /**
    * The gadget name is automatically set during the build process
-   */ 
+   */
   name: string
 
   /**
    * If set to true on the gadgets definition, then Vite will exclude this file
-   * from the list of gadgets that will be served/distributed 
+   * from the list of gadgets that will be served/distributed
    */
   disabled?: boolean
-  
+
   /**
    * Specify specific loading conditions. Used to emulate MediaWiki's ResourceLoader.
    */
@@ -76,13 +76,13 @@ export interface GadgetDefinition {
 }
 
 /**
- * Refer to https://www.mediawiki.org/wiki/Extension:Gadgets#Options 
- * for more information on what these parameters mean 
+ * Refer to https://www.mediawiki.org/wiki/Extension:Gadgets#Options
+ * for more information on what these parameters mean
  */
 export interface ResourceLoaderConditions {
   default?: boolean
   hidden?: boolean
-  
+
   dependencies?: string | string[] | null
   rights?: string | string[] | null
   skins?: string | string[] | null
@@ -90,12 +90,12 @@ export interface ResourceLoaderConditions {
   categories?: string | string[] | null
   namespaces?: string | string[] | null
   contentModels?: string | string[] | null
-  
-  type?: "styles" | "general" | null 
+
+  type?: "styles" | "general" | null
   supportsUrlLoad?: string
 }
 
 export interface ViteCustomCliArguments {
-  cmd?: 'build' | 'watch-build' | 'rollup'
+  cmd?: 'build' | 'watch-build'
   minify?: boolean
 }

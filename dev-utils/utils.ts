@@ -6,8 +6,8 @@ const rxFileExtension = /\.[a-zA-Z0-9]+$/;
 
 /**
  * Determine if a userscript code file is a script, a stylesheet, or other asset.
- * 
- * @param filename 
+ *
+ * @param filename
  * @returns
  */
 export function getFileType(filename: string): "script" | "style" | "other" {
@@ -27,9 +27,9 @@ export function getFileType(filename: string): "script" | "style" | "other" {
 }
 
 /**
- * 
- * @param filepath 
- * @returns 
+ *
+ * @param filepath
+ * @returns
  */
 export function getFileExtension(filepath: string): string {
   const m = filepath.match(rxFileExtension);
@@ -40,9 +40,9 @@ export function getFileExtension(filepath: string): string {
  * For a userscript code file to be included in the bundle output,
  * resolve the file extension from development stage (e.g. .ts/.less)
  * to final build (e.g. compiled .js/.css)
- * 
- * @param filepath 
- * @returns 
+ *
+ * @param filepath
+ * @returns
  */
 export function resolveFileExtension(filepath: string): string {
   filepath = filepath.replace(/\.ts$/i, '.js');
@@ -51,9 +51,9 @@ export function resolveFileExtension(filepath: string): string {
 }
 
 /**
- * 
- * @param filepath 
- * @returns 
+ *
+ * @param filepath
+ * @returns
  */
 export function removeFileExtension(filepath: string): string {
   return filepath.replace(rxFileExtension, '');
@@ -61,8 +61,8 @@ export function removeFileExtension(filepath: string): string {
 
 /**
  * Used to resolve the bundle input key for compiled JS/CSS
- * @param filepath 
- * @returns 
+ * @param filepath
+ * @returns
  */
 export function resolveFilepathForBundleInputKey(filepath: string): string {
   const sm = filepath.match(/^(.*)\.(?:ts|js)$/i);
@@ -74,26 +74,26 @@ export function resolveFilepathForBundleInputKey(filepath: string): string {
 
 /**
  * Resolves the path of the `src/` directory in the project
- * 
- * @returns 
+ *
+ * @returns
  */
 export function resolveSrcPath(): string {
   const srcDirPath = normalizePath(resolve(__dirname, '../src'));
   if (!existsSync(srcDirPath)) {
-    mkdirSync(srcDirPath); 
+    mkdirSync(srcDirPath);
   }
   return srcDirPath;
 }
 
 /**
  * Resolves the path of the `src/gadgets` directory. If `gadgetSectionName` and `gadgetName`
- * is provided, then this function will resolve the path of the gadget section / gadget's 
+ * is provided, then this function will resolve the path of the gadget section / gadget's
  * subdirectory.
- * 
- * @param gadgetSectionName 
- * @param gadgetName 
+ *
+ * @param gadgetSectionName
+ * @param gadgetName
  * @param codeRelativePath
- * @returns 
+ * @returns
  */
 export function resolveSrcGadgetsPath(gadgetSectionName?: string, gadgetName?: string, codeRelativePath?: string): string {
   const srcDirPath = resolveSrcPath();
@@ -107,10 +107,10 @@ export function resolveSrcGadgetsPath(gadgetSectionName?: string, gadgetName?: s
 }
 
 /**
- * Resolves the path of the `src/mediawiki` directory. If `filename` is given then 
+ * Resolves the path of the `src/mediawiki` directory. If `filename` is given then
  * this function will resolve the path of the file within the directory.
- * 
- * @param filename 
+ *
+ * @param filename
  */
 export function resolveSrcMediawikiCodePath(filename?: string): string {
   const srcDirPath = resolveSrcPath();
@@ -131,9 +131,9 @@ export function resolveGadgetsDefinitionManifestPath(): string {
 
 /**
  * Resolves the path of the `dist/` directory. If a relative filepath is given, resolve
- * the path to the given relative filepath. 
- * 
- * @returns 
+ * the path to the given relative filepath.
+ *
+ * @returns
  */
 export function resolveDistPath(relativeFilepath?: string): string {
   const distFolder = resolve(__dirname, '../dist');
@@ -152,19 +152,18 @@ export function resolveDistPath(relativeFilepath?: string): string {
 
 /**
  * Resolves the path of the `dist/gadgets` directory. If `gadgetSectionName` and `gadgetName`
- * is provided, then this function will resolve the path of the gadget section / gadget's 
+ * is provided, then this function will resolve the path of the gadget section / gadget's
  * subdirectory.
- * 
- * @param gadgetSectionName 
- * @param gadgetName 
+ *
+ * @param gadgetName
  * @param codeRelativePath
- * @returns 
+ * @returns
  */
-export function resolveDistGadgetsPath(gadgetSectionName?: string, gadgetName?: string, codeRelativePath?: string): string {
-  const srcDirPath = resolveDistPath();
-  const gadgetsDir = resolve(srcDirPath, './gadgets');
+export function resolveDistGadgetsPath(gadgetName?: string, codeRelativePath?: string): string {
+  const distDirPath = resolveDistPath();
+  const gadgetsDir = resolve(distDirPath, './gadgets');
   let gadgetDir = gadgetsDir;
-  for (let rel of [gadgetSectionName, gadgetName, codeRelativePath]) {
+  for (let rel of [gadgetName, codeRelativePath]) {
     if (!rel) { break; }
     gadgetDir = resolve(gadgetDir, rel);
   }
@@ -172,14 +171,14 @@ export function resolveDistGadgetsPath(gadgetSectionName?: string, gadgetName?: 
 }
 
 /**
- * Resolves the path of the `dist/mediawiki` directory. If `filename` is given then 
+ * Resolves the path of the `dist/mediawiki` directory. If `filename` is given then
  * this function will resolve the path of the file within the directory.
- * 
- * @param filename 
+ *
+ * @param filename
  */
 export function resolveDistMediawikiCodePath(filename?: string): string {
-  const srcDirPath = resolveDistPath();
-  const mediawikiDir = resolve(srcDirPath, './mediawiki');
+  const distDirPath = resolveDistPath();
+  const mediawikiDir = resolve(distDirPath, './mediawiki');
   let fileDir = mediawikiDir;
   if (!!filename) {
     fileDir = resolve(fileDir, filename);
@@ -189,8 +188,8 @@ export function resolveDistMediawikiCodePath(filename?: string): string {
 
 /**
  * Resolves the path of `dist/load.js`
- * 
- * @returns 
+ *
+ * @returns
  */
 export function resolveEntrypointFilepath(): string {
   const distFolder = resolveDistPath();
@@ -199,11 +198,11 @@ export function resolveEntrypointFilepath(): string {
 
 /**
  * Check if a gadget sub-directory or a gadget code file exists
- * 
- * @param gadgetSection 
- * @param gadgetName 
- * @param codeFile 
- * @returns 
+ *
+ * @param gadgetSection
+ * @param gadgetName
+ * @param codeFile
+ * @returns
  */
 export function checkGadgetExists(gadgetSection: string, gadgetName: string, codeFile?: string): boolean {
   const path = resolveSrcGadgetsPath(gadgetSection, gadgetName, codeFile);
@@ -211,10 +210,10 @@ export function checkGadgetExists(gadgetSection: string, gadgetName: string, cod
 }
 
 /**
- * 
- * @param gadgetSection 
- * @param gadgetName 
- * @returns 
+ *
+ * @param gadgetSection
+ * @param gadgetName
+ * @returns
  */
 export function getGadgetId(gadgetSection: string, gadgetName: string) {
   return `${gadgetSection}/${gadgetName}`;
