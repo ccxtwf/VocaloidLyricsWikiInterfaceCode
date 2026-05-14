@@ -96,10 +96,6 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
             }
             return 'assets/[name][extname]';
           },
-          globals: {
-            'jQuery': '$',
-            'mediaWiki': 'mw',
-          },
           banner: minify ? undefined :
             generateScriptBanner({ ghUrl, ghBranch, gadgetsDefinition }),
         },
@@ -107,7 +103,6 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
           ".yaml": "text",
           ".yml": "text"
         },
-        external: ['jQuery', 'mediaWiki'],
       },
       outDir: 'dist',
       emptyOutDir: true,
@@ -126,11 +121,6 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
           // Add any Less-specific options here
         }
       },
-    },
-    optimizeDeps: {
-      rolldownOptions: {
-
-      }
     },
     preview: {
       open: '/load.js'

@@ -274,14 +274,14 @@ export async function serveGadgets(
   useRolledUpImplementation: boolean
 ): Promise<void> {
   const entrypointFile = resolveEntrypointFilepath();
-  const writeStream = createWriteStream(entrypointFile, { flags: 'w', encoding: 'utf-8'});
+  const writeStream = createWriteStream(entrypointFile, { flags: 'w', encoding: 'utf-8' });
   try {
     if (useRolledUpImplementation) {
       const writeScriptLoadingStatement = (gadget: GadgetDefinition) => {
         return writeStream.write(
           `mw.loader.load("${
             getStaticUrlToFile('gadget-impl.js', {
-              gadgetSubdir: `${gadget.section}/${gadget.name}`,
+              gadgetSubdir: gadget.name,
               isMediawikiInterfaceCode: gadget.section === 'mediawiki'
             })
           }");\n`
@@ -427,7 +427,7 @@ export async function createRolledUpGadgetImplementation(
 
   if (scripts.length > 0) {
     scripts.forEach((script) => {
-      const moduleInfo = writeBundle[`gadgets/${section}/${name}/${resolveFileExtension(script)}`];
+      const moduleInfo = writeBundle[`gadgets/${name}/${resolveFileExtension(script)}`];
       if (moduleInfo.type === 'chunk') body.push(moduleInfo.code);
     });
   }
@@ -436,7 +436,7 @@ export async function createRolledUpGadgetImplementation(
 
   if (styles.length > 0) {
     styles.forEach((style) => {
-      const assetInfo = writeBundle[`gadgets/${section}/${name}/${resolveFileExtension(style)}`];
+      const assetInfo = writeBundle[`gadgets/${name}/${resolveFileExtension(style)}`];
       if (assetInfo.type === 'asset') {
         body.push(minify ? `"` : `\``);
         (() => {
@@ -490,14 +490,14 @@ export async function createRolledUpGadgetImplementationByLazyLoading(gadget: Ga
 
   const scriptsToLoad = getScriptsToLoadFromGadgetDefinition(gadget).map((script) => {
     const scriptUrl = getStaticUrlToFile(script, {
-      gadgetSubdir: `${section}/${name}`, isMediawikiInterfaceCode: isMwInterfaceCode
+      gadgetSubdir: name, isMediawikiInterfaceCode: isMwInterfaceCode
     }).replaceAll(/"/g, '\\"');
     return `loadLazily("${scriptUrl}");`;
   }) || [];
 
   const stylesToLoad = getStylesheetsToLoadFromGadgetDefinition(gadget).map((style) => {
     const styleUrl = getStaticUrlToFile(style, {
-      gadgetSubdir: `${section}/${name}`, isMediawikiInterfaceCode: isMwInterfaceCode
+      gadgetSubdir: name, isMediawikiInterfaceCode: isMwInterfaceCode
     }).replaceAll(/"/g, '\\"');
     return `"${styleUrl}"`;
   }) || [];
@@ -551,7 +551,7 @@ export function mapWikicodeSourceFiles(gadgetsToBuild: GadgetDefinition[], mwInt
   gadgetsToBuild.forEach((definition) => {
     const { section, name } = definition;
     const loadFile = (filepath: string) => {
-      const key = `gadgets/${section}/${name}/${resolveFilepathForBundleInputKey(filepath)}`;
+      const key = `gadgets/${name}/${resolveFilepathForBundleInputKey(filepath)}`;
       entries[key] = resolveSrcGadgetsPath(section, name, filepath);
     }
     getStylesheetsToLoadFromGadgetDefinition(definition).forEach(loadFile);

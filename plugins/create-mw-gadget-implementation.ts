@@ -5,13 +5,13 @@ import type { GadgetDefinition } from '../dev-utils/types.js';
 
 /**
  * A Vite plugin that creates the gadget implementation code (i.e. scripts
- * and stylesheets wrapped in mw.loader.impl) for each gadget that has been compiled, 
- * built, and placed in the `dist/` directory. 
- * 
+ * and stylesheets wrapped in mw.loader.impl) for each gadget that has been compiled,
+ * built, and placed in the `dist/` directory.
+ *
  * @returns
  */
 export default function createMwGadgetImplementation(gadgetsToBuild: GadgetDefinition[], minify: boolean): PluginOption {
-  
+
   return {
     name: 'create-mw-gadget-implementation',
     enforce: 'post',
@@ -19,10 +19,10 @@ export default function createMwGadgetImplementation(gadgetsToBuild: GadgetDefin
 
     async generateBundle(_, bundle) {
       for (const gadget of gadgetsToBuild) {
-        const gadgetImplementationFilePath = resolveDistGadgetsPath(gadget.section, gadget.name, 'gadget-impl.js');
+        const gadgetImplementationFilePath = resolveDistGadgetsPath(gadget.name, 'gadget-impl.js');
         this.emitFile({
           code: await createRolledUpGadgetImplementation(gadgetImplementationFilePath, bundle, gadget, minify),
-          fileName: `gadgets/${gadget.section}/${gadget.name}/gadget-impl.js`,
+          fileName: `gadgets/${gadget.name}/gadget-impl.js`,
           type: 'prebuilt-chunk'
         });
       }

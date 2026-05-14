@@ -36,8 +36,8 @@ Mwn.setLoggingConfig({
 
 /**
  * Utility to log a message onto the console along with a file on disk.
- * 
- * @param message 
+ *
+ * @param message
  */
 function log(message: string) {
   console.log(message);
@@ -46,7 +46,7 @@ function log(message: string) {
 
 /**
  * Resolves the project's environment variables by referring to the profile
- * set using the environment variable `NODE_PROJECT_PROFILE` 
+ * set using the environment variable `NODE_PROJECT_PROFILE`
  */
 function resolveEnv(): void {
   const profile = process.env.NODE_PROJECT_PROFILE || null;
@@ -63,8 +63,8 @@ function resolveEnv(): void {
 
 /**
  * Creates the Mwn Bot object
- * 
- * @returns 
+ *
+ * @returns
  */
 async function initBot(): Promise<Mwn> {
   /* Constructor */
@@ -113,20 +113,20 @@ async function initBot(): Promise<Mwn> {
 const rxGadgetFolderStructure = new RegExp(`^${gadgetsSubfolder}\/(?<gadgetId>[^\/]+\/[^\/]+)\/(?<relFilePath>.*)$`);
 
 /**
- * Fetches the names of each `MediaWiki:` page to edit as well as the correspondent 
- * filepaths of the code bundle on `dist/`. 
- * 
- * `getPagesToUpdate()` will try to get the minimum list of pages to edit if 
+ * Fetches the names of each `MediaWiki:` page to edit as well as the correspondent
+ * filepaths of the code bundle on `dist/`.
+ *
+ * `getPagesToUpdate()` will try to get the minimum list of pages to edit if
  * possible.
- * 
- * @param from        only subscribe to changes made after the specified date & time   
+ *
+ * @param from        only subscribe to changes made after the specified date & time
  * @param updateAll   if set to `true`, then `getPagesToUpdate` will update all pages
  * @returns           a Map object with the pagename as key, filepath as value
  */
 async function getPagesToUpdate(from?: Date, updateAll?: boolean): Promise<Map<string, string>> {
   const res = new Map<string, string>();
   const gadgetsToUpdate = new Set<string>();
-  
+
   let filepaths = await ((from === undefined || updateAll) ? getAllFilesFromSrc() : getFileChangesFromGit(from));
 
   for (let filepath of filepaths) {
@@ -152,14 +152,14 @@ async function getPagesToUpdate(from?: Date, updateAll?: boolean): Promise<Map<s
       res.set(pagename, file);
     });
   });
-  
+
   return res;
 }
 
 /**
  * Fetch all filepaths in `src/`.
- * 
- * @returns 
+ *
+ * @returns
  */
 async function getAllFilesFromSrc(): Promise<string[]> {
   let entries = readdirSync(srcPath, { withFileTypes: true, recursive: true });
@@ -171,9 +171,9 @@ async function getAllFilesFromSrc(): Promise<string[]> {
 
 /**
  * Only fetch the paths of files changed from the specified date & time.
- * 
- * @param from 
- * @returns 
+ *
+ * @param from
+ * @returns
  */
 function getFileChangesFromGit(from: Date): Promise<string[]> {
   return new Promise((resolve, _) => {
@@ -197,9 +197,9 @@ function getFileChangesFromGit(from: Date): Promise<string[]> {
 
 /**
  * Fetch the paths of the code bundle files comprising a gadget in `dist/`.
- * 
- * @param gadgetId 
- * @returns 
+ *
+ * @param gadgetId
+ * @returns
  */
 function getFilesInGadgetDistFolder(gadgetId: string): string[] {
   const folderPath = resolve(gadgetsDistPath, gadgetId);
@@ -215,9 +215,9 @@ function getFilesInGadgetDistFolder(gadgetId: string): string[] {
 
 /**
  * Main bot run
- * 
- * @param bot 
- * @param pagesToUpdate 
+ *
+ * @param bot
+ * @param pagesToUpdate
  */
 async function syncWikiCode(bot: Mwn, pagesToUpdate: Map<string, string>): Promise<void> {
   log('Syncing wiki code...');
@@ -250,14 +250,14 @@ async function syncWikiCode(bot: Mwn, pagesToUpdate: Map<string, string>): Promi
 async function main() {
   try {
     resolveEnv();
-    
+
     const args = process.argv.slice(2);
     const updateAll = args.some((arg) => arg === '--update-all');
 
     log("Starting the deploy script...");
 
     const bot = await initBot();
-    
+
     /* Get last updated time */
     const lastUpdatedLogFileName = `last-updated${!!process.env.profile ? '.' : ''}${process.env.profile || ''}.txt`;
     const lastUpdatedLogFile = resolve(logsFolderPath, lastUpdatedLogFileName);

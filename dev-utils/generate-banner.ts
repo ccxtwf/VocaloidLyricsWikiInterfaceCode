@@ -59,7 +59,7 @@ function generateBanner({ ghUrl, ghBranch = 'development', id, gadgetDefinition 
  * @returns [gadgetSectionName, gadgetName]
  */
 function getGadgetKeysFromChunkName(id: string): [string, string] | null {
-  const m = id.match(/^gadgets\/([^\/]+)\/([^\/]+).*$/);
+  const m = id.match(/gadgets\/([^\/]+)\/([^\/]+).*$/);
   if (m === null) {
     return null;
   }
@@ -81,7 +81,7 @@ export function generateScriptBanner({ ghUrl, ghBranch, gadgetsDefinition }: { g
       return '';
     }
     const id = chunk.facadeModuleId || chunk.moduleIds[0]!;
-    const m = getGadgetKeysFromChunkName(chunk.name);
+    const m = getGadgetKeysFromChunkName(id);
     const gadgetDefinition = (
       m !== null ? gadgetsDefinition.gadgets[m[0]][m[1]] : undefined
     );
