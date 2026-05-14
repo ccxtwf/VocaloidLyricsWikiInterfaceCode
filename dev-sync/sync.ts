@@ -110,7 +110,7 @@ async function initBot(): Promise<Mwn> {
   return bot;
 }
 
-const rxGadgetFolderStructure = new RegExp(`^${gadgetsSubfolder}\/(?<gadgetId>[^\/]+\/[^\/]+)\/(?<relFilePath>.*)$`);
+const rxGadgetFolderStructure = new RegExp(`^${gadgetsSubfolder}\/(?<gadgetSection>[^\/]+)\/(?<gadgetId>[^\/]+)\/(?<relFilePath>.*)$`);
 
 /**
  * Fetches the names of each `MediaWiki:` page to edit as well as the correspondent
