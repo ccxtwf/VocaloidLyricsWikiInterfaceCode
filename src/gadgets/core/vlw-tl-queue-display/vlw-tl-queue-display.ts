@@ -1,4 +1,3 @@
-//! <pre>
 import type { Reactive, App } from "vue";
 
 interface TLQueueItem {
@@ -23,6 +22,7 @@ interface IAppStore {
 }
 
 'use strict';
+//! <pre>
 
 const config = mw.config.get([
   'wgArticlePath',
