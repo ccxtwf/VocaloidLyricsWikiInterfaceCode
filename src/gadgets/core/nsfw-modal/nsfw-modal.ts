@@ -2,6 +2,8 @@
 
 const config = mw.config.get([
 	'wgArticleId',
+	'wgNamespaceNumber',
+	'wgCategories'
 ]);
 const SESSIONSTORAGE_KEY = 'skip-nsfw-notice';
 const USER_PREFERENCE_KEY = 'userjs-suppress-nsfw-modal';
@@ -21,6 +23,10 @@ const messages = {
 mw.messages.set(messages);
 
 (function (mw, $) {
+  // Skip if namespace is not main or the category is not detected
+	if (config.wgNamespaceNumber !== 0 || config.wgCategories.indexOf("Songs with NSFW content") < 0) {
+		return;
+	}
 
 	// Skip if user has given their consent to not show any NSFW modals
 	const userHasSuppressedModals = checkUserSavedOptions();
