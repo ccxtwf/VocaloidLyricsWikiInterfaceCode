@@ -23,7 +23,7 @@ const messages = {
 mw.messages.set(messages);
 
 (function (mw, $) {
-	// Skip if namespace is not main or the category is not detected
+  // Skip if namespace is not main or the category is not detected
 	if (config.wgNamespaceNumber !== 0 || config.wgCategories.indexOf("Songs with NSFW content") < 0) {
 		return;
 	}
@@ -67,11 +67,11 @@ mw.messages.set(messages);
 
 	function onClickConfirm(): void {
 		$('#cw-modal').hide();
-		
-		// Save user consent to local storage 
+
+		// Save user consent to local storage
 		skipIds.push(''+config.wgArticleId);
 		sessionStorage.setItem( SESSIONSTORAGE_KEY, skipIds.join(',') );
-		
+
 		// Save option to user preferences
 		if ($('#cw-suppress-nsfw-notifs').prop('checked') === true) {
 			const expiry = new Date(Date.now() + SUPPRESS_EXPIRY).getTime();
@@ -83,7 +83,7 @@ mw.messages.set(messages);
 				api.saveOption(USER_PREFERENCE_EXPIRY_KEY, ''+expiry);
 			}
 		}
-		
+
 		// Clear scroll locking
 		const scrollY = document.body.style.top;
 		document.body.style.position = '';
@@ -160,5 +160,5 @@ mw.messages.set(messages);
 		document.body.style.position = 'fixed';
 		document.body.style.top = '-' + window.scrollY + 'px';
 	});
-  
+
 }(mediaWiki, jQuery));

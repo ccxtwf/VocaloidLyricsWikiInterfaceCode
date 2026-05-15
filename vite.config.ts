@@ -39,7 +39,6 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
 
   const isDev = mode === 'development';
   const isOnBuildWatch = customArgs.cmd === 'watch-build';
-  const createRolledUpImplementation = customArgs.cmd === 'rollup';
 
   if (isDev) {
     setViteServerOrigin(serverDevOrigin);
@@ -57,35 +56,21 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
 
   return {
     plugins: [
-
-      // On Vite Build, watch changes made to files in gadgets/ subdirectory
-      // and generate the load.js entrypoint file
-      autogenerateEntrypoint(gadgetsToBuild, mwInterfaceCodeToBuild, createRolledUpImplementation),
-
       // On Vite Build, generate the contents of MediaWiki:Gadgets-definition
       generateGadgetsDefinitionWikitext(gadgetsDefinition),
 
-      // Create the rolled up gadget implementation if prompted to
-      createRolledUpImplementation &&
-        createMwGadgetImplementation(
-          gadgetsToBuild, minify
-        ),
-
       // On Vite Build, copy the i18n.json files to dist/
-      viteStaticCopy({
-        targets: bundleAssets,
-        structured: false,
-      }),
+      viteStaticCopy({ targets: bundleAssets }),
 
       // On Vite Build, automatically add banner to each CSS file
       !minify &&
         generateCssBanner(ghUrl, ghBranch, gadgetsDefinition)
     ],
     build: {
-      target: 'es2018',
+      target: 'es2019',
       minify: minify,
       cssMinify: minify,
-      rollupOptions: {
+      rolldownOptions: {
         input: bundleInputs,
         output: {
           // Preserve the directory structure
@@ -99,26 +84,18 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
             }
             return 'assets/[name][extname]';
           },
-          generatedCode: {
-            /**
-             * Turn these settings off if you want to enforce ES5 compliance
-             */
-            arrowFunctions: true,
-            constBindings: true,
-            objectShorthand: true,
-          },
-          globals: {
-            /**
-             * Pass this to ensure that Vite/Rollup does not use $ as a
-             * minification symbol
-             */
-            'jQuery': '$',
-            'mediaWiki': 'mw',
-          },
           banner: minify ? undefined :
-            generateScriptBanner({ ghUrl, ghBranch, gadgetsDefinition })
+            generateScriptBanner({ ghUrl, ghBranch, gadgetsDefinition }),
         },
-        external: ['jQuery', 'mediaWiki']
+        transform: {
+          assumptions: {
+            setPublicClassFields: true,
+          },
+        },
+        moduleTypes: {
+          ".yaml": "text",
+          ".yml": "text"
+        },
       },
       outDir: 'dist',
       emptyOutDir: true,
@@ -129,7 +106,7 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
           'dist/**',
           'load.js'
         ]
-      } : null
+      } : null,
     },
     css: {
       preprocessorOptions: {
@@ -137,29 +114,6 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
           // Add any Less-specific options here
         }
       },
-    },
-    esbuild: {
-      format: 'esm',
-      // Preserve banner & footer
-      legalComments: 'inline',
-      // Ignore annotations such as /* @__PURE__ */ when building
-      ignoreAnnotations: true,
-
-      // Minification settings
-      minifyWhitespace: minify && true,
-      minifyIdentifiers: minify && false,
-      minifySyntax: minify && true,
-    },
-    optimizeDeps: {
-      esbuildOptions: {
-        loader: {
-          ".yaml": "text",
-          ".yml": "text"
-        }
-      }
-    },
-    preview: {
-      open: '/load.js'
     }
   }
 });
