@@ -10,8 +10,13 @@
 *   --nsfw-modal-msg-confirm-button-color
 *   --nsfw-modal-msg-confirm-button-border-color
 *   --nsfw-modal-msg-confirm-button-text-color
+*   --nsfw-modal-msg-confirm-button-color-hover
+*   --nsfw-modal-msg-confirm-button-border-color-hover
 *   --nsfw-modal-msg-back-button-color
+*   --nsfw-modal-msg-back-button-border-color
 *   --nsfw-modal-msg-back-button-text-color
+*   --nsfw-modal-msg-back-button-color-hover
+*   --nsfw-modal-msg-back-button-border-color-hover
 */
 #cw-modal {
   position: fixed;
@@ -25,10 +30,7 @@
   background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(5px);
 
-  #cw-modal-box {
-    background-color: var(--nsfw-modal-msg-container-bg-color, #fefefe);
-    padding: 50px;
-    border: 1px solid var(--nsfw-modal-msg-container-border-color, #888);
+  #cw-modal-box-wrapper {
     width: 900px;
     height: 60vh;
     box-sizing: border-box;
@@ -41,16 +43,25 @@
     margin-top: -30vh;
     margin-left: -450px;
     vertical-align: middle;
+  }
+
+  #cw-modal-box {
+    background-color: var(--nsfw-modal-msg-container-bg-color, #dedede);
+    padding: 50px;
+    border: 1px solid var(--nsfw-modal-msg-container-border-color, #888);
+    width: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  }
 
-  #cw-modal-content > div {
-    vertical-align: middle;
-    text-align: center;
-    width: 100%;
+    & > div {
+      vertical-align: middle;
+      text-align: center;
+      width: 100%;
+    }
   }
 
   #cw-heading {
@@ -68,14 +79,23 @@
 
     #cw-confirm {
       background-color: var(--nsfw-modal-msg-confirm-button-color, #ffad17);
-      color: var(--nsfw-modal-msg-confirm-button-text-color, inherit);
+      color: var(--nsfw-modal-msg-confirm-button-text-color, #121212);
       font-weight: bold;
       border: solid 2px var(--nsfw-modal-msg-confirm-button-border-color, #b20000);
+      &:hover, &:active {
+        background-color: var(--nsfw-modal-msg-confirm-button-color-hover, #ffc75e);
+        border-color: var(--nsfw-modal-msg-confirm-button-border-color-hover, #a00e0e);
+      }
     }
 
     #cw-back {
       background-color: var(--nsfw-modal-msg-back-button-color, #000);
-      color: var(--nsfw-modal-msg-back-button-text-color, #fff);
+      color: var(--nsfw-modal-msg-back-button-text-color, #ddd);
+      border: solid 2px var(--nsfw-modal-msg-back-button-border-color, #242424);
+      &:hover, &:active {
+        background-color: var(--nsfw-modal-msg-back-button-color-hover, #2f2f2f);
+        border-color: var(--nsfw-modal-msg-back-button-border-color-hover, #242424);
+      }
     }
   }
   .cw-action-button {
@@ -90,9 +110,13 @@
   }
 
   #cw-more-actions {
-    margin-top: 20px;
+    margin-top: 30px;
     font-size: 0.85rem;
     color: var(--nsfw-modal-msg-more-actions-text-color, #7a7a7a);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 
     label {
       cursor: pointer;
@@ -100,11 +124,6 @@
       flex-direction: row;
       justify-content: center;
       align-items: center;
-    }
-
-    & > input + span {
-      text-align: left;
-      width: fit-content;
     }
   }
 
@@ -114,37 +133,40 @@
   }
 
   @media (max-width: 1000px) {
-    #cw-modal-box {
+    #cw-modal-box-wrapper {
       width: 700px;
       margin-left: -350px;
     }
   }
 
   @media (max-width: 800px) {
-    #cw-modal-box {
+    #cw-modal-box-wrapper {
       width: 500px;
       margin-left: -250px;
+      height: initial;
     }
+
     .cw-action-button {
       margin-bottom: 10px;
     }
   }
 
   @media (max-width: 500px) {
-    #cw-modal-box {
-      top: 20%;
+    #cw-modal-box-wrapper {
+      top: 15%;
       left: 10%;
       width: 80%;
       margin-top: 0;
       margin-left: 0;
-      padding: 20px 15px;
       box-sizing: border-box;
       overflow-x: hidden;
       overflow-y: scroll;
     }
-    #cw-more-actions label > input + span {
-      max-width: 200px;
+
+    #cw-modal-box {
+      padding: 40px 15px;
     }
+
     .cw-action-button {
       margin-left: 0;
       width: 220px;
@@ -159,6 +181,8 @@
     --nsfw-modal-msg-heading-text-color: #ddd;
     --nsfw-modal-msg-subheading-text-color: #bbb;
     --nsfw-modal-msg-more-actions-text-color: #bbb;
+    --nsfw-modal-msg-back-button-border-color: #787878;
+    --nsfw-modal-msg-back-button-border-color-hover: #353535;
   }
 }
 html.theme-dark, html.skin-theme-clientpref-night, :root.skin-theme-clientpref-night {
