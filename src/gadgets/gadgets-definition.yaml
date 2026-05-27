@@ -17,6 +17,17 @@ gadgets:
         categories: ["Songs with NSFW content"]
         actions:
           - view
+    nsfw-modal-reset:
+      description: "Reset user settings for the Vocaloid Lyrics Wiki's NSFW popup."
+      authors:
+        - CoolMikeHatsune22
+      code:
+        - nsfw-modal-reset.ts
+      resourceLoader:
+        hidden: true
+        supportsUrlLoad: true
+        dependencies:
+          - mediawiki.api
     lyrics-options:
       description: "This gadget configures the button toggles for toggling the visibility of the lyrics tables' columns."
       authors:
