@@ -12,6 +12,8 @@
 html.theme-dark {
   color-scheme: dark;
 
+  --unseen-fadeout-to-unread-1: #eaf3ff;
+  --unseen-fadeout-to-unread-2: #fff;
   --unseen-fadeout-to-read-1: #eaf3ff;
   --unseen-fadeout-to-read-2: #fff;
 
@@ -1014,6 +1016,14 @@ html.theme-dark {
   }
 }
 
+@keyframes unseen-fadeout-to-unread {
+  0% {
+    background-color: var(--unseen-fadeout-to-unread-1) !important;
+  }
+  100% {
+    background-color: var(--unseen-fadeout-to-unread-2) !important;
+  }
+}
 @keyframes unseen-fadeout-to-read {
   0% {
     background-color: var(--unseen-fadeout-to-read-1) !important;
