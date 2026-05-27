@@ -1,8 +1,30 @@
+/**
+ * Run script:
+ *  node dev-sync/sync.ts [OPTIONAL ARGS]
+ *    or equivalent to
+ *  npm run sync -- [OPTIONAL ARGS]
+ *
+ * Run `. set-profile.sh [PROFILE]` to switch to `.env.[PROFILE]` before running this script
+ *
+ * Usage:
+ *  npm run sync
+ *    Updates code for gadgets & interface code that have been changed since a recorded date
+ *    Uses Git logs to find this list of changed pages
+ *  npm run sync -- --gadget "countdown, nsfw-modal"
+ *    Updates the listed gadgets
+ *  npm run sync -- --siteinterface "common, vector-2022"
+ *    Updates the listed site interface code
+ *  npm run sync -- --update-all
+ *    Force-update all pages
+ *
+ */
 import { resolveFileExtension } from '../dev-utils/utils.ts';
 
 import { normalizePath } from "vite";
 
 import { Mwn } from "mwn";
+
+import minimist from "minimist";
 
 import http from "http";
 import https from "https";
@@ -121,13 +143,18 @@ const rxGadgetFolderStructure = new RegExp(`^${gadgetsSubfolder}\/(?<gadgetSecti
  *
  * @param from        only subscribe to changes made after the specified date & time
  * @param updateAll   if set to `true`, then `getPagesToUpdate` will update all pages
+ * @param forGadgets  a list of gadget names to update
+ * @param forSiteInterfaces
+ *                    a list of skins (e.g. Vector-2022) to update MediaWiki Site Interface
+ *                    JS & CSS. Specify "Common" to update Common.css & Common.js
  * @returns           a Map object with the pagename as key, filepath as value
  */
-async function getPagesToUpdate(from?: Date, updateAll?: boolean): Promise<Map<string, string>> {
+async function getPagesToUpdate({ from, updateAll, forGadgets, forSiteInterfaces }: { from?: Date, updateAll?: boolean, forGadgets?: string[], forSiteInterfaces?: string[] }): Promise<Map<string, string>> {
   const res = new Map<string, string>();
+  const restrictMode = forGadgets || forSiteInterfaces;
   const gadgetsToUpdate = new Set<string>();
 
-  let filepaths = await ((from === undefined || updateAll) ? getAllFilesFromSrc() : getFileChangesFromGit(from));
+  let filepaths = await ((from === undefined || updateAll || restrictMode) ? getAllFilesFromSrc() : getFileChangesFromGit(from));
 
   for (let filepath of filepaths) {
     if (filepath.startsWith(`${gadgetsSubfolder}/`)) {
@@ -136,11 +163,18 @@ async function getPagesToUpdate(from?: Date, updateAll?: boolean): Promise<Map<s
       } else {
         const m = filepath.match(rxGadgetFolderStructure);
         if (m !== null) {
-          gadgetsToUpdate.add(m.groups!['gadgetId']!);
+          const gadgetId = m.groups!['gadgetId']!;
+          if (restrictMode && (forGadgets || []).every(a => a !== gadgetId)) {
+            continue;
+          }
+          gadgetsToUpdate.add(gadgetId);
         }
       }
     } else if (filepath.startsWith(`${mediawikiSubfolder}/`)) {
       const pagename = resolveFileExtension(basename(filepath));
+      if (restrictMode && (forSiteInterfaces || []).every(a => a.toLowerCase() !== pagename.replace(/\.(js|css)$/, "").toLowerCase())) {
+        continue;
+      }
       res.set(`MediaWiki:${pagename}`, normalizePath(resolve(mediawikiDistPath, pagename)));
     }
   }
@@ -251,8 +285,24 @@ async function main() {
   try {
     resolveEnv();
 
-    const args = process.argv.slice(2);
-    const updateAll = args.some((arg) => arg === '--update-all');
+    const argv = minimist(process.argv.slice(2));
+    const convertCliArgToList = (arg: string) => {
+      const arr = arg.trim().split(/\s*,\s*/).filter(i => i !== '');
+      return (arr.length ? arr : undefined);
+    }
+    const forGadgets = convertCliArgToList(argv['gadget'] || '');
+    const forSiteInterfaces = convertCliArgToList(argv['siteinterface'] || '');
+    const updateAll = (forGadgets || forSiteInterfaces) ? false : 'update-all' in argv;
+
+    if (forSiteInterfaces) {
+      log(`Updating code for the following site interfaces: ${forSiteInterfaces.join(', ')}`);
+    }
+    if (forGadgets) {
+      log(`Updating code for the following gadgets: ${forGadgets.join(', ')}`);
+    }
+    if (updateAll) {
+      log(`Force updating all gadgets...`);
+    }
 
     log("Starting the deploy script...");
 
@@ -270,7 +320,8 @@ async function main() {
       }
     }
 
-    const pagesToUpdate = await getPagesToUpdate(from, updateAll);
+    const pagesToUpdate = await getPagesToUpdate({ from, updateAll, forGadgets, forSiteInterfaces });
+
     syncWikiCode(bot, pagesToUpdate);
 
     /* Save last updated time for next time */

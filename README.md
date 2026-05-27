@@ -290,7 +290,7 @@ Execute Jest unit tests.
 <tr>
 <td><code>npm run sync</code></td>
 <td>
-Syncs the interface code written in the wiki with the latest built bundle.<br /><br />Run <code>npm run sync -- --update-all</code> to force the script to update all pages.
+Syncs the interface code written in the wiki with the latest built bundle.<br /><br />Run <code>npm run sync -- --gadget "countdown, nsfw-modal" --siteinterface "common, vector-2022"</code> to get the script to update only the selected gadgets/site interface code.<br />Run <code>npm run sync -- --update-all</code> to force the script to update all pages.
 </td>
 </tr>
 </tbody>
