@@ -15,6 +15,10 @@ gadgets:
         hidden: true
         namespaces: "0"
         categories: ["Songs with NSFW content"]
+        dependencies:
+          - mediawiki.api
+          - '@wikimedia/codex'
+          - vue
         actions:
           - view
     nsfw-modal-reset:
