@@ -89,7 +89,7 @@ To sync the latest state of the project with the code running on the wiki, run `
 
 > **Note**: Make sure that the account whose credentials you're using has either been assigned the `interface-admin` user group, or the user rights `editsitecss` and `editsitejs`. When first creating your bot password/OAuth token, make sure that the options "*Edit the MediaWiki namespace and sitewide/user JSON*" and "*Edit sitewide and user CSS/JS*" were checked.
 
-Transpiling of userscripts written in Typescript into Javascript is configured in `vite.config.ts` (`build` options). This repository targets **Javascript ES2018**.
+Transpiling of userscripts written in Typescript into Javascript is configured in `vite.config.ts` (`build` options). This repository targets **Javascript ES2019**.
 
 #### Deploying to multiple wikis
 
