@@ -155,6 +155,31 @@ span.iconlink.discogs::before {
 	content: '';
 	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/5/58/Favicon-discogs.png');
 }
+/* AWA */
+span.iconlink.awa::before {
+  content: '';
+  background-image: url('https://static.wikitide.net/vocaloidlyricswiki/c/c3/Favicon-awa.jpeg');
+}
+/* KKBOX */
+span.iconlink.kkbox::before {
+  content: '';
+  background-image: url('https://static.wikitide.net/vocaloidlyricswiki/3/37/Favicon-kkbox.png');
+}
+/* Kugou */
+span.iconlink.kugoum::before {
+  content: '';
+  background-image: url('https://static.wikitide.net/vocaloidlyricswiki/7/71/Favicon-kugoum.png');
+}
+/* Kuwo */
+span.iconlink.kuwo::before {
+  content: '';
+  background-image: url('https://static.wikitide.net/vocaloidlyricswiki/8/84/Favicon-kuwo.png');
+}
+/* LINE Music */
+span.iconlink.linem::before {
+  content: '';
+  background-image: url('https://static.wikitide.net/vocaloidlyricswiki/9/93/Favicon-linem.png');
+}
 /* Misc */
 span.iconlink.etc::before {
 	content: '';
