@@ -108,12 +108,17 @@ span.iconlink.sv::before {
 /* Tumblr */
 span.iconlink.tr::before {
 	content: '';
-	background-image: url('https://static.wikitide.net/commonswiki/f/fa/Favicon-tr.png');
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/f/fa/Favicon-tr.png');
 }
 /* Twitter */
 span.iconlink.twt::before {
 	content: '';
 	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/0/0b/Favicon-x.png');
+}
+/* Bluesky */
+span.iconlink.bsky::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/b/b5/Favicon-bsky.png');
 }
 /* QQ */
 span.iconlink.qq::before {
@@ -179,6 +184,31 @@ span.iconlink.kuwo::before {
 span.iconlink.linem::before {
   content: '';
   background-image: url('https://static.wikitide.net/vocaloidlyricswiki/9/93/Favicon-linem.png');
+}
+/* Afdian */
+span.iconlink.afdian::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/6/66/Favicon-afdian.jpg');
+}
+/* Instagram */
+span.iconlink.ig::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/8/8e/Favicon-ig.png');
+}
+/* NAVER */
+span.iconlink.naver::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/4/4c/Favicon-naver.png');
+}
+/* MissEvan */
+span.iconlink.msevan::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/a/a5/Favicon-msevan.png');
+}
+/* Audius */
+span.iconlink.audius::before {
+	content: '';
+	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/5/56/Favicon-audius.png');
 }
 /* Misc */
 span.iconlink.etc::before {
