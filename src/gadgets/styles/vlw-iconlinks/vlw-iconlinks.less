@@ -260,3 +260,29 @@ span.iconlink.etc::before {
 	content: '';
 	background-image: url('https://static.wikitide.net/vocaloidlyricswiki/a/a2/Favicon-etc.png');
 }
+
+/* Region-restricted icon */
+.iconlink-region-lock.st .simple-tooltip-img {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-left: 4px;
+  cursor: default;
+  border: 0;
+  box-sizing: border-box;
+}
+@dark-mode-css-definitions: {
+  .iconlink-region-lock.st .simple-tooltip-img {
+    -moz-filter: brightness(1) invert(1);
+    -webkit-filter: brightness(1) invert(1);
+    filter: brightness(1) invert(1);
+  }
+}
+html.theme-dark, html.skin-theme-clientpref-night, :root.skin-theme-clientpref-night {
+  @dark-mode-css-definitions();
+}
+@media screen and (prefers-color-scheme: dark) {
+  html.skin-theme-clientpref-os, :root.skin-theme-clientpref-os {
+    @dark-mode-css-definitions();
+  }
+}

@@ -292,7 +292,7 @@ gadgets:
       authors:
         - CoolMikeHatsune22
       code:
-        - vlw-iconlinks.css
+        - vlw-iconlinks.less
       resourceLoader:
         default: true
         hidden: true
