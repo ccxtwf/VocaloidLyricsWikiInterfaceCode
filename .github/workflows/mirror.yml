@@ -1,0 +1,24 @@
+name: Mirror
+
+on: [push, delete]
+
+jobs:
+  to_gitlab:
+    concurrency:
+      group: ${{ github.workflow }}-gitlab
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          # for public GitHub repos only
+          # if GitHub repo is private, add an access token
+          git clone --mirror "https://github.com/$GITHUB_REPOSITORY" .
+
+          # remove refs to GitHub PRs
+          git for-each-ref --format 'delete %(refname)' refs/pull | git update-ref --stdin
+
+          # finally push
+          git push --mirror "https://x:$GITLAB_TOKEN@$GITLAB_REPO_URL"
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_PUSH_ACCESS_TOKEN }}
+          GITLAB_REPO_URL: ${{ vars.GITLAB_SSH_URL }}
