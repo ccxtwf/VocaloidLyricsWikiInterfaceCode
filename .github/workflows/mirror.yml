@@ -21,4 +21,4 @@ jobs:
           git push --mirror "https://x:$GITLAB_TOKEN@$GITLAB_REPO_URL"
         env:
           GITLAB_TOKEN: ${{ secrets.GITLAB_PUSH_ACCESS_TOKEN }}
-          GITLAB_REPO_URL: ${{ vars.GITLAB_SSH_URL }}
+          GITLAB_REPO_URL: ${{ vars.GITLAB_REPO_URL }}
