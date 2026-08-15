@@ -1,0 +1,17 @@
+/**********************************************************************
+ *
+ * [[なんだかいいかんじ (Nandaka Ii Kanji)]]
+ *
+ * Font is sourced from:
+ *   https://glyphwiki.org/wiki/Group:umbreon126_iikanji
+ * under the following license:
+ *   https://glyphwiki.org/wiki/GlyphWiki:データ・記事のライセンス
+ *
+ **********************************************************************/
+@font-face {
+	font-family:iikanji;
+	src: url('https://static.wikitide.net/vocaloidlyricswiki/f/f1/Iikanji2.ttf') format('truetype');
+}
+.iikanji {
+	font-family:MS Mincho, iikanji, HanaMinB, SimSun, SimSun-ExtB, MingLiU-ExtB, PMingLiU-ExtB, MingLiU_HKSCS-ExtB;
+}
