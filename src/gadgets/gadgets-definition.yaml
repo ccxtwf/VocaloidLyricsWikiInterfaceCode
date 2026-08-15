@@ -395,11 +395,3 @@ gadgets:
       resourceLoader:
         default: true
         type: "styles"
-    custom-fonts:
-      description: "Catch-all file for defining custom fonts used for specific songs."
-      code:
-        - custom-fonts.css
-      resourceLoader:
-        default: true
-        hidden: true
-        type: "styles"
