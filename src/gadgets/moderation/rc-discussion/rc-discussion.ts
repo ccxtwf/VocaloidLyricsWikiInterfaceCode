@@ -1,18 +1,19 @@
+//! <nowiki>
 import type { ApiQueryRecentChangesParams, ApiQueryAllRevisionsParams } from "types-mediawiki-api";
 import type { ApiResponse } from "types-mediawiki/mw/Api.js";
-import type { 
-	IMenuUption, 
-	IParsedApiQueryRc, 
-	IGroupedParsedApiQueryRc, 
+import type {
+	IMenuUption,
+	IParsedApiQueryRc,
+	IGroupedParsedApiQueryRc,
 	IExpectedApiQueryRcResponse,
-	IExpectedApiQueryRvResponse, 
+	IExpectedApiQueryRvResponse,
 	IAppStore,
 	IExpectedApiQueryCompareResponse,
 } from "./types.js";
 import type { Reactive, App } from "vue";
 
-import { 
-	parseRcFeeds, 
+import {
+	parseRcFeeds,
 	parseRcApiQuery,
 	parseRvApiQuery,
 	compareParsedRcs,
@@ -26,64 +27,64 @@ import {
 //   Configuration
 // =================
 const MENU_OPTIONS: IMenuUption[] = [
-	{ 
-		label: 'All (Excluding User Talk)', 
-		frc: '&namespace=3&invert=true', 
+	{
+		label: 'All (Excluding User Talk)',
+		frc: '&namespace=3&invert=true',
 		ns: [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 500, 501, 828, 829]
 	},
-	{ 
-		label: 'All', 
-		frc: '', 
+	{
+		label: 'All',
+		frc: '',
 		ns: null
 	},
 	{
-		label: 'Main Talk', 
-		frc: '&namespace=1', 
+		label: 'Main Talk',
+		frc: '&namespace=1',
 		ns: [1]
 	},
 	{
-		label: 'Help Talk', 
-		frc: '&namespace=13', 
+		label: 'Help Talk',
+		frc: '&namespace=13',
 		ns: [13]
 	},
 	{
-		label: 'Vocaloid Lyrics Wiki Discussion', 
-		frc: '&namespace=4', 
+		label: 'Vocaloid Lyrics Wiki Discussion',
+		frc: '&namespace=4',
 		ns: [4]
 	},
 	{
-		label: 'Vocaloid Lyrics Wiki Talk', 
-		frc: '&namespace=5', 
+		label: 'Vocaloid Lyrics Wiki Talk',
+		frc: '&namespace=5',
 		ns: [5]
 	},
 	{
-		label: 'User Talk', 
-		frc: '&namespace=3', 
+		label: 'User Talk',
+		frc: '&namespace=3',
 		ns: [3]
 	},
 	{
-		label: 'Category Talk', 
-		frc: '&namespace=15', 
+		label: 'Category Talk',
+		frc: '&namespace=15',
 		ns: [15]
 	},
 	{
-		label: 'File Talk', 
-		frc: '&namespace=7', 
+		label: 'File Talk',
+		frc: '&namespace=7',
 		ns: [7]
 	},
 	{
-		label: 'MediaWiki Talk', 
-		frc: '&namespace=9', 
+		label: 'MediaWiki Talk',
+		frc: '&namespace=9',
 		ns: [9]
 	},
 	{
-		label: 'Template Talk', 
-		frc: '&namespace=11', 
+		label: 'Template Talk',
+		frc: '&namespace=11',
 		ns: [11]
 	},
 	{
-		label: 'Module Talk', 
-		frc: '&namespace=829', 
+		label: 'Module Talk',
+		frc: '&namespace=829',
 		ns: [829]
 	}
 ];
@@ -92,7 +93,7 @@ const NUMBER_OF_POSTS = 50;
 const MAX_DURATION_IN_DAYS = 7;
 
 // Set to the domain of another (live/prod) wiki for testing on a local (non-prod) MW mirror
-const DEBUG_FOREIGN_WIKI: string = ''; 
+const DEBUG_FOREIGN_WIKI: string = '';
 
 const LOCAL_STORAGE_KEY = 'vlw_rc_discussions_items';
 const LOCAL_STORAGE_MAX_AGE = 5 * 60; // 5 minutes
@@ -133,13 +134,16 @@ const config = mw.config.get([
 		return;
 	}
 
-	const api: mw.Api | mw.ForeignApi = (DEBUG_FOREIGN_WIKI === '' ? 
+	const api: mw.Api | mw.ForeignApi = (DEBUG_FOREIGN_WIKI === '' ?
 		new mw.Api() :
 		new mw.ForeignApi(`${DEBUG_FOREIGN_WIKI}${config.wgScriptPath}/api.php`, { anonymous: true })
 	);
 
 	let store: Reactive<IAppStore> | undefined;
 
+  /**
+   * Load the Vue App
+   */
 	function loadApp(): void {
 		// Change document title
 		document.getElementsByTagName('title')[0].innerHTML = mw.msg('rc-discussion--title', config.wgSiteName);
@@ -148,7 +152,7 @@ const config = mw.config.get([
 		mw.loader.using( ['vue', '@wikimedia/codex'] ).then(require => {
 			const Vue = require('vue');
 			const { CdxButton, CdxIcon, CdxSelect, CdxField, CdxProgressIndicator } = require('@wikimedia/codex');
-			
+
 			store = Vue.reactive({
 				option: 0,
 				data: {},
@@ -164,7 +168,7 @@ const config = mw.config.get([
 						</div>
 						<div id="rc-discussion-dropdown">
 							<cdx-field>
-								<cdx-select 
+								<cdx-select
 									v-model:selected="store.option"
 									v-model:modelValue="selectedLabel"
 									:menu-items="dropdownMenuItems"
@@ -189,10 +193,10 @@ const config = mw.config.get([
 								<div class="rc-discussion-no-data" v-else-if="dateGroups.length === 0">
 									{{ $i18n('rc-discussion--no-data').text() }}
 								</div>
-								<rc-discussion-cards-grouped-by-date 
+								<rc-discussion-cards-grouped-by-date
 									v-else
-									v-for="(dateGroup, index) in dateGroups" 
-									:key="dateGroup" 
+									v-for="(dateGroup, index) in dateGroups"
+									:key="dateGroup"
 									:date="dateGroup"
 									:posts="store.data[dateGroup]"
 								/>
@@ -239,10 +243,10 @@ const config = mw.config.get([
 						<div class="rc-discussion-date">
 							{{ renderedDate }}
 						</div>
-						<rc-discussion-card 
+						<rc-discussion-card
 							v-for="(post, index) in posts"
 							:key="''+post.toRev+(post.contents === null ? '' : 't')"
-							:post="post" 
+							:post="post"
 							:date="date"
 							:index="index"
 						/>
@@ -263,7 +267,7 @@ const config = mw.config.get([
 			$app.component("rc-discussion-card", {
 				template: `
 					<article>
-				
+
 						<div class="rc-discussion-feed-comment-summary">
 							<span class="rc-discussion-feed-post-author">
 								{{ username }}
@@ -277,13 +281,13 @@ const config = mw.config.get([
 								{{ pageTitle }}
 							</a>
 						</div>
-						
+
 						<div class="rc-discussion-feed-comment-heading">
 							<a v-bind:href="postUrl" rel="nofollow noindex">
 								{{ heading }}
 							</a>
 						</div>
-				
+
 						<div class="rc-discussion-feed-added-comment">
 							<span v-if="contents === null" class="rc-discussion-error" @click="onClickedFailedToLoadCard">
 								{{ $i18n( 'rc-discussion--failed-to-load' ).text() }}
@@ -292,11 +296,11 @@ const config = mw.config.get([
 								{{ contents }}
 							</span>
 						</div>
-				
+
 						<div class="rc-discussion-feed-timestamp">
 							{{ renderedDate }}
 						</div>
-				
+
 					</article>
 					`,
 				props: ["post", "date", "index"],
@@ -356,6 +360,22 @@ const config = mw.config.get([
 		});
 	}
 
+  /**
+   * A function that handles changes & updates to the UI corresponding to data fetching events.
+   *
+   * Data fetching events:
+   *  - fetchFromCache:         fetch cached data from HTML storage
+   *  - readRecentChangesFeed:  reads the list of changes & revisions from
+   *                            `action=feedrecentchanges` and
+   *                            `action=query&list=recentchanges`
+   *  - fillIntermediaryRevs:   fetches intermediary revisions & corresponding
+   *                            diffs in cases where a page in the feed is edited
+   *                            more than once
+   *
+   * @param idx       Numerical index of chosen dropdown option
+   * @param noCache   Equals true if intended to pull recent (uncached) data
+   * @returns
+   */
 	function loadDiscussions(idx: number, noCache?: boolean): void {
 		idx = +idx;
 		if (isNaN(idx)) {
@@ -398,6 +418,18 @@ const config = mw.config.get([
 			});
 	}
 
+  /**
+   * Data fetching event. Parallelizes requests to `action=feedrecentchanges` and
+   * `action=query&list=recentchanges`
+   *
+   * `action=feedrecentchanges` collates diffs from each revision/edit, with the
+   * caveat that the diffs are always grouped and cannot be ungrouped. By contrast,
+   * `action=query&list=recentchanges` is able to fetch the ungrouped revisions, but
+   * is unable to collate each individual diff.
+   *
+   * @param idx   Numerical index of chosen dropdown option
+   * @returns
+   */
 	function readRecentChangesFeed(idx: number): Promise<[PromiseSettledResult<string>, PromiseSettledResult<ApiResponse>]> {
 		return Promise.allSettled([
 			new Promise<string>((resolve, reject) => {
@@ -408,36 +440,50 @@ const config = mw.config.get([
 				.catch(reject);
 			}),
 			api.get({
-				action: 'query', 
+				action: 'query',
 				format: 'json',
-				list: 'recentchanges', 
+				list: 'recentchanges',
 				rctag: 'discussiontools',
 				rcprop: ['user', 'comment', 'flags', 'timestamp', 'title', 'tags', 'ids'],
 				rcnamespace: MENU_OPTIONS[idx].ns,
 				rclimit: NUMBER_OF_POSTS,
-				rcslot: 'main', 
+				rcslot: 'main',
 				rcgeneraterevisions: true,
 				rcend: new Date(Date.now() - (MAX_DURATION_IN_DAYS * 24 * 60 * 60 * 1000)).toISOString(),
 			} as ApiQueryRecentChangesParams)
 		]);
 	}
 
+  /**
+   * For cases where a page on the Recent Changes feed is edited more than once (and thus have
+   * grouped diffs that need to be fetched separately), we make a request to `prop=revisions`
+   * to fetch each individual diff.
+   *
+   * Keep in mind that `rvdiffto=prev` is used, which allows us to fetch multiple revisions' diffs
+   * in one request but is potentially unsupported in future updates.
+   *
+   * @param parsedApiRcs
+   * @param revToIdx
+   * @returns
+   */
 	function fillIntermediaryRevs(parsedApiRcs: IParsedApiQueryRc[], revToIdx: Map<number, number>) {
 		return new Promise(function (resolve, reject) {
-			if (revToIdx.size === 0) { 
-				resolve(parsedApiRcs); 
+			if (revToIdx.size === 0) {
+				resolve(parsedApiRcs);
 				return;
 			}
 			const revids = Array.from(revToIdx.keys());
 			api.get({
-				action: 'query', 
+				action: 'query',
 				format: 'json',
 				revids,
 				prop: 'revisions',
-				//! rvdiffto is a quote-on-quote deprecated method of prop=revisions 
-				//! (https://www.mediawiki.org/w/api.php?action=help&modules=query%2Brevisions)
-				//! If you're importing this code to use on another wiki, beware
-				rvdiffto: 'prev'	
+				/**
+         * rvdiffto is a quote-on-quote deprecated method of prop=revisions
+         * (https://www.mediawiki.org/w/api.php?action=help&modules=query%2Brevisions)
+         * If you're importing this code to use on another wiki, beware
+         */
+				rvdiffto: 'prev'
 			} as ApiQueryAllRevisionsParams)
 			.done((data: IExpectedApiQueryRvResponse) => {
 				parseRvApiQuery(parser, data, parsedApiRcs, revToIdx);
@@ -447,6 +493,20 @@ const config = mw.config.get([
 		});
 	}
 
+  /**
+   * fillIntermediaryRevs may fail to fetch diffs for uncached pages.
+   *
+   * In such cases, we provide a click event that the end user may use to load the contents of the
+   * comment on demand.
+   *
+   * @param fromRev
+   * @param toRev
+   * @param heading
+   * @param isReply
+   * @param date
+   * @param index
+   * @returns
+   */
 	function parseCommentFromCompareActionApi({ fromRev, toRev, heading, isReply, date, index }: { fromRev: number, toRev: number, heading: string, isReply: boolean, date: string, index: number }): Promise<void> {
 		return new Promise((resolve, reject) => {
 			api.get({
@@ -511,6 +571,7 @@ const config = mw.config.get([
 
 	// =================
 	//   Run
-	// =================	
+	// =================
 	loadApp();
 })(mediaWiki, jQuery);
+//! </nowiki>
