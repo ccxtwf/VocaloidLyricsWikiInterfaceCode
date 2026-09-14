@@ -539,8 +539,8 @@ export async function createRolledUpGadgetImplementationByLazyLoading(gadget: Ga
  * @param mwInterfaceCodeToBuild
  * @returns
  */
-export function mapWikicodeSourceFiles(gadgetsToBuild: GadgetDefinition[], mwInterfaceCodeToBuild: GadgetDefinition[]): [{ [Key: string]: string }, Target[]] {
-  const entries: { [Key: string]: string } = {};
+export function mapWikicodeSourceFiles(gadgetsToBuild: GadgetDefinition[], mwInterfaceCodeToBuild: GadgetDefinition[]): [Record<string, string>, Target[]] {
+  const entries: Record<string, string> = {};
   const assets: Target[] = [];
 
   mwInterfaceCodeToBuild.forEach((definition) => {
