@@ -3,6 +3,7 @@ import {
   generateCssBanner,
   generateGadgetsDefinitionWikitext,
   createMwGadgetImplementation,
+  duplicatePerEntry,
 } from './plugins';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
@@ -22,6 +23,7 @@ import {
   UserConfig,
   loadEnv
 } from 'vite';
+import { globSync } from 'fs';
 
 export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => {
   const customArgs = resolveCommandLineArgumentsPassedToVite();
@@ -56,6 +58,10 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
 
   return {
     plugins: [
+      // Ensures that utils modules shared between multiple entrypoint files are
+      // correctly duplicated on each file
+      duplicatePerEntry(globSync("src/utils/*")),
+
       // On Vite Build, generate the contents of MediaWiki:Gadgets-definition
       generateGadgetsDefinitionWikitext(gadgetsDefinition),
 
@@ -64,7 +70,7 @@ export default defineConfig(async ({ mode }: ConfigEnv): Promise<UserConfig> => 
 
       // On Vite Build, automatically add banner to each CSS file
       !minify &&
-        generateCssBanner(ghUrl, ghBranch, gadgetsDefinition)
+        generateCssBanner(ghUrl, ghBranch, gadgetsDefinition),
     ],
     build: {
       target: 'es2019',
