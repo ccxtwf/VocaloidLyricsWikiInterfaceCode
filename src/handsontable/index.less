@@ -1,0 +1,66 @@
+/* Handsontable */
+/* CSS Variables */
+
+.ht-light-mode() {
+}
+.ht-dark-mode() {
+  --ht-background-color: var(--color-base-100);
+  --ht-header-background-color: #000;
+  --ht-row-header-odd-background-color: #000;
+  --ht-row-header-even-background-color: #000;
+  --ht-cell-horizontal-border-color: #6e6f72;
+  --ht-cell-vertical-border-color: #454647;
+  --ht-border-color: #6e6f72;
+}
+.ht-lyrics-light-mode() {
+  --ht-background-color: #fff;
+  --ht-row-cell-odd-background-color: #f6f6f6;
+}
+.ht-lyrics-dark-mode() {
+  --ht-background-color: #101010;
+  --ht-row-cell-odd-background-color: #2b2b2b;
+}
+
+.ht-theme-light,
+.ht-theme-auto {
+  .ht-light-mode();
+}
+#lyrics {
+  .ht-theme-light,
+  .ht-theme-auto {
+    .ht-lyrics-light-mode();
+  }
+}
+.ht-theme-dark {
+  .ht-dark-mode();
+}
+#lyrics .ht-theme-dark {
+  .ht-lyrics-dark-mode();
+}
+@media (prefers-color-scheme: dark) {
+  .ht-theme-auto {
+    .ht-dark-mode();
+  }
+  #lyrics .ht-theme-auto {
+    .ht-lyrics-dark-mode();
+  }
+}
+
+/* Stacking priority of table headers */
+.ht_clone_top {
+  z-index: 1 !important;
+}
+.ht_clone_inline_start {
+  z-index: 1 !important;
+}
+.ht_clone_top_inline_start_corner {
+  z-index: 1 !important;
+}
+
+/* Medium size screens */
+@media screen and (min-width: 500px) and (max-width: 768px) {
+  .handsontable span.colHeader,
+  .handsontable span.rowHeader {
+    --ht-font-size: 12px;
+  }
+}

@@ -9,15 +9,10 @@ export default defineConfig(() => {
         formats: ['iife'],
         name: 'Handsontable',
         fileName: () => 'handsontable.js',
+        cssFileName: 'handsontable',
       },
       rolldownOptions: {
-        input: {
-          "handsontable": "src/handsontable/index"
-        },
         output: {
-          entryFileNames: (chunkInfo) => {
-            return chunkInfo.name + ".js";
-          },
           assetFileNames: (assetInfo) => {
             // Handle CSS files
             if (assetInfo.name && assetInfo.name.endsWith(".css")) {
