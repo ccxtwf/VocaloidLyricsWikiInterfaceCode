@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": [
+    "**/*.md",
+    "**/*.json",
+    "src/gadgets/editing/lyrics-editor/hottable.d.ts"
+  ],
+
+  "semi": true,
+  "singleQuote": false,
+  "arrowParens": "always",
+  "embeddedLanguageFormatting": "auto",
+  "singleAttributePerLine": true,
+  "insertFinalNewline": false,
+}

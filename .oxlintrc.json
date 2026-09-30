@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "ignorePatterns": [
+    "**/*.md",
+    "**/*.json",
+    "src/gadgets/editing/lyrics-editor/hottable.d.ts"
+  ],
+  "plugins": ["typescript", "unicorn", "oxc"],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "no-unused-expressions": [
+      "error",
+      {
+        "allowShortCircuit": true,
+        "allowTernary": true
+      }
+    ],
+    "no-useless-default-assignment": "off",
+    "no-unused-vars": "warn",
+    "no-useless-escape": "warn",
+    "typescript/triple-slash-reference": "warn"
+  },
+  "env": {
+    "builtin": true
+  }
+}
