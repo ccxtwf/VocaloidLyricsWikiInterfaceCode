@@ -1,5 +1,5 @@
 import { relative, resolve } from 'path';
-import { normalizePath } from 'vite';
+import normalizePath from 'normalize-path';
 import wrap from 'word-wrap';
 import { GadgetDefinition, GadgetsDefinition } from './types.js';
 import { getFileType } from './utils.js';

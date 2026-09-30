@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync } from "fs";
 import { resolve } from "path";
-import { normalizePath } from "vite";
+import normalizePath from "normalize-path";
 
 const rxFileExtension = /\.[a-zA-Z0-9]+$/;
 

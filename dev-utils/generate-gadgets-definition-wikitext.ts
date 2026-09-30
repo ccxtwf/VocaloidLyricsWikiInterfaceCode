@@ -1,5 +1,5 @@
 import { writeFile } from 'fs/promises';
-import { normalizePath } from 'vite';
+import normalizePath from 'normalize-path';
 import { resolve } from 'path';
 import type { GadgetDefinition, GadgetsDefinition, ResourceLoaderConditions } from './types.js';
 import { resolveDistPath, resolveFileExtension } from './utils.js';

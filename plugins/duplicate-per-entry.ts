@@ -15,7 +15,7 @@
  */
 import fs from 'node:fs';
 import { resolve, relative } from 'node:path';
-import { normalizePath } from 'vite';
+import normalizePath from 'normalize-path';
 import type { Plugin } from 'vite';
 
 const MARKER = '?dup=';

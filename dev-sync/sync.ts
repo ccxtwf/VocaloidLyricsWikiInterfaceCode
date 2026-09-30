@@ -20,7 +20,7 @@
  */
 import { resolveFileExtension } from '../dev-utils/utils.ts';
 
-import { normalizePath } from "vite";
+import normalizePath from "normalize-path";
 
 import { Mwn } from "mwn";
 
