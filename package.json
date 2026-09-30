@@ -32,6 +32,7 @@
     "oxfmt": "^0.71.0",
     "oxlint": "^1.86.0",
     "ts-jest": "^29.4.9",
+    "tsdown": "^0.23.0",
     "types-mediawiki": "^2.0.0",
     "types-mediawiki-api": "^2.0.0",
     "typescript": "^6.0.3",
