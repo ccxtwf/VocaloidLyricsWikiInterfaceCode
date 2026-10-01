@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "es2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+
+    "module": "esnext",
+    "moduleDetection": "force",
+    "allowImportingTsExtensions": true,
+
+    "allowJs": false,
+    "checkJs": false,
+    "noEmit": true,
+
+    "outDir": "./build-tools",
+
+    "types": ["node", "jest", "jsdom", "normalize-path"],
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedSideEffectImports": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strict": false,
+  },
+  "exclude": ["src/**/*"]
+}

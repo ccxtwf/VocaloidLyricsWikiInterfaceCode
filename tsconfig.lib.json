@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "useDefineForClassFields": true,
+    "lib": ["ES2019", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+
+    "module": "esnext",
+    "moduleDetection": "force",
+    "allowImportingTsExtensions": true,
+
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": false,
+    "noEmitOnError": false,
+
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/types-mediawiki",
+      "./node_modules/types-mediawiki-api",
+      "./node_modules/@vue"
+    ],
+    "types": ["node", "jquery", "oojs", "oojs-ui"],
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedSideEffectImports": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strict": false
+  },
+  "include": ["src/**/*"]
+}
