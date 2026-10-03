@@ -11,18 +11,13 @@
 
     "allowJs": true,
     "checkJs": false,
-    "noEmit": false,
+    "noEmit": true,
     "noEmitOnError": false,
 
     "rootDir": "./src",
     "outDir": "./dist",
 
-    "typeRoots": [
-      "./node_modules/@types",
-      "./node_modules/types-mediawiki",
-      "./node_modules/types-mediawiki-api",
-      "./node_modules/@vue"
-    ],
+    "typeRoots": ["./node_modules/@types"],
     "types": ["node", "jquery", "oojs", "oojs-ui"],
 
     /* Linting */
@@ -33,5 +28,10 @@
     "strictNullChecks": true,
     "strict": false
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*",
+    "./node_modules/types-mediawiki/**/*.d.ts",
+    "./node_modules/types-mediawiki-api/**/*.d.ts",
+    "./node_modules/@vue/**/*.d.ts"
+  ]
 }
