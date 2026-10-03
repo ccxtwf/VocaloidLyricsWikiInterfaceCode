@@ -4,22 +4,22 @@
   "version": "0.0.1",
   "type": "module",
   "imports": {
-    "#src/*": "./src/*"
+    "#src/*": "./src/*",
+    "#utils/*": "./src/utils/*"
   },
   "scripts": {
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
-    "build": "vite build",
-    "watch": "vite build --mode development -- --cmd=watch-build",
-    "preview": "vite preview",
-    "build-show": "npm run build && npm run preview",
+    "build": "tsdown",
+    "watch": "tsdown --watch",
     "tests": "jest",
     "presync": "npm run build",
     "sync": "node dev-sync/sync.ts"
   },
   "devDependencies": {
+    "@tsdown/css": "^0.23.0",
     "@types/jest": "^30.0.0",
     "@types/less": "^3.0.8",
     "@types/minimist": "^1.2.5",
@@ -31,6 +31,7 @@
     "minimist": "^1.2.8",
     "mwn": "^3.0.1",
     "normalize-path": "^3.0.0",
+    "oxc-transform": "^0.152.0",
     "oxfmt": "^0.71.0",
     "oxlint": "^1.86.0",
     "ts-jest": "^29.4.9",

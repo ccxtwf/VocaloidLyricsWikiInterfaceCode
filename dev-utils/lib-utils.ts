@@ -15,11 +15,11 @@ export function getFileType(filename: string): "script" | "style" | "other" {
   if (extension !== null) {
     extension = extension[0].toLowerCase();
     switch (extension) {
-      case '.js':
-      case '.ts':
+      case ".js":
+      case ".ts":
         return "script";
-      case '.css':
-      case '.less':
+      case ".css":
+      case ".less":
         return "style";
     }
   }
@@ -33,7 +33,7 @@ export function getFileType(filename: string): "script" | "style" | "other" {
  */
 export function getFileExtension(filepath: string): string {
   const m = filepath.match(rxFileExtension);
-  return m === null ? '' : m[0];
+  return m === null ? "" : m[0];
 }
 
 /**
@@ -45,8 +45,8 @@ export function getFileExtension(filepath: string): string {
  * @returns
  */
 export function resolveFileExtension(filepath: string): string {
-  filepath = filepath.replace(/\.ts$/i, '.js');
-  filepath = filepath.replace(/\.less$/i, '.css');
+  filepath = filepath.replace(/\.ts$/i, ".js");
+  filepath = filepath.replace(/\.less$/i, ".css");
   return filepath;
 }
 
@@ -56,20 +56,7 @@ export function resolveFileExtension(filepath: string): string {
  * @returns
  */
 export function removeFileExtension(filepath: string): string {
-  return filepath.replace(rxFileExtension, '');
-}
-
-/**
- * Used to resolve the bundle input key for compiled JS/CSS
- * @param filepath
- * @returns
- */
-export function resolveFilepathForBundleInputKey(filepath: string): string {
-  const sm = filepath.match(/^(.*)\.(?:ts|js)$/i);
-  if (sm !== null) {
-    return sm[1];
-  }
-  return resolveFileExtension(filepath);
+  return filepath.replace(rxFileExtension, "");
 }
 
 /**
@@ -78,7 +65,7 @@ export function resolveFilepathForBundleInputKey(filepath: string): string {
  * @returns
  */
 export function resolveSrcPath(): string {
-  const srcDirPath = normalizePath(resolve(__dirname, '../src'));
+  const srcDirPath = normalizePath(resolve(import.meta.dirname, "../src"));
   if (!existsSync(srcDirPath)) {
     mkdirSync(srcDirPath);
   }
@@ -95,12 +82,18 @@ export function resolveSrcPath(): string {
  * @param codeRelativePath
  * @returns
  */
-export function resolveSrcGadgetsPath(gadgetSectionName?: string, gadgetName?: string, codeRelativePath?: string): string {
+export function resolveSrcGadgetsPath(
+  gadgetSectionName?: string,
+  gadgetName?: string,
+  codeRelativePath?: string,
+): string {
   const srcDirPath = resolveSrcPath();
-  const gadgetsDir = resolve(srcDirPath, './gadgets');
+  const gadgetsDir = resolve(srcDirPath, "./gadgets");
   let gadgetDir = gadgetsDir;
   for (let rel of [gadgetSectionName, gadgetName, codeRelativePath]) {
-    if (!rel) { break; }
+    if (!rel) {
+      break;
+    }
     gadgetDir = resolve(gadgetDir, rel);
   }
   return normalizePath(gadgetDir);
@@ -114,9 +107,9 @@ export function resolveSrcGadgetsPath(gadgetSectionName?: string, gadgetName?: s
  */
 export function resolveSrcMediawikiCodePath(filename?: string): string {
   const srcDirPath = resolveSrcPath();
-  const mediawikiDir = resolve(srcDirPath, './mediawiki');
+  const mediawikiDir = resolve(srcDirPath, "./mediawiki");
   let fileDir = mediawikiDir;
-  if (!!filename) {
+  if (filename) {
     fileDir = resolve(fileDir, filename);
   }
   return normalizePath(fileDir);
@@ -126,7 +119,7 @@ export function resolveSrcMediawikiCodePath(filename?: string): string {
  * Resolves the path of `src/gadgets/gadgets-definitions.yaml`
  */
 export function resolveGadgetsDefinitionManifestPath(): string {
-  return resolveSrcGadgetsPath('gadgets-definition.yaml');
+  return resolveSrcGadgetsPath("gadgets-definition.yaml");
 }
 
 /**
@@ -136,12 +129,12 @@ export function resolveGadgetsDefinitionManifestPath(): string {
  * @returns
  */
 export function resolveDistPath(relativeFilepath?: string): string {
-  const distFolder = resolve(__dirname, '../dist');
+  const distFolder = resolve(import.meta.dirname, "../dist");
   if (!existsSync(distFolder)) {
     mkdirSync(distFolder);
   }
   let dir = distFolder;
-  if (!!relativeFilepath) {
+  if (relativeFilepath) {
     dir = resolve(dir, relativeFilepath);
   }
   if (!existsSync(dir)) {
@@ -161,10 +154,12 @@ export function resolveDistPath(relativeFilepath?: string): string {
  */
 export function resolveDistGadgetsPath(gadgetName?: string, codeRelativePath?: string): string {
   const distDirPath = resolveDistPath();
-  const gadgetsDir = resolve(distDirPath, './gadgets');
+  const gadgetsDir = resolve(distDirPath, "./gadgets");
   let gadgetDir = gadgetsDir;
   for (let rel of [gadgetName, codeRelativePath]) {
-    if (!rel) { break; }
+    if (!rel) {
+      break;
+    }
     gadgetDir = resolve(gadgetDir, rel);
   }
   return normalizePath(gadgetDir);
@@ -178,9 +173,9 @@ export function resolveDistGadgetsPath(gadgetName?: string, codeRelativePath?: s
  */
 export function resolveDistMediawikiCodePath(filename?: string): string {
   const distDirPath = resolveDistPath();
-  const mediawikiDir = resolve(distDirPath, './mediawiki');
+  const mediawikiDir = resolve(distDirPath, "./mediawiki");
   let fileDir = mediawikiDir;
-  if (!!filename) {
+  if (filename) {
     fileDir = resolve(fileDir, filename);
   }
   return normalizePath(fileDir);
@@ -193,28 +188,5 @@ export function resolveDistMediawikiCodePath(filename?: string): string {
  */
 export function resolveEntrypointFilepath(): string {
   const distFolder = resolveDistPath();
-  return normalizePath(resolve(distFolder, 'load.js'));
-}
-
-/**
- * Check if a gadget sub-directory or a gadget code file exists
- *
- * @param gadgetSection
- * @param gadgetName
- * @param codeFile
- * @returns
- */
-export function checkGadgetExists(gadgetSection: string, gadgetName: string, codeFile?: string): boolean {
-  const path = resolveSrcGadgetsPath(gadgetSection, gadgetName, codeFile);
-  return existsSync(path);
-}
-
-/**
- *
- * @param gadgetSection
- * @param gadgetName
- * @returns
- */
-export function getGadgetId(gadgetSection: string, gadgetName: string) {
-  return `${gadgetSection}/${gadgetName}`;
+  return normalizePath(resolve(distFolder, "load.js"));
 }

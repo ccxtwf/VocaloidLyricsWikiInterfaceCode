@@ -13,20 +13,21 @@
  *     chunks without splitting those contents into a shared module?
  *   - can I create a plugin that duplicates these functions instead?
  */
-import fs from 'node:fs';
-import { resolve, relative } from 'node:path';
-import normalizePath from 'normalize-path';
-import type { Plugin } from 'vite';
+import fs from "node:fs";
+import { resolve, relative } from "node:path";
+import normalizePath from "normalize-path";
+import type { TsdownPlugin } from "tsdown";
 
-const MARKER = '?dup=';
+const MARKER = "?dup=";
 
-export default function duplicatePerEntry(modules: string[]): Plugin {
+/**
+ * A Rolldown plugin that duplicates modules shared across various bundle entrypoints.
+ */
+export default function duplicatePerEntry(modules: string[]): TsdownPlugin {
   const targets = new Set(modules.map((m) => normalizePath(resolve(m))));
 
   return {
-    name: 'duplicate-per-entry',
-    enforce: 'pre',
-    apply: 'build',
+    name: "duplicate-per-entry",
 
     async resolveId(source, importer, options) {
       const cleanImporter = importer?.split(MARKER)[0];
@@ -38,7 +39,7 @@ export default function duplicatePerEntry(modules: string[]): Plugin {
 
       if (targets.has(resolved.id)) {
         // Tag with the importer so each entry gets its own copy of the module
-        const key = normalizePath(relative(process.cwd(), (importer ?? process.cwd())));
+        const key = normalizePath(relative(process.cwd(), importer ?? process.cwd()));
         return `${resolved.id}${MARKER}${encodeURIComponent(key)}`;
       }
       return resolved.id;
@@ -49,7 +50,7 @@ export default function duplicatePerEntry(modules: string[]): Plugin {
         return null;
       }
       const [realId] = id.split(MARKER);
-      return fs.readFileSync(realId, 'utf-8');
+      return fs.readFileSync(realId, "utf-8");
     },
   };
 }

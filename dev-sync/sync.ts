@@ -18,7 +18,7 @@
  *    Force-update all pages
  *
  */
-import { resolveFileExtension } from '../dev-utils/utils.ts';
+import { resolveFileExtension } from "../dev-utils/lib-utils.ts";
 
 import normalizePath from "normalize-path";
 
@@ -32,28 +32,28 @@ import axios from "axios";
 import { readdirSync, createWriteStream, existsSync, mkdirSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { join, relative, resolve, basename } from "path";
-import { exec } from 'child_process';
+import { exec } from "child_process";
 
-const EDIT_SUMMARY = 'Automated: Syncing the MediaWiki Interface + Gadgets Code';
+const EDIT_SUMMARY = "Automated: Syncing the MediaWiki Interface + Gadgets Code";
 
-const __dirname = import.meta.dirname;
-const logsFolderPath = resolve(__dirname, '../logs');
-if (!existsSync(logsFolderPath)) { mkdirSync(logsFolderPath); }
-const srcPath = resolve(__dirname, '../src');
-const distPath = resolve(__dirname, '../dist');
-const gadgetsSubfolder = 'gadgets';
-const mediawikiSubfolder = 'mediawiki';
+const logsFolderPath = resolve(import.meta.dirname, "../logs");
+if (!existsSync(logsFolderPath)) {
+  mkdirSync(logsFolderPath);
+}
+const srcPath = resolve(import.meta.dirname, "../src");
+const distPath = resolve(import.meta.dirname, "../dist");
+const gadgetsSubfolder = "gadgets";
+const mediawikiSubfolder = "mediawiki";
 const gadgetsDistPath = resolve(distPath, gadgetsSubfolder);
 const mediawikiDistPath = resolve(distPath, mediawikiSubfolder);
 
 /* Set Mwn to log to a file */
 const currentDate = new Date(Date.now()).toISOString().slice(0, 10);
 Mwn.setLoggingConfig({
-  stream: createWriteStream(
-    resolve(logsFolderPath, `${currentDate}.log`), {
-    flags: 'a',
-    encoding: 'utf8'
-  })
+  stream: createWriteStream(resolve(logsFolderPath, `${currentDate}.log`), {
+    flags: "a",
+    encoding: "utf8",
+  }),
 });
 
 /**
@@ -72,10 +72,10 @@ function log(message: string) {
  */
 function resolveEnv(): void {
   const profile = process.env.NODE_PROJECT_PROFILE || null;
-  console.log(`Running Node script on profile '${profile ?? 'default'}'`);
+  console.log(`Running Node script on profile '${profile ?? "default"}'`);
   if (profile !== null) process.env.profile = profile;
 
-  const envFilename = `.env${!!profile ? '.' : ''}${profile || ''}`;
+  const envFilename = `.env${profile ? "." : ""}${profile || ""}`;
   const envFile = resolve(process.cwd(), envFilename);
   if (!existsSync(envFile)) {
     throw new Error(`Cannot find ./${envFilename}!`);
@@ -96,14 +96,16 @@ async function initBot(): Promise<Mwn> {
     password: process.env.BOT_PASSWORD,
     userAgent: process.env.BOT_USERAGENT,
     OAuth2AccessToken: process.env.BOT_OAUTH_ACCESS_TOKEN,
-    silent: true,       // suppress messages (except error messages)
-    retryPause: 5000,   // pause for 5000 milliseconds (5 seconds) on maxlag error.
-    maxRetries: 5       // attempt to retry a failing requests upto 5 times
+    silent: true, // suppress messages (except error messages)
+    retryPause: 5000, // pause for 5000 milliseconds (5 seconds) on maxlag error.
+    maxRetries: 5, // attempt to retry a failing requests upto 5 times
   });
 
   /* For non-prod environments, set the bot to transmit requests over insecure HTTP if needed */
-  if (process.env.ENV_REJECT_UNAUTHORIZED === '0') {
-    log("Setting HTTP Request Agent to not reject unauthorized requests. Do not do this on a production environment.");
+  if (process.env.ENV_REJECT_UNAUTHORIZED === "0") {
+    log(
+      "Setting HTTP Request Agent to not reject unauthorized requests. Do not do this on a production environment.",
+    );
     const httpAgent = new http.Agent({ keepAlive: true });
     const httpsAgent = new https.Agent({ keepAlive: true, rejectUnauthorized: false });
     axios.defaults.httpAgent = httpAgent;
@@ -132,7 +134,9 @@ async function initBot(): Promise<Mwn> {
   return bot;
 }
 
-const rxGadgetFolderStructure = new RegExp(`^${gadgetsSubfolder}\/(?<gadgetSection>[^\/]+)\/(?<gadgetId>[^\/]+)\/(?<relFilePath>.*)$`);
+const rxGadgetFolderStructure = new RegExp(
+  `^${gadgetsSubfolder}\\/(?<gadgetSection>[^\\/]+)\\/(?<gadgetId>[^\\/]+)\\/(?<relFilePath>.*)$`,
+);
 
 /**
  * Fetches the names of each `MediaWiki:` page to edit as well as the correspondent
@@ -149,22 +153,37 @@ const rxGadgetFolderStructure = new RegExp(`^${gadgetsSubfolder}\/(?<gadgetSecti
  *                    JS & CSS. Specify "Common" to update Common.css & Common.js
  * @returns           a Map object with the pagename as key, filepath as value
  */
-async function getPagesToUpdate({ from, updateAll, forGadgets, forSiteInterfaces }: { from?: Date, updateAll?: boolean, forGadgets?: string[], forSiteInterfaces?: string[] }): Promise<Map<string, string>> {
+async function getPagesToUpdate({
+  from,
+  updateAll,
+  forGadgets,
+  forSiteInterfaces,
+}: {
+  from?: Date;
+  updateAll?: boolean;
+  forGadgets?: string[];
+  forSiteInterfaces?: string[];
+}): Promise<Map<string, string>> {
   const res = new Map<string, string>();
   const restrictMode = forGadgets || forSiteInterfaces;
   const gadgetsToUpdate = new Set<string>();
 
-  let filepaths = await ((from === undefined || updateAll || restrictMode) ? getAllFilesFromSrc() : getFileChangesFromGit(from));
+  let filepaths = await (from === undefined || updateAll || restrictMode
+    ? getAllFilesFromSrc()
+    : getFileChangesFromGit(from));
 
   for (let filepath of filepaths) {
     if (filepath.startsWith(`${gadgetsSubfolder}/`)) {
-      if (basename(filepath) === 'gadgets-definition.yaml') {
-        res.set('MediaWiki:Gadgets-definition', resolve(gadgetsDistPath, 'gadgets-definition.wikitext'));
+      if (basename(filepath) === "gadgets-definition.yaml") {
+        res.set(
+          "MediaWiki:Gadgets-definition",
+          resolve(gadgetsDistPath, "gadgets-definition.wikitext"),
+        );
       } else {
         const m = filepath.match(rxGadgetFolderStructure);
         if (m !== null) {
-          const gadgetId = m.groups!['gadgetId']!;
-          if (restrictMode && (forGadgets || []).every(a => a !== gadgetId)) {
+          const gadgetId = m.groups!["gadgetId"]!;
+          if (restrictMode && (forGadgets || []).every((a) => a !== gadgetId)) {
             continue;
           }
           gadgetsToUpdate.add(gadgetId);
@@ -172,16 +191,21 @@ async function getPagesToUpdate({ from, updateAll, forGadgets, forSiteInterfaces
       }
     } else if (filepath.startsWith(`${mediawikiSubfolder}/`)) {
       const pagename = resolveFileExtension(basename(filepath));
-      if (restrictMode && (forSiteInterfaces || []).every(a => a.toLowerCase() !== pagename.replace(/\.(js|css)$/, "").toLowerCase())) {
+      if (
+        restrictMode &&
+        (forSiteInterfaces || []).every(
+          (a) => a.toLowerCase() !== pagename.replace(/\.(js|css)$/, "").toLowerCase(),
+        )
+      ) {
         continue;
       }
       res.set(`MediaWiki:${pagename}`, normalizePath(resolve(mediawikiDistPath, pagename)));
     }
   }
 
-  gadgetsToUpdate.forEach(gadgetId => {
+  gadgetsToUpdate.forEach((gadgetId) => {
     const files = getFilesInGadgetDistFolder(gadgetId);
-    files.forEach(file => {
+    files.forEach((file) => {
       const pagename = `MediaWiki:Gadget-${basename(file)}`;
       res.set(pagename, file);
     });
@@ -198,8 +222,8 @@ async function getPagesToUpdate({ from, updateAll, forGadgets, forSiteInterfaces
 async function getAllFilesFromSrc(): Promise<string[]> {
   let entries = readdirSync(srcPath, { withFileTypes: true, recursive: true });
   let results = entries
-    .filter(entry => entry.isFile())
-    .map(entry => normalizePath(join(relative(srcPath, entry.parentPath), entry.name)));
+    .filter((entry) => entry.isFile())
+    .map((entry) => normalizePath(join(relative(srcPath, entry.parentPath), entry.name)));
   return results;
 }
 
@@ -210,7 +234,7 @@ async function getAllFilesFromSrc(): Promise<string[]> {
  * @returns
  */
 function getFileChangesFromGit(from: Date): Promise<string[]> {
-  return new Promise((resolve, _) => {
+  return new Promise((resolve) => {
     const cmd = `git log --since="${from.toISOString()}" --name-only --pretty=format: | sort -u | grep -ve "^$"`;
     log(`CMD EXEC: ${cmd}`);
     exec(cmd, (error, stdout, stderr) => {
@@ -219,11 +243,11 @@ function getFileChangesFromGit(from: Date): Promise<string[]> {
         resolve([]);
         return;
       }
-      let files = stdout.trim().split('\n');
+      let files = stdout.trim().split("\n");
       // Restrict to files within src/
       files = files
-        .filter(file => file.startsWith(`${basename(srcPath)}/`))
-        .map(file => file.replace(`${basename(srcPath)}/`, ''));
+        .filter((file) => file.startsWith(`${basename(srcPath)}/`))
+        .map((file) => file.replace(`${basename(srcPath)}/`, ""));
       resolve(files);
     });
   });
@@ -242,8 +266,8 @@ function getFilesInGadgetDistFolder(gadgetId: string): string[] {
   }
   let entries = readdirSync(folderPath, { withFileTypes: true, recursive: true });
   let results = entries
-    .filter(entry => entry.isFile())
-    .map(entry => normalizePath(join(entry.parentPath, entry.name)));
+    .filter((entry) => entry.isFile())
+    .map((entry) => normalizePath(join(entry.parentPath, entry.name)));
   return results;
 }
 
@@ -254,32 +278,30 @@ function getFilesInGadgetDistFolder(gadgetId: string): string[] {
  * @param pagesToUpdate
  */
 async function syncWikiCode(bot: Mwn, pagesToUpdate: Map<string, string>): Promise<void> {
-  log('Syncing wiki code...');
+  log("Syncing wiki code...");
   const failed = await bot.batchOperation(
     Array.from(pagesToUpdate.keys()) as string[],
-    async (pageTitle: string, _: number): Promise<any> => {
+    async (pageTitle: string, _index: number): Promise<void> => {
       const filepath = pagesToUpdate.get(pageTitle)!;
-      const src = await readFile(filepath, { encoding: 'utf-8', flag: 'r' });
+      const src = await readFile(filepath, { encoding: "utf-8", flag: "r" });
       await bot.save(pageTitle, src, EDIT_SUMMARY);
       log(`Edited page '${pageTitle}'`);
       return;
     },
     /* concurrencies */ 5,
-    /* maxRetries */ 3
+    /* maxRetries */ 3,
   );
-  log('Finished syncing wiki code!');
+  log("Finished syncing wiki code!");
   if (!!failed && !!failed.failures) {
     const errors = Object.entries(failed.failures);
     if (errors.length > 0) {
       log(`Failed to edit the following pages:`);
       errors.forEach(([item, error]) => {
         log(`${item}\t${error}`);
-      })
+      });
     }
   }
 }
-
-
 
 async function main() {
   try {
@@ -287,18 +309,21 @@ async function main() {
 
     const argv = minimist(process.argv.slice(2));
     const convertCliArgToList = (arg: string) => {
-      const arr = arg.trim().split(/\s*,\s*/).filter(i => i !== '');
-      return (arr.length ? arr : undefined);
-    }
-    const forGadgets = convertCliArgToList(argv['gadget'] || '');
-    const forSiteInterfaces = convertCliArgToList(argv['siteinterface'] || '');
-    const updateAll = (forGadgets || forSiteInterfaces) ? false : 'update-all' in argv;
+      const arr = arg
+        .trim()
+        .split(/\s*,\s*/)
+        .filter((i) => i !== "");
+      return arr.length ? arr : undefined;
+    };
+    const forGadgets = convertCliArgToList(argv["gadget"] || "");
+    const forSiteInterfaces = convertCliArgToList(argv["siteinterface"] || "");
+    const updateAll = forGadgets || forSiteInterfaces ? false : "update-all" in argv;
 
     if (forSiteInterfaces) {
-      log(`Updating code for the following site interfaces: ${forSiteInterfaces.join(', ')}`);
+      log(`Updating code for the following site interfaces: ${forSiteInterfaces.join(", ")}`);
     }
     if (forGadgets) {
-      log(`Updating code for the following gadgets: ${forGadgets.join(', ')}`);
+      log(`Updating code for the following gadgets: ${forGadgets.join(", ")}`);
     }
     if (updateAll) {
       log(`Force updating all gadgets...`);
@@ -309,23 +334,31 @@ async function main() {
     const bot = await initBot();
 
     /* Get last updated time */
-    const lastUpdatedLogFileName = `last-updated${!!process.env.profile ? '.' : ''}${process.env.profile || ''}.txt`;
+    const lastUpdatedLogFileName = `last-updated${process.env.profile ? "." : ""}${process.env.profile || ""}.txt`;
     const lastUpdatedLogFile = resolve(logsFolderPath, lastUpdatedLogFileName);
     let from: Date | undefined;
     if (existsSync(lastUpdatedLogFile)) {
-      const rw = await readFile(lastUpdatedLogFile, { encoding: 'utf-8', flag: 'r' });
+      const rw = await readFile(lastUpdatedLogFile, { encoding: "utf-8", flag: "r" });
       const rn = Date.parse(rw.trim());
       if (!isNaN(rn)) {
         from = new Date(rn);
       }
     }
 
-    const pagesToUpdate = await getPagesToUpdate({ from, updateAll, forGadgets, forSiteInterfaces });
+    const pagesToUpdate = await getPagesToUpdate({
+      from,
+      updateAll,
+      forGadgets,
+      forSiteInterfaces,
+    });
 
     syncWikiCode(bot, pagesToUpdate);
 
     /* Save last updated time for next time */
-    await writeFile(lastUpdatedLogFile, new Date(Date.now()).toISOString(), { encoding: 'utf-8', flag: 'w' });
+    await writeFile(lastUpdatedLogFile, new Date(Date.now()).toISOString(), {
+      encoding: "utf-8",
+      flag: "w",
+    });
   } catch (err) {
     log(err);
   }

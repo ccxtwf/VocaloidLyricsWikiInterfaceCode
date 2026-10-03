@@ -1,13 +1,15 @@
-import autogenerateEntrypoint from "./autogenerate-entrypoint.js";
-import createMwGadgetImplementation from "./create-mw-gadget-implementation.js";
-import generateCssBanner from "./generate-css-banner.js";
-import generateGadgetsDefinitionWikitext from "./generate-gadgets-definition-wikitext.js";
-import duplicatePerEntry from "./duplicate-per-entry.js";
+import loadEnvironmentPlugin from "./load-env/index.ts";
+import bannerPlugin from "./banner/index.ts";
+import serveAndLoadGadgetsPlugin from "./serve-and-load/index.ts";
+import mwGadgetImplementationPlugin from "./mw-gadget-implementation/index.ts";
+import gadgetsDefinitionPlugin from "./gadgets-definition/index.ts";
+import duplicatePerEntryPlugin from "./duplicate-per-entry/index.ts";
 
 export {
-  autogenerateEntrypoint,
-  createMwGadgetImplementation,
-  generateCssBanner,
-  generateGadgetsDefinitionWikitext,
-  duplicatePerEntry,
+  loadEnvironmentPlugin,
+  bannerPlugin,
+  serveAndLoadGadgetsPlugin,
+  mwGadgetImplementationPlugin,
+  gadgetsDefinitionPlugin,
+  duplicatePerEntryPlugin,
 };
