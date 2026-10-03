@@ -2,7 +2,7 @@ import { relative, resolve } from "path";
 import normalizePath from "normalize-path";
 import wrap from "word-wrap";
 import type { GadgetDefinition, GadgetsDefinition } from "../../dev-utils/models/index.ts";
-import { getFileType, resolveSrcPath } from "../../dev-utils/lib-utils.ts";
+import { getFileType } from "../../dev-utils/lib-utils.ts";
 
 let ghUrl: string;
 let ghBranch: string;
@@ -20,6 +20,15 @@ export function setGhEntrypoint(url: string, branch: string) {
 }
 
 /**
+ * Get the root directory of this project
+ *
+ * @returns
+ */
+function getProjectRootDirectory(): string {
+  return resolve(import.meta.dirname, "../../");
+}
+
+/**
  * Creates a piece of text to be added to bundled JS & CSS files
  *
  * @param id id of bundle input
@@ -33,8 +42,6 @@ function generateBannerString({
   id: string;
   gadgetDefinition?: GadgetDefinition | null;
 }): string {
-  const projectRootDir = resolve(import.meta.dirname, "../");
-
   const fileType = getFileType(id);
   let tag = "";
   switch (fileType) {
@@ -46,7 +53,7 @@ function generateBannerString({
       break;
   }
 
-  const url = `${ghUrl}/blob/${ghBranch}/${normalizePath(relative(projectRootDir, id))}`;
+  const url = `${ghUrl}/blob/${ghBranch}/${normalizePath(id)}`;
 
   const {
     description = "",
@@ -73,11 +80,15 @@ function generateBannerString({
 /**
  * Resolve the object keys belonging to the gadget in the shared GadgetsDefinition object
  *
- * @param id id of bundle input
- * @returns [gadgetSectionName, gadgetName]
+ * @param id id of bundle input/output
+ * @param fromBundleInput Set to `true` if the given id is the bundle input
+ * @returns
  */
-function getGadgetName(id: string): string | null {
-  const m = id.match(/gadgets\/([^/]+)\/([^/]+).*$/);
+function getGadgetName(id: string, fromBundleInput: boolean): string | null {
+  const rx = fromBundleInput
+    ? /gadgets\/(?:[^/]+)\/([^/]+)\/([^/]+).*$/
+    : /gadgets\/([^/]+)\/([^/]+).*$/;
+  const m = id.match(rx);
   if (m === null) {
     return null;
   }
@@ -91,14 +102,23 @@ function getGadgetName(id: string): string | null {
  * @param gadgetsDefinition
  * @returns
  */
-export function generateScriptBanner(gadgetsDefinition: GadgetsDefinition) {
-  return ({ fileName }: { fileName: string }): string => {
-    if (getFileType(fileName) !== "script") {
+export function generateScriptBanner(
+  bundleEntry: Record<string, string>,
+  gadgetsDefinition: GadgetsDefinition,
+) {
+  return ({ fileName: bundleOutputFilepath }: { fileName: string }): string => {
+    if (getFileType(bundleOutputFilepath) !== "script") {
       return "";
     }
-    const gadgetName = getGadgetName(fileName);
+    const bundleInputFilepath = bundleEntry[bundleOutputFilepath];
+    if (!bundleInputFilepath) {
+      throw new Error(`Corresponding input for ${bundleOutputFilepath} not found`);
+    }
+    const gadgetName = getGadgetName(bundleOutputFilepath, false);
     const gadgetDefinition = gadgetsDefinition.getGadgetByName(gadgetName);
-    return generateBannerString({ id: fileName, gadgetDefinition });
+    const id = normalizePath(relative(getProjectRootDirectory(), bundleInputFilepath));
+    const bannerString = generateBannerString({ id, gadgetDefinition });
+    return bannerString;
   };
 }
 
@@ -113,12 +133,11 @@ export function generateScriptBanner(gadgetsDefinition: GadgetsDefinition) {
  */
 export function generateStylesheetBanner(
   src: string,
-  id: string,
+  bundleInputId: string,
   gadgetsDefinition: GadgetsDefinition,
 ) {
-  const rootDir = resolveSrcPath();
-  id = normalizePath(relative(rootDir, id));
-  const gadgetName = getGadgetName(id);
+  const id = normalizePath(relative(getProjectRootDirectory(), bundleInputId));
+  const gadgetName = getGadgetName(id, true);
   const gadgetDefinition = gadgetsDefinition.getGadgetByName(gadgetName);
-  return `${generateBannerString({ id: `src/${id}`, gadgetDefinition })}\n${src}`;
+  return `${generateBannerString({ id, gadgetDefinition })}\n${src}`;
 }

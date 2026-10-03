@@ -32,7 +32,7 @@ export default defineConfig(async (): Promise<UserConfig> => {
 
     plugins: [
       loadEnvironmentPlugin(),
-      bannerPlugin(gadgetsDefinition),
+      bannerPlugin(bundleEntry, gadgetsDefinition),
       gadgetsDefinitionPlugin(gadgetsDefinition),
       mwGadgetImplementationPlugin(gadgetsToBuild),
       serveAndLoadGadgetsPlugin(gadgetsToBuild, mwInterfaceCodeToBuild),

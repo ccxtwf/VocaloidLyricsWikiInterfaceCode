@@ -1,7 +1,7 @@
 import type { TsdownPlugin } from "tsdown";
-import { getFileType } from "../../dev-utils/lib-utils.ts";
 import { generateScriptBanner, generateStylesheetBanner } from "./utils.ts";
-import type { GadgetsDefinition } from "../../dev-utils/models/index.ts";
+import type GadgetsDefinition from "../../dev-utils/models/GadgetsDefinition.ts";
+import { getFileType } from "../../dev-utils/lib-utils.ts";
 
 /**
  * A Rolldown plugin that automatically adds a custom banner to each file.
@@ -9,13 +9,16 @@ import type { GadgetsDefinition } from "../../dev-utils/models/index.ts";
  * @param gadgetsDefinition
  * @returns
  */
-export default function banner(gadgetsDefinition: GadgetsDefinition): TsdownPlugin {
+export default function banner(
+  bundleEntry: Record<string, string>,
+  gadgetsDefinition: GadgetsDefinition,
+): TsdownPlugin {
   return {
     name: "banner",
 
     tsdownConfig() {
       return {
-        banner: generateScriptBanner(gadgetsDefinition),
+        banner: generateScriptBanner(bundleEntry, gadgetsDefinition),
       };
     },
     transform(src: string, id: string) {
