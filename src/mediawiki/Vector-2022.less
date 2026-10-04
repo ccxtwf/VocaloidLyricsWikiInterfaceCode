@@ -1,5 +1,10 @@
+@import "../utils/less-mixins/invert.less";
+
 /* All CSS here will be loaded for users of the Vector 2022 skin */
-.mw-page-title-namespace, .mw-page-title-separator, .mw-page-title-main, .mw-headline {
+.mw-page-title-namespace,
+.mw-page-title-separator,
+.mw-page-title-main,
+.mw-headline {
   font-family: "Lora", "Open Sans", "Noto Sans", "Times", sans-serif;
 }
 
@@ -8,7 +13,7 @@
   width: 12px;
   height: 16px;
   float: right;
-  content: '';
+  content: "";
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -31,10 +36,9 @@
 }
 @dark-mode-css-definitions: {
   #vector-main-menu .mw-portlet > .vector-menu-heading > .menu-btn {
-    filter: brightness(1) invert(1);
-    backdrop-filter: brightness(1) invert(1);
+    .invert();
   }
-}
+};
 html.skin-theme-clientpref-night {
   @dark-mode-css-definitions();
 }

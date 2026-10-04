@@ -1,8 +1,10 @@
+@import "../utils/less-mixins/invert.less";
+
 /* All CSS here will be loaded for users of the Citizen skin */
 :root {
   --lyrics-table-header: #e0e0e0;
   --lyrics-row-odd-color: #ededed;
-  
+
   --border-color-base: rgba(0, 0, 0, 0.3);
 }
 
@@ -18,7 +20,7 @@
   width: 12px;
   height: 16px;
   float: right;
-  content: '';
+  content: "";
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -50,10 +52,9 @@
     --border-color-base: rgba(255, 255, 255, 0.3);
   }
   #citizen-drawer__card .mw-portlet > .citizen-menu__heading > .menu-btn {
-    filter: brightness(1) invert(1);
-    backdrop-filter: brightness(1) invert(1);
+    .invert();
   }
-}
+};
 :root.skin-theme-clientpref-night {
   @dark-mode-css-definitions();
 }

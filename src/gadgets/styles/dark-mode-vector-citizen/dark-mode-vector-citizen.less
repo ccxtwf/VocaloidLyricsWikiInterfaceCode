@@ -1,15 +1,6 @@
-.invert() {
-  -moz-filter: brightness(1) invert(1);
-  -webkit-filter: brightness(1) invert(1);
-  filter: brightness(1) invert(1);
-}
-.no-invert() {
-  -moz-filter: none;
-  -webkit-filter: none;
-  filter: none;
-}
+@import "../../../utils/less-mixins/invert.less";
 
-@dark-mode-css-definitions: {  
+@dark-mode-css-definitions: {
   // Wordmark
   .mw-logo-container,
   img.mw-logo-wordmark {
@@ -18,12 +9,12 @@
     -webkit-filter: initial !important;
     filter: initial !important;
   }
-  
+
   // jQuery Spinner
   .mw-spinner {
     .invert();
   }
-  
+
   // Load random page
   .load-random .gallerybox .thumb img {
     .invert();
@@ -32,18 +23,20 @@
   .load-random .gallerybox .gallerytext a {
     color: #94dd8d !important;
   }
-  
+
   // DiscussionTools: Highlighted Comment
   .ext-discussiontools-init-highlight {
     mix-blend-mode: lighten !important;
   }
-}
+};
 
-html.skin-theme-clientpref-night, :root.skin-theme-clientpref-night {
+html.skin-theme-clientpref-night,
+:root.skin-theme-clientpref-night {
   @dark-mode-css-definitions();
 }
 @media screen and (prefers-color-scheme: dark) {
-  html.skin-theme-clientpref-os, :root.skin-theme-clientpref-os {
+  html.skin-theme-clientpref-os,
+  :root.skin-theme-clientpref-os {
     @dark-mode-css-definitions();
   }
 }

@@ -16,6 +16,8 @@
 *   --tl-queue-item-subtitle-color
 *   --tl-queue-error-text-color
 */
+@import "../../../utils/less-mixins/invert.less";
+
 /* Default styling when mounted on sidebar */
 #vlw-tl-queue-container {
   background-color: var(--tl-queue-container-bg-color, #f6f6f6);
@@ -36,7 +38,7 @@
     margin-right: 10px;
 
     &:hover {
-      opacity: 1.0;
+      opacity: 1;
     }
 
     img {
@@ -122,7 +124,8 @@
     color: var(--tl-queue-item-subtitle-color, #9d9d9d);
   }
 
-  .tl-check-req-producer, .tl-check-req-author {
+  .tl-check-req-producer,
+  .tl-check-req-author {
     display: inline;
   }
 
@@ -132,9 +135,10 @@
   }
 
   .tl-check-req-author::before {
-    content: '';
+    content: "";
     background-image: url(https://upload.wikimedia.org/wikipedia/commons/9/97/Ic_create_48px.svg);
-    filter: brightness(0) saturate(100%) invert(69%) sepia(3%) saturate(4%) hue-rotate(322deg) brightness(91%) contrast(89%);
+    filter: brightness(0) saturate(100%) invert(69%) sepia(3%) saturate(4%) hue-rotate(322deg)
+      brightness(91%) contrast(89%);
     display: inline-block;
     width: 12px;
     height: 12px;
@@ -145,7 +149,7 @@
     width: 15px;
     height: 15px;
     margin-right: 4px;
-    content: url('https://upload.wikimedia.org/wikipedia/commons/1/16/Allowed.svg');
+    content: url("https://upload.wikimedia.org/wikipedia/commons/1/16/Allowed.svg");
     display: inline;
   }
 
@@ -153,7 +157,7 @@
     width: 15px;
     height: 15px;
     margin-right: 4px;
-    content: url('https://upload.wikimedia.org/wikipedia/commons/b/bc/Not_allowed.svg');
+    content: url("https://upload.wikimedia.org/wikipedia/commons/b/bc/Not_allowed.svg");
     display: inline;
   }
 
@@ -212,7 +216,6 @@ body.skin-citizen .citizen-footer__container #vlw-tl-queue-container {
           }
         }
       }
-
     }
     @media screen and (max-width: 600px) {
       & {
@@ -280,7 +283,8 @@ body.skin-citizen {
   }
 }
 
-html.theme-light:not(.skin-theme-clientpref-night), html.skin-theme-clientpref-day:not(.skin-theme-clientpref-night) {
+html.theme-light:not(.skin-theme-clientpref-night),
+html.skin-theme-clientpref-day:not(.skin-theme-clientpref-night) {
   body.skin-timeless {
     --tl-queue-container-bg-color: #f8f9fa;
     --tl-queue-container-border-color: #eaecf0;
@@ -294,11 +298,6 @@ html.theme-light:not(.skin-theme-clientpref-night), html.skin-theme-clientpref-d
   }
 }
 
-.invert() {
-  -moz-filter: brightness(1) invert(1);
-  -webkit-filter: brightness(1) invert(1);
-  filter: brightness(1) invert(1);
-}
 @dark-mode-css-definitions: {
   & {
     --tl-queue-container-bg-color: #000;
@@ -317,12 +316,15 @@ html.theme-light:not(.skin-theme-clientpref-night), html.skin-theme-clientpref-d
   #vlw-tl-queue-container #icon-refresh img {
     .invert();
   }
-}
-html.theme-dark, html.skin-theme-clientpref-night, :root.skin-theme-clientpref-night {
+};
+html.theme-dark,
+html.skin-theme-clientpref-night,
+:root.skin-theme-clientpref-night {
   @dark-mode-css-definitions();
 }
 @media screen and (prefers-color-scheme: dark) {
-  html.skin-theme-clientpref-os, :root.skin-theme-clientpref-os {
+  html.skin-theme-clientpref-os,
+  :root.skin-theme-clientpref-os {
     @dark-mode-css-definitions();
   }
 }

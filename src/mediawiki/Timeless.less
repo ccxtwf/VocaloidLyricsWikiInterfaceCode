@@ -1,3 +1,5 @@
+@import "../utils/less-mixins/invert.less";
+
 /* All CSS here will be loaded for users of the Timeless skin */
 /* Hide logo wordmark */
 #p-logo {
@@ -19,17 +21,21 @@
 }
 /* Wikitable */
 .wikitable {
-  background-color: var(--background-color-neutral-subtle,#f8f9fa);
-  color: var(--color-base,#202122);
-  border: 1px solid var(--border-color-base,#a2a9b1);
+  background-color: var(--background-color-neutral-subtle, #f8f9fa);
+  color: var(--color-base, #202122);
+  border: 1px solid var(--border-color-base, #a2a9b1);
 }
-.wikitable > tr > th, .wikitable > * > tr > th {
-  background-color: var(--background-color-neutral,#eaecf0);
-  color: var(--color-base,#202122);
+.wikitable > tr > th,
+.wikitable > * > tr > th {
+  background-color: var(--background-color-neutral, #eaecf0);
+  color: var(--color-base, #202122);
   text-align: center;
 }
-.wikitable > tr > th, .wikitable > tr > td, .wikitable > * > tr > th, .wikitable > * > tr > td {
-  border: 1px solid var(--border-color-base,#a2a9b1);
+.wikitable > tr > th,
+.wikitable > tr > td,
+.wikitable > * > tr > th,
+.wikitable > * > tr > td {
+  border: 1px solid var(--border-color-base, #a2a9b1);
   padding: 0.2em 0.4em;
 }
 
@@ -47,39 +53,37 @@ body.skin-timeless {
 #mw-header {
   background-color: #212121;
 }
-#pt-notifications-alert .mw-echo-notifications-badge::after, 
+#pt-notifications-alert .mw-echo-notifications-badge::after,
 #pt-notifications-notice .mw-echo-notifications-badge::after {
   background-color: #fff;
   color: #000;
-  opacity: 1.0 !important;
+  opacity: 1 !important;
 }
-#pt-notifications-notice .mw-echo-notifications-badge.oo-ui-flaggedElement-unseen::after, 
+#pt-notifications-notice .mw-echo-notifications-badge.oo-ui-flaggedElement-unseen::after,
 #pt-notifications-notice .mw-echo-notifications-badge.mw-echo-unseen-notifications::after {
   background-color: #2678ff;
   color: #fff;
 }
-#pt-notifications-alert .mw-echo-notifications-badge.oo-ui-flaggedElement-unseen::after, 
+#pt-notifications-alert .mw-echo-notifications-badge.oo-ui-flaggedElement-unseen::after,
 #pt-notifications-alert .mw-echo-notifications-badge.mw-echo-unseen-notifications::after {
   background-color: #ff003b;
   color: #032c47;
 }
-.color-bar .color-middle-container, 
-.color-bar .color-middle, 
-.color-bar .color-left, 
+.color-bar .color-middle-container,
+.color-bar .color-middle,
+.color-bar .color-left,
 .color-bar .color-right {
   background-color: #09c328;
 }
 .p-body .oo-ui-buttonElement {
-  filter: brightness(1) invert(1);
-  backdrop-filter: brightness(1) invert(1);
+  .invert();
 }
 #personal h2::after {
-  filter: brightness(1) invert(1);
-  backdrop-filter: brightness(1) invert(1);
+  .invert();
 }
-#user-tools h2::after, .sidebar-chunk h2::after {
-  filter: brightness(1) invert(1);
-  backdrop-filter: brightness(1) invert(1);
+#user-tools h2::after,
+.sidebar-chunk h2::after {
+  .invert();
 }
 @media screen and (max-width: 850px) {
   #site-tools h2 {
@@ -96,7 +100,9 @@ body.skin-timeless {
     border-top: solid 2px #000;
     background: #000;
   }
-  #site-navigation, #site-tools, #page-tools {
+  #site-navigation,
+  #site-tools,
+  #page-tools {
     color: #ddd;
   }
 }
@@ -115,7 +121,7 @@ a.mw-echo-notifications-badge.mw-echo-notification-badge-nojs.oo-ui-icon-tray {
 
 /* Sidebar */
 .sidebar-chunk h3 {
-  background: var(--header-bg-color, #29AB87); 
+  background: var(--header-bg-color, #29ab87);
   color: var(--header-fg-color, #fff);
   padding: 5px 5px 0px 2px;
 }
@@ -143,7 +149,7 @@ a.mw-echo-notifications-badge.mw-echo-notification-badge-nojs.oo-ui-icon-tray {
   width: 12px;
   height: 16px;
   float: right;
-  content: '';
+  content: "";
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -185,16 +191,22 @@ table#mw-allmessagestable {
 .mw-datatable td {
   background-color: var(--background-color-base, #fff);
 }
+.mw-datatable th {
+  background-color: var(--background-color-neutral-subtle, #f1f4fd);
+}
 .mw-datatable tr:hover td {
   background-color: var(--background-color-progressive-subtle, #f1f4fd);
 }
-.mw-datatable td, .mw-datatable th {
+.mw-datatable td,
+.mw-datatable th {
   border: var(--border-width-base, 1px) solid var(--border-color-base, #a2a9b1);
 }
-#mw-allmessagestable .am_default, #mw-allmessagestable body:hover .am_default {
+#mw-allmessagestable .am_default,
+#mw-allmessagestable body:hover .am_default {
   background-color: var(--background-color-content-removed, #ffe49c);
 }
-#mw-allmessagestable .am_actual, #mw-allmessagestable tbody:hover .am_actual {
+#mw-allmessagestable .am_actual,
+#mw-allmessagestable tbody:hover .am_actual {
   background-color: var(--background-color-content-added, #a3d3ff);
 }
 .mw-datatable {
@@ -203,6 +215,7 @@ table#mw-allmessagestable {
 }
 
 /* Highlighted References */
-ol.references li:target, sup.reference:target {
+ol.references li:target,
+sup.reference:target {
   background-color: var(--background-color-progressive-subtle, #eaf3ff);
 }

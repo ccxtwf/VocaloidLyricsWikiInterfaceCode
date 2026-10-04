@@ -1,13 +1,4 @@
-.invert() {
-  -moz-filter: brightness(1) invert(1);
-  -webkit-filter: brightness(1) invert(1);
-  filter: brightness(1) invert(1);
-}
-.no-invert() {
-  -moz-filter: none;
-  -webkit-filter: none;
-  filter: none;
-}
+@import "../../../utils/less-mixins/invert.less";
 
 html.theme-dark {
   --medik: #074936 !important;
@@ -17,10 +8,18 @@ html.theme-dark {
   }
 
   // Headings
-  h1, h2, h3, h4, h5, h6,
-  .mw-heading h1, .mw-heading h2,
-  .mw-heading h3, .mw-heading h4,
-  .mw-heading h5, .mw-heading h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .mw-heading h1,
+  .mw-heading h2,
+  .mw-heading h3,
+  .mw-heading h4,
+  .mw-heading h5,
+  .mw-heading h6 {
     color: #bfbfbf;
   }
 
@@ -106,7 +105,8 @@ html.theme-dark {
   }
   #content .subpages {
     color: #9c9ea2;
-    a:not(.new):link, a:not(.new):active {
+    a:not(.new):link,
+    a:not(.new):active {
       color: #3998ff;
     }
     a:not(.new):visited {
@@ -152,7 +152,8 @@ html.theme-dark {
     color: #2a80da !important;
   }
   .mw-collapsible-toggle-default {
-    &::before, &::after {
+    &::before,
+    &::after {
       color: #e0e4d6 !important;
     }
   }
