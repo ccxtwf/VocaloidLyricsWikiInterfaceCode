@@ -114,9 +114,9 @@ Running `npm run build -- --rollup` will get tsdown to create a gadget implement
 
 You may run `--rollup` in combination with `--serve`, in which case the created `load.js` file will load the gadgets on your wiki.
 
-### Unit Tests - Jest
+### Unit Tests - vitest
 
-To run unit tests (Jest), execute `npm run tests`.
+To run unit tests (vitest), execute `npm run test`.
 
 ## Code Definition
 
@@ -288,9 +288,9 @@ Create a <code>gadget-impl.js</code> file for each gadget.
 </td>
 </tr>
 <tr>
-<td><code>npm run tests</code></td>
+<td><code>npm run test</code></td>
 <td>
-Execute Jest unit tests.
+Execute Vitest unit tests.
 </td>
 </tr>
 <tr>
