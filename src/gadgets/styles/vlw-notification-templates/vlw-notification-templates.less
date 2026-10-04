@@ -9,7 +9,6 @@
   padding-bottom: 10px;
 
   & > tbody > tr > td {
-
     &.vlw-notify-exclamation {
       font: 20pt Book Antiqua;
       vertical-align: middle;
@@ -53,17 +52,17 @@
   yellow: #ffd700;
   red: #ff0000;
   gray: #808080;
-  green: #29AB87;
+  green: #29ab87;
   darkgreen: #228b22;
   blue: #66ccff;
   darkblue: #2910b5;
   black: #000;
   purple: #800080;
-}
+};
 @colour-items-dark-mode: {
   darkblue: #024fd4;
   black: #fff;
-}
+};
 
 & {
   each(@colour-items, {
@@ -81,7 +80,7 @@
 }
 
 .vlw-notify.wip .vlw-notify-alert-text {
-  color: #29AB87;
+  color: #29ab87;
 }
 
 /* Styling read-more links for long paragraphs */
@@ -126,12 +125,15 @@
       }
     });
   }
-}
-html.theme-dark, html.skin-theme-clientpref-night, :root.skin-theme-clientpref-night {
+};
+html.theme-dark,
+html.skin-theme-clientpref-night,
+:root.skin-theme-clientpref-night {
   @dark-mode-css-definitions();
 }
 @media screen and (prefers-color-scheme: dark) {
-  html.skin-theme-clientpref-os, :root.skin-theme-clientpref-os {
+  html.skin-theme-clientpref-os,
+  :root.skin-theme-clientpref-os {
     @dark-mode-css-definitions();
   }
 }

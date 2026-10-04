@@ -40,7 +40,8 @@
     background-color: var(--songs-browser-chip-needs-eng-tl-bg-color, #720000);
     color: var(--songs-browser-chip-needs-eng-tl-fg-color, #fff);
   }
-  &.verified-genai, &.suspected-genai {
+  &.verified-genai,
+  &.suspected-genai {
     background: var(--songs-browser-chip-ai-usage-bg-color, #00a800);
     color: var(--songs-browser-chip-ai-usage-fg-color, antiquewhite);
   }
@@ -133,7 +134,7 @@
     margin-top: -10px;
 
     &.checked {
-      background: url('https://upload.wikimedia.org/wikipedia/commons/3/39/OOjs_UI_icon_check-green.svg');
+      background: url("https://upload.wikimedia.org/wikipedia/commons/3/39/OOjs_UI_icon_check-green.svg");
     }
   }
 
@@ -203,12 +204,15 @@ body.skin-timeless #songs-browser {
     --songs-browser-toggle-dropdown-options-separator-color: #888888;
     --songs-browser-toggle-dropdown-option-hover-bg-color: #272727;
   }
-}
-html.theme-dark, html.skin-theme-clientpref-night, :root.skin-theme-clientpref-night {
+};
+html.theme-dark,
+html.skin-theme-clientpref-night,
+:root.skin-theme-clientpref-night {
   @dark-mode-css-definitions();
 }
 @media screen and (prefers-color-scheme: dark) {
-  html.skin-theme-clientpref-os, :root.skin-theme-clientpref-os {
+  html.skin-theme-clientpref-os,
+  :root.skin-theme-clientpref-os {
     @dark-mode-css-definitions();
   }
 }

@@ -2,8 +2,8 @@
 @dark-mode-css-definitions: {
   & {
     --lyrics-table-header: #353535;
-	  --lyrics-row-odd-color: #202020;
-	  --album-embed-container-bg-color: #313131;
+    --lyrics-row-odd-color: #202020;
+    --album-embed-container-bg-color: #313131;
     --album-embed-container-text-color: #bebebe;
     --album-embed-container-shadow-color: #3e3e3e61;
     --album-embed-container-active-tab-color: #dbdbdb;
@@ -28,7 +28,7 @@
       background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ctitle%3Enotice%3C/title%3E%3Cpath d='M10 0a10 10 0 1 0 10 10A10 10 0 0 0 10 0zm1 16H9v-2h2zm0-4H9V4h2z' id='path4' style='fill:white;fill-opacity:1' /%3E%3C/svg%3E%0A");
     }
   }
-}
+};
 /* DARK MODE */
 html.skin-theme-clientpref-night {
   @dark-mode-css-definitions();
@@ -36,7 +36,7 @@ html.skin-theme-clientpref-night {
 
 /* AUTO THEME MODE */
 @media screen and (prefers-color-scheme: dark) {
-	html.skin-theme-clientpref-os {
-		@dark-mode-css-definitions();
-	}
+  html.skin-theme-clientpref-os {
+    @dark-mode-css-definitions();
+  }
 }

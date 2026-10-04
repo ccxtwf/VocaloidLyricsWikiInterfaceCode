@@ -1,110 +1,110 @@
 export interface IMenuUption {
-	label: string					// Dropdown menu item label
-	frc: string						// Query parameter to pass onto the Action API (action=recentchanges)
-	ns: number[] |null		// List of namespace IDs 
+  label: string; // Dropdown menu item label
+  frc: string; // Query parameter to pass onto the Action API (action=recentchanges)
+  ns: number[] | null; // List of namespace IDs
 }
 
-export interface IParsedRssRcFeed { 
-	author: string
-	pageTitle: string 
-	heading: string | null
-	textAdditions: string[] | null
-	timestamp: number | null
-	isReply: boolean
-	fromRev: number 
-	toRev: number
-	isNewPage: boolean
-	hasMultipleRevs: boolean
+export interface IParsedRssRcFeed {
+  author: string;
+  pageTitle: string;
+  heading: string | null;
+  textAdditions: string[] | null;
+  timestamp: number | null;
+  isReply: boolean;
+  fromRev: number;
+  toRev: number;
+  isNewPage: boolean;
+  hasMultipleRevs: boolean;
 }
 
 export interface IParsedApiQueryRc {
-	pageId: number
-	pageTitle: string
-	heading: string | null
-	username: string
-	isAnon: boolean
-	timestamp: number | null
-	isReply: boolean
-	isNewTopic: boolean
-	fromRev: number
-	toRev: number
-	contents: string | null
+  pageId: number;
+  pageTitle: string;
+  heading: string | null;
+  username: string;
+  isAnon: boolean;
+  timestamp: number | null;
+  isReply: boolean;
+  isNewTopic: boolean;
+  fromRev: number;
+  toRev: number;
+  contents: string | null;
 }
 
-export interface IGroupedParsedApiQueryRc { 
-	[d: string]: IParsedApiQueryRc[] 
+export interface IGroupedParsedApiQueryRc {
+  [d: string]: IParsedApiQueryRc[];
 }
 
 interface IMwQueryApiResponse {
-	batchcomplete: string
-	continue?: {
-		rccontinue?: string
-		continue?: string
-	}
-	query?: any
+  batchcomplete: string;
+  continue?: {
+    rccontinue?: string;
+    continue?: string;
+  };
+  query?: any;
 }
 
 export interface IExpectedApiQueryRcResponse extends IMwQueryApiResponse {
-	query: {
-		recentchanges?: {
-			type: string
-			ns: number
-			title: string
-			pageid: number
-			revid: number
-    	old_revid: number
-      rcid: number
-      user: string
-			anon?: ''
-      timestamp: string
-      comment: string
-      tags: string[]
-		}[]
-	}
+  query: {
+    recentchanges?: {
+      type: string;
+      ns: number;
+      title: string;
+      pageid: number;
+      revid: number;
+      old_revid: number;
+      rcid: number;
+      user: string;
+      anon?: "";
+      timestamp: string;
+      comment: string;
+      tags: string[];
+    }[];
+  };
 }
 
 export interface IExpectedApiQueryRvResponse extends IMwQueryApiResponse {
-	query: {
-		pages?: {
-			[pageid: string]: {
-				pageid: number
-				ns: number
-				title: string
-				revisions: {
-					revid: number
-					parentid: number
-					user: string
-					anon?: string
-					timestamp: string
-					diff: {
-						notcached?: string
-						from?: number
-						to?: number
-						'*'?: string
-					}
-					comment: string
-				}[]
-			}
-		}
-	}
+  query: {
+    pages?: {
+      [pageid: string]: {
+        pageid: number;
+        ns: number;
+        title: string;
+        revisions: {
+          revid: number;
+          parentid: number;
+          user: string;
+          anon?: string;
+          timestamp: string;
+          diff: {
+            notcached?: string;
+            from?: number;
+            to?: number;
+            "*"?: string;
+          };
+          comment: string;
+        }[];
+      };
+    };
+  };
 }
 
 export interface IExpectedApiQueryCompareResponse {
   compare: {
-    fromid?: number
-    fromrevid?: number
-    fromns?: number
-    fromtitle?: string
-    toid?: number
-    torevid?: number
-    tons?: number
-    totitle?: string
-    "*": string
-  }
+    fromid?: number;
+    fromrevid?: number;
+    fromns?: number;
+    fromtitle?: string;
+    toid?: number;
+    torevid?: number;
+    tons?: number;
+    totitle?: string;
+    "*": string;
+  };
 }
 
 export interface IAppStore {
-	option: number
-	data: IGroupedParsedApiQueryRc
-	isLoading: boolean
+  option: number;
+  data: IGroupedParsedApiQueryRc;
+  isLoading: boolean;
 }

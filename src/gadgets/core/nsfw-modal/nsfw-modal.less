@@ -82,7 +82,8 @@
       color: var(--nsfw-modal-msg-confirm-button-text-color, #121212);
       font-weight: bold;
       border: solid 2px var(--nsfw-modal-msg-confirm-button-border-color, #b20000);
-      &:hover, &:active {
+      &:hover,
+      &:active {
         background-color: var(--nsfw-modal-msg-confirm-button-color-hover, #ffc75e);
         border-color: var(--nsfw-modal-msg-confirm-button-border-color-hover, #a00e0e);
       }
@@ -92,7 +93,8 @@
       background-color: var(--nsfw-modal-msg-back-button-color, #000);
       color: var(--nsfw-modal-msg-back-button-text-color, #ddd);
       border: solid 2px var(--nsfw-modal-msg-back-button-border-color, #242424);
-      &:hover, &:active {
+      &:hover,
+      &:active {
         background-color: var(--nsfw-modal-msg-back-button-color-hover, #2f2f2f);
         border-color: var(--nsfw-modal-msg-back-button-border-color-hover, #242424);
       }
@@ -184,12 +186,15 @@
     --nsfw-modal-msg-back-button-border-color: #787878;
     --nsfw-modal-msg-back-button-border-color-hover: #353535;
   }
-}
-html.theme-dark, html.skin-theme-clientpref-night, :root.skin-theme-clientpref-night {
+};
+html.theme-dark,
+html.skin-theme-clientpref-night,
+:root.skin-theme-clientpref-night {
   @dark-mode-css-definitions();
 }
 @media screen and (prefers-color-scheme: dark) {
-  html.skin-theme-clientpref-os, :root.skin-theme-clientpref-os {
+  html.skin-theme-clientpref-os,
+  :root.skin-theme-clientpref-os {
     @dark-mode-css-definitions();
   }
 }

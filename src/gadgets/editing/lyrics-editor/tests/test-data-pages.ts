@@ -57,7 +57,9 @@ export const sampleWikitext1 = `{{Epilepsy}}
 
 [[Category:Some categories]]`;
 
-export const expectedParsedTables1 = [[`{| {{Lyrics table class}}
+export const expectedParsedTables1 = [
+  [
+    `{| {{Lyrics table class}}
 |- class="lyrics-table-header"
 ! {{lyrics header}}
 |-
@@ -92,9 +94,11 @@ export const expectedParsedTables1 = [[`{| {{Lyrics table class}}
 |酔いもせず
 |yoi mo sezu
 |duis aute irure dolor in reprehenderit
-|}`, `{| {{Lyrics table class}}
+|}`,
+    `{| {{Lyrics table class}}
 |- class="lyrics-table-header"
-! {{lyrics header}}`, `|-
+! {{lyrics header}}`,
+    `|-
 |色は匂えど
 |iro wa nioedo
 |lorem ipsum dolor sit amet
@@ -126,7 +130,9 @@ export const expectedParsedTables1 = [[`{| {{Lyrics table class}}
 |酔いもせず
 |yoi mo sezu
 |duis aute irure dolor in reprehenderit
-|}`]];
+|}`,
+  ],
+];
 
 export const sampleWikitext2 = `{{Epilepsy}}
 {{Infobox Song
@@ -189,7 +195,9 @@ export const sampleWikitext2 = `{{Epilepsy}}
 
 [[Category:Some categories]]`;
 
-export const expectedParsedTables2 = [[`{| {{lyrics table class}}
+export const expectedParsedTables2 = [
+  [
+    `{| {{lyrics table class}}
 |- class="lyrics-table-header"
 ! {{lyrics header}}
 |- style="color: red;"
@@ -226,9 +234,11 @@ export const expectedParsedTables2 = [[`{| {{lyrics table class}}
 |酔いもせず
 |yoi mo sezu
 |duis aute irure dolor in reprehenderit
-|}`, `{| {{lyrics table class}}
+|}`,
+    `{| {{lyrics table class}}
 |- class="lyrics-table-header"
-! {{lyrics header}}`, `|- style="color: red;"
+! {{lyrics header}}`,
+    `|- style="color: red;"
 |色は匂えど
 |iro wa nioedo
 |{{wp|lorem ipsum dolor sit amet}}
@@ -262,7 +272,9 @@ export const expectedParsedTables2 = [[`{| {{lyrics table class}}
 |酔いもせず
 |yoi mo sezu
 |duis aute irure dolor in reprehenderit
-|}`]];
+|}`,
+  ],
+];
 
 export const sampleWikitext3 = `{{Epilepsy}}
 {{Infobox Song
@@ -358,7 +370,8 @@ Version 2 =
 [[Category:Some categories]]`;
 
 export const expectedParsedTables3 = [
-[`{| {{lyrics table class}}
+  [
+    `{| {{lyrics table class}}
 |- class="lyrics-table-header"
 ! {{lyrics header}}
 |-
@@ -393,9 +406,11 @@ export const expectedParsedTables3 = [
 |酔いもせず
 |yoi mo sezu
 |duis aute irure dolor in reprehenderit
-|}`, `{| {{lyrics table class}}
+|}`,
+    `{| {{lyrics table class}}
 |- class="lyrics-table-header"
-! {{lyrics header}}`, `|-
+! {{lyrics header}}`,
+    `|-
 |色は匂えど
 |iro wa nioedo
 |lorem ipsum dolor sit amet
@@ -427,8 +442,10 @@ export const expectedParsedTables3 = [
 |酔いもせず
 |yoi mo sezu
 |duis aute irure dolor in reprehenderit
-|}`],
-[`{| {{lyrics table class}}
+|}`,
+  ],
+  [
+    `{| {{lyrics table class}}
 |- class="lyrics-table-header"
 ! {{lyrics header}}
 |-
@@ -455,9 +472,11 @@ export const expectedParsedTables3 = [
 |-
 |酔いもせず
 |yoi mo sezu
-|}`, `{| {{lyrics table class}}
+|}`,
+    `{| {{lyrics table class}}
 |- class="lyrics-table-header"
-! {{lyrics header}}`, `|-
+! {{lyrics header}}`,
+    `|-
 |色は匂えど
 |iro wa nioedo
 |-
@@ -481,8 +500,9 @@ export const expectedParsedTables3 = [
 |-
 |酔いもせず
 |yoi mo sezu
-|}`]
-]
+|}`,
+  ],
+];
 
 export const sampleWikitext4 = `{{Epilepsy}}
 {{Infobox Song
@@ -535,7 +555,9 @@ export const sampleWikitext4 = `{{Epilepsy}}
 
 [[Category:Some categories]]`;
 
-export const expectedParsedTables4 = [[`{| {{lyrics table class}}
+export const expectedParsedTables4 = [
+  [
+    `{| {{lyrics table class}}
 |- class="lyrics-table-header"
 ! {{lyrics header}}
 |-
@@ -562,9 +584,11 @@ export const expectedParsedTables4 = [[`{| {{lyrics table class}}
 |-
 |yoi mo sezu
 |duis aute irure dolor in reprehenderit
-|}`, `{| {{lyrics table class}}
+|}`,
+    `{| {{lyrics table class}}
 |- class="lyrics-table-header"
-! {{lyrics header}}`, `|-
+! {{lyrics header}}`,
+    `|-
 |iro wa nioedo
 |lorem ipsum dolor sit amet
 |-
@@ -588,7 +612,9 @@ export const expectedParsedTables4 = [[`{| {{lyrics table class}}
 |-
 |yoi mo sezu
 |duis aute irure dolor in reprehenderit
-|}`]];
+|}`,
+  ],
+];
 
 export const sampleWikitext5 = `{{Epilepsy}}
 {{Infobox Song
@@ -631,7 +657,9 @@ export const sampleWikitext5 = `{{Epilepsy}}
 
 [[Category:Some categories]]`;
 
-export const expectedParsedTables5 = [[`{| {{lyrics table class}}
+export const expectedParsedTables5 = [
+  [
+    `{| {{lyrics table class}}
 |- class="lyrics-table-header"
 ! {{lyrics header}}
 |-
@@ -650,9 +678,11 @@ export const expectedParsedTables5 = [[`{| {{lyrics table class}}
 |asaki yume miji
 |-
 |yoi mo sezu
-|}`, `{| {{lyrics table class}}
+|}`,
+    `{| {{lyrics table class}}
 |- class="lyrics-table-header"
-! {{lyrics header}}`, `|-
+! {{lyrics header}}`,
+    `|-
 |iro wa nioedo
 |-
 |chirinuru o
@@ -668,7 +698,9 @@ export const expectedParsedTables5 = [[`{| {{lyrics table class}}
 |asaki yume miji
 |-
 |yoi mo sezu
-|}`]];
+|}`,
+  ],
+];
 
 export const sampleWikitext6 = `{{Epilepsy}}
 {{Infobox Song
@@ -745,7 +777,9 @@ export const sampleWikitext6 = `{{Epilepsy}}
 
 [[Category:Some categories]]`;
 
-export const expectedParsedTables6 = [[`{| {{Lyrics table class}}
+export const expectedParsedTables6 = [
+  [
+    `{| {{Lyrics table class}}
 |- class="lyrics-table-header"
 ! {{lyrics header}}
 |-
@@ -796,9 +830,11 @@ export const expectedParsedTables6 = [[`{| {{Lyrics table class}}
 |duis aute irure dolor in reprehenderit
 |duis aute irure dolor in reprehenderit
 |duis aute irure dolor in reprehenderit
-|}`, `{| {{Lyrics table class}}
+|}`,
+    `{| {{Lyrics table class}}
 |- class="lyrics-table-header"
-! {{lyrics header}}`, `|-
+! {{lyrics header}}`,
+    `|-
 |色は匂えど
 |iro wa nioedo
 |lorem ipsum dolor sit amet
@@ -846,7 +882,9 @@ export const expectedParsedTables6 = [[`{| {{Lyrics table class}}
 |duis aute irure dolor in reprehenderit
 |duis aute irure dolor in reprehenderit
 |duis aute irure dolor in reprehenderit
-|}`]];
+|}`,
+  ],
+];
 
 export const sampleWikitext7 = `{{Epilepsy}}
 {{Infobox Song
@@ -931,7 +969,9 @@ export const sampleWikitext7 = `{{Epilepsy}}
 
 [[Category:Some categories]]`;
 
-export const expectedParsedTables7 = [[`{| {{Lyrics table class}}
+export const expectedParsedTables7 = [
+  [
+    `{| {{Lyrics table class}}
 |- class="lyrics-table-header"
 ! {{lyrics header}}
 |-
@@ -990,9 +1030,11 @@ export const expectedParsedTables7 = [[`{| {{Lyrics table class}}
 |duis aute irure dolor in reprehenderit
 |duis aute irure dolor in reprehenderit
 |duis aute irure dolor in reprehenderit
-|}`, `{| {{Lyrics table class}}
+|}`,
+    `{| {{Lyrics table class}}
 |- class="lyrics-table-header"
-! {{lyrics header}}`, `|-
+! {{lyrics header}}`,
+    `|-
 |色は匂えど
 |iro wa nioedo
 |lorem ipsum dolor sit amet
@@ -1048,4 +1090,6 @@ export const expectedParsedTables7 = [[`{| {{Lyrics table class}}
 |duis aute irure dolor in reprehenderit
 |duis aute irure dolor in reprehenderit
 |duis aute irure dolor in reprehenderit
-|}`]]
+|}`,
+  ],
+];

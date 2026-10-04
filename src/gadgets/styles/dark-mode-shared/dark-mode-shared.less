@@ -1,5 +1,5 @@
 @dark-mode-css-definitions: {
-  & {  
+  & {
     /* Shared site-wide CSS Variables */
     --lyrics-table-header: #414141;
     --lyrics-row-odd-color: #2b2b2b;
@@ -13,19 +13,22 @@
     --header-bg-color: #15432e;
     --header-fg-color: #e1e1e1;
     --background-color-main-page-nav-button-hover: #333b34;
-    
+
     /* Animation */
     --unseen-fadeout-to-unread-1: #4c4848;
     --unseen-fadeout-to-unread-2: #282828;
-    
+
     scrollbar-color: #363636 #000;
   }
-}
-html.theme-dark, html.skin-theme-clientpref-night, :root.skin-theme-clientpref-night {
+};
+html.theme-dark,
+html.skin-theme-clientpref-night,
+:root.skin-theme-clientpref-night {
   @dark-mode-css-definitions();
 }
 @media screen and (prefers-color-scheme: dark) {
-  html.skin-theme-clientpref-os, :root.skin-theme-clientpref-os {
+  html.skin-theme-clientpref-os,
+  :root.skin-theme-clientpref-os {
     @dark-mode-css-definitions();
   }
 }

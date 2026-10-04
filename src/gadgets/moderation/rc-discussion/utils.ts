@@ -8,7 +8,7 @@ import type {
   IGroupedParsedApiQueryRc,
   IExpectedApiQueryRcResponse,
   IExpectedApiQueryRvResponse,
-  IExpectedApiQueryCompareResponse
+  IExpectedApiQueryCompareResponse,
 } from "./types.js";
 
 /**
@@ -41,37 +41,42 @@ export function parseRcFeeds(parser: DOMParser, rss: string): IParsedRssRcFeed[]
   return items.map((item: Element) => {
     const xmlString = decodeXmlContents(item.querySelector("description")?.innerHTML);
     const pageTitle = item.querySelector("title")?.innerHTML;
-    const author = item.getElementsByTagName('dc:creator')[0].innerHTML;
+    const author = item.getElementsByTagName("dc:creator")[0].innerHTML;
     const rTimestamp = item.querySelector("pubDate")?.innerHTML;
-    const timestamp = (!rTimestamp) ? null : Date.parse(rTimestamp);
+    const timestamp = !rTimestamp ? null : Date.parse(rTimestamp);
     const link = decodeXmlContents(item.querySelector("link")?.innerHTML);
 
-    const doc = parser.parseFromString(`<html>${xmlString}</html>`, 'application/xml');
+    const doc = parser.parseFromString(`<html>${xmlString}</html>`, "application/xml");
 
     const fromRev = +(getParamValue("oldid", link) || 0);
     const toRev = +(getParamValue("diff", link) || 0);
-    const isNewPage = (fromRev === 0);
+    const isNewPage = fromRev === 0;
 
-    const hasMultipleRevs = doc.querySelector('td.diff-multi') !== null;
+    const hasMultipleRevs = doc.querySelector("td.diff-multi") !== null;
 
-    const summaryNode = doc.querySelector('p:first-child');
-    const commentHeadingNode = summaryNode?.querySelector('span.autocomment') || null;
+    const summaryNode = doc.querySelector("p:first-child");
+    const commentHeadingNode = summaryNode?.querySelector("span.autocomment") || null;
     let commentHeading = null;
     let commentType = null;
     let isReply = false;
     if (commentHeadingNode !== null) {
-      commentHeading = ((commentHeadingNode as Element).textContent).replace(/\s*:\s*$/, '');
-      commentType = (summaryNode?.textContent || '').replace((commentHeadingNode as Element).textContent, '').trim();
-      if (commentType === 'Reply') { isReply = true; }
+      commentHeading = (commentHeadingNode as Element).textContent.replace(/\s*:\s*$/, "");
+      commentType = (summaryNode?.textContent || "")
+        .replace((commentHeadingNode as Element).textContent, "")
+        .trim();
+      if (commentType === "Reply") {
+        isReply = true;
+      }
     }
 
     let textAdditions: string[] | null = null;
     if (isNewPage) {
       textAdditions = [];
-      Array.from(doc.documentElement.children).slice(2)
+      Array.from(doc.documentElement.children)
+        .slice(2)
         .forEach((el: Element) => {
           Array.from(el.childNodes).forEach((c: Element) => {
-            textAdditions!.push(c.tagName === 'br' ? '' : c.textContent.trim());
+            textAdditions!.push(c.tagName === "br" ? "" : c.textContent.trim());
           });
         });
     } else if (!hasMultipleRevs) {
@@ -88,7 +93,7 @@ export function parseRcFeeds(parser: DOMParser, rss: string): IParsedRssRcFeed[]
       fromRev,
       toRev,
       isNewPage,
-      hasMultipleRevs
+      hasMultipleRevs,
     };
   });
 }
@@ -108,22 +113,22 @@ export function parseRcApiQuery(res: IExpectedApiQueryRcResponse): IParsedApiQue
     let {
       title: pageTitle,
       pageid: pageId,
-      'old_revid': fromRev,
+      old_revid: fromRev,
       revid: toRev,
       comment: revSummary,
-      user: username
+      user: username,
     } = curComment;
-    const isAnon = (curComment.anon !== undefined);
+    const isAnon = curComment.anon !== undefined;
     const isReply = (curComment.tags || []).indexOf("discussiontools-reply") > -1;
     const isNewTopic = (curComment.tags || []).indexOf("discussiontools-newtopic") > -1;
-    const timestamp = ((curComment.timestamp || '') === '') ? null : Date.parse(curComment.timestamp);
+    const timestamp = (curComment.timestamp || "") === "" ? null : Date.parse(curComment.timestamp);
     let heading: string | null = null;
-    if (fromRev === 0 && revSummary.startsWith('Created page with')) {
+    if (fromRev === 0 && revSummary.startsWith("Created page with")) {
       // Do nothing
     } else if (isReply) {
-      heading = revSummary.slice(3, revSummary.length - ("Reply".length) - 4);
+      heading = revSummary.slice(3, revSummary.length - "Reply".length - 4);
     } else if (isNewTopic) {
-      heading = revSummary.slice(3, revSummary.length - ("new section".length) - 4);
+      heading = revSummary.slice(3, revSummary.length - "new section".length - 4);
     }
     return {
       pageId,
@@ -136,7 +141,7 @@ export function parseRcApiQuery(res: IExpectedApiQueryRcResponse): IParsedApiQue
       isNewTopic,
       fromRev,
       toRev,
-      contents: null
+      contents: null,
     };
   });
   return discussions;
@@ -155,13 +160,16 @@ export function parseRcApiQuery(res: IExpectedApiQueryRcResponse): IParsedApiQue
  * @param parsedApiQuery
  * @returns
  */
-export function compareParsedRcs(parser: DOMParser, parsedFeeds: IParsedRssRcFeed[], parsedApiQuery: IParsedApiQueryRc[]): [IParsedApiQueryRc[], Map<number, number>] {
+export function compareParsedRcs(
+  parser: DOMParser,
+  parsedFeeds: IParsedRssRcFeed[],
+  parsedApiQuery: IParsedApiQueryRc[],
+): [IParsedApiQueryRc[], Map<number, number>] {
   let idxApiQuery = 0;
   let idxFeeds = 0;
   const atIndexes: number[] = [];
   const fetchMidRevs: number[] = [];
   while (idxApiQuery < parsedApiQuery.length) {
-
     // Reached end of parsedFeeds, let the remaining parsedApiQuery items be
     // passed onto the next API request (to fetch text contents)
     if (idxFeeds >= parsedFeeds.length) {
@@ -180,7 +188,7 @@ export function compareParsedRcs(parser: DOMParser, parsedFeeds: IParsedRssRcFee
         parser,
         parsedFeeds[idxFeeds].textAdditions || [],
         parsedFeeds[idxFeeds].heading,
-        parsedFeeds[idxFeeds].isReply
+        parsedFeeds[idxFeeds].isReply,
       );
       idxApiQuery++;
       idxFeeds++;
@@ -190,7 +198,10 @@ export function compareParsedRcs(parser: DOMParser, parsedFeeds: IParsedRssRcFee
         atIndexes.push(idxApiQuery);
         fetchMidRevs.push(parsedApiQuery[idxApiQuery].toRev);
         idxApiQuery++;
-      } while (idxApiQuery < parsedApiQuery.length && parsedApiQuery[idxApiQuery-1].fromRev !== parsedFeeds[idxFeeds].fromRev);
+      } while (
+        idxApiQuery < parsedApiQuery.length &&
+        parsedApiQuery[idxApiQuery - 1].fromRev !== parsedFeeds[idxFeeds].fromRev
+      );
       idxFeeds++;
     } else {
       // Something is wrong... Try to fetch the extra information anyway
@@ -222,28 +233,36 @@ export function compareParsedRcs(parser: DOMParser, parsedFeeds: IParsedRssRcFee
  * @param parsedApiRcs  Output from `compareParsedRcs`
  * @param revToIdx      Map of MW Revision ID -> Position index on parsedApiRcs
  */
-export function parseRvApiQuery(parser: DOMParser, res: IExpectedApiQueryRvResponse, parsedApiRcs: IParsedApiQueryRc[], revToIdx: Map<number, number>): void {
+export function parseRvApiQuery(
+  parser: DOMParser,
+  res: IExpectedApiQueryRvResponse,
+  parsedApiRcs: IParsedApiQueryRc[],
+  revToIdx: Map<number, number>,
+): void {
   const objs = Object.values(res.query.pages || {});
   for (const obj of objs) {
     const revs = obj.revisions || [];
     revs.forEach((rev) => {
       const revid = rev.revid;
-      let diffs: string | undefined = (rev.diff || {})['*'];
+      let diffs: string | undefined = (rev.diff || {})["*"];
       if (diffs !== undefined) {
         const atIndex = revToIdx.get(revid)!;
         parsedApiRcs[atIndex].contents = ((diffs: string, atIndex: number) => {
-          const d = parser.parseFromString(`<html><table>${diffs}</table></html>`, 'application/xml');
+          const d = parser.parseFromString(
+            `<html><table>${diffs}</table></html>`,
+            "application/xml",
+          );
           const arrd = parseNewAdditionDiffs(d);
           const comment = buildStringFromDiffs(
             parser,
             arrd,
             parsedApiRcs[atIndex].heading,
-            parsedApiRcs[atIndex].isReply
+            parsedApiRcs[atIndex].isReply,
           );
           return comment;
         })(diffs, atIndex);
       }
-    })
+    });
   }
 }
 
@@ -254,16 +273,21 @@ export function parseRvApiQuery(parser: DOMParser, res: IExpectedApiQueryRvRespo
  * @param parser
  * @param res
  */
-export function parseCompareApiQuery({ parser, res, heading, isReply }: {parser: DOMParser, res: IExpectedApiQueryCompareResponse, heading: string, isReply: boolean }): string {
-  const diffs = res.compare['*'];
-  const d = parser.parseFromString(`<html><table>${diffs}</table></html>`, 'application/xml');
+export function parseCompareApiQuery({
+  parser,
+  res,
+  heading,
+  isReply,
+}: {
+  parser: DOMParser;
+  res: IExpectedApiQueryCompareResponse;
+  heading: string;
+  isReply: boolean;
+}): string {
+  const diffs = res.compare["*"];
+  const d = parser.parseFromString(`<html><table>${diffs}</table></html>`, "application/xml");
   const arrd = parseNewAdditionDiffs(d);
-  const comment = buildStringFromDiffs(
-    parser,
-    arrd,
-    heading,
-    isReply
-  );
+  const comment = buildStringFromDiffs(parser, arrd, heading, isReply);
   return comment;
 }
 
@@ -277,17 +301,14 @@ export function groupDiscussionsByDate(items: IParsedApiQueryRc[]): IGroupedPars
   const res: IGroupedParsedApiQueryRc = {};
   let prevDate: string | null = null;
   for (const item of items) {
-    let curDate: string = '';
+    let curDate: string = "";
     if (item.timestamp !== null) {
       const d = new Date(item.timestamp);
       // Get date in local time and in standard yyyy-MM-dd format
-      curDate = `${
-        d.getFullYear()
-      }-${
-        (d.getMonth()+1).toString().padStart(2, '0')
-      }-${
-        d.getDate().toString().padStart(2, '0')
-      }`;
+      curDate = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, "0")}-${d
+        .getDate()
+        .toString()
+        .padStart(2, "0")}`;
     }
     if (prevDate !== curDate) {
       res[curDate] = [];
@@ -304,22 +325,22 @@ export function groupDiscussionsByDate(items: IParsedApiQueryRc[]): IGroupedPars
  * @returns
  */
 function decodeXmlContents(text: string | null | undefined): string {
-  if (!text) return '';
+  if (!text) return "";
   return text.replace(/&(lt|gt|amp|#039|quot|apos);/g, (_: string, t: string): string => {
     switch (t) {
-      case 'lt':
-        return '<';
-      case 'gt':
-        return '>';
-      case 'amp':
-        return '&';
-      case 'quot':
+      case "lt":
+        return "<";
+      case "gt":
+        return ">";
+      case "amp":
+        return "&";
+      case "quot":
         return '"';
-      case '#039':
-      case 'apos':
-        return '\'';
+      case "#039":
+      case "apos":
+        return "'";
     }
-    return '';
+    return "";
   });
 }
 
@@ -329,7 +350,7 @@ function decodeXmlContents(text: string | null | undefined): string {
  * @returns
  */
 function escapeRegExp(string: string): string {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
 
 /**
@@ -339,9 +360,9 @@ function escapeRegExp(string: string): string {
  * @returns
  */
 function stripLinks(text: string): string {
-  text = text.replace(/\[\[([^\|\]]+)\]\]/g, '$1');
-  text = text.replace(/\[\[([^\|\]]+)\|([^\|\]]*)\]\]/g, '$2');
-  text = text.replace(/\[(https?:\/\/[^ \]]+)\s*([^\]]*)\]/g, '$2');
+  text = text.replace(/\[\[([^|\]]+)\]\]/g, "$1");
+  text = text.replace(/\[\[([^|\]]+)\|([^|\]]*)\]\]/g, "$2");
+  text = text.replace(/\[(https?:\/\/[^ \]]+)\s*([^\]]*)\]/g, "$2");
   return text;
 }
 
@@ -352,7 +373,10 @@ function stripLinks(text: string): string {
  * @returns
  */
 function stripTags(text: string): string {
-  text = text.replace(/<(nowiki|includeonly|noinclude|mobileonly|nomobile|code|blockquote)>(.*?)<\/\1>/g, "$2");
+  text = text.replace(
+    /<(nowiki|includeonly|noinclude|mobileonly|nomobile|code|blockquote)>(.*?)<\/\1>/g,
+    "$2",
+  );
   return text;
 }
 
@@ -363,16 +387,16 @@ function stripTags(text: string): string {
  * @returns
  */
 function parseNewAdditionDiffs(doc: Document): string[] {
-  const diffRows = Array.from(doc.querySelectorAll('table > tr:not(.diff-title)'));
+  const diffRows = Array.from(doc.querySelectorAll("table > tr:not(.diff-title)"));
   const diffs = diffRows
     .filter((tr: Element) => {
-      return tr.querySelector('td.diff-empty.diff-side-deleted') !== null;
+      return tr.querySelector("td.diff-empty.diff-side-deleted") !== null;
     })
     .map((tr: Element) => {
-      return tr.querySelector('td:not(.diff-empty):not(.diff-side-deleted):not(.diff-marker)');
+      return tr.querySelector("td:not(.diff-empty):not(.diff-side-deleted):not(.diff-marker)");
     })
     .map((td: Element | null) => {
-      return td?.textContent.trim() || '';
+      return td?.textContent.trim() || "";
     });
   return diffs;
 }
@@ -389,29 +413,45 @@ function parseNewAdditionDiffs(doc: Document): string[] {
  * @param isReply
  * @returns
  */
-function buildStringFromDiffs(parser: DOMParser, diffs: string[], filterHeading: string | null, isReply: boolean): string {
-  const rxTaggedSignature = /\s*(?:\[\[User:[^\]]+?\]\]\s+\(\[\[User[ _]talk:[^\]\|]+?\|talk\]\]\)|\[\[Special:Contributions\/[^\]]+?\]\])\s+\d{1,2}:\d{1,2},\s+\d{1,2}\s+[a-zA-Z]+\s+\d{4}\s+\(UTC\)\s*$/;
-  const rxHeadingWikitext = new RegExp("(?<=^|\\n|<br\\s?\\/?>)={2}\\s*" + escapeRegExp(filterHeading || '').replace(/[ _]+/g, '[ _]+') + "\\s*={2}(?=\\n|<br\\s?\/?>|$)");
+function buildStringFromDiffs(
+  parser: DOMParser,
+  diffs: string[],
+  filterHeading: string | null,
+  isReply: boolean,
+): string {
+  const rxTaggedSignature =
+    /\s*(?:\[\[User:[^\]]+?\]\]\s+\(\[\[User[ _]talk:[^\]|]+?\|talk\]\]\)|\[\[Special:Contributions\/[^\]]+?\]\])\s+\d{1,2}:\d{1,2},\s+\d{1,2}\s+[a-zA-Z]+\s+\d{4}\s+\(UTC\)\s*$/;
+  const rxHeadingWikitext = new RegExp(
+    "(?<=^|\\n|<br\\s?\\/?>)={2}\\s*" +
+      escapeRegExp(filterHeading || "").replace(/[ _]+/g, "[ _]+") +
+      "\\s*={2}(?=\\n|<br\\s?/?>|$)",
+  );
 
   // Get pure text content
-  diffs = diffs
-    .map(txt => (
-      parser.parseFromString(
-        `<div>${stripTags(txt)}</div>`, 'text/html')?.firstChild?.textContent || ''
-      ));
+  diffs = diffs.map(
+    (txt) =>
+      parser.parseFromString(`<div>${stripTags(txt)}</div>`, "text/html")?.firstChild
+        ?.textContent || "",
+  );
   // Clear heading
   diffs = diffs
-    .map(txt => filterHeading !== null ? txt.replace(rxHeadingWikitext, '') : txt)
-    .filter(txt => txt.trim() !== '');
+    .map((txt) => (filterHeading !== null ? txt.replace(rxHeadingWikitext, "") : txt))
+    .filter((txt) => txt.trim() !== "");
   // Remove reply wikitext syntax
-  if (isReply) { diffs = diffs.map(s => s.replace(/^:+\s*/, '')); }
+  if (isReply) {
+    diffs = diffs.map((s) => s.replace(/^:+\s*/, ""));
+  }
   // Remove tagged signature
-  diffs = diffs.map(s => s.replace(rxTaggedSignature, ''));
+  diffs = diffs.map((s) => s.replace(rxTaggedSignature, ""));
   // Clear links
-  diffs = diffs.map(s => stripLinks(s));
+  diffs = diffs.map((s) => stripLinks(s));
   // Trim unneeded whitespace
-  while (diffs.length > 0 && diffs[0] === '') { diffs.shift(); }
-  while (diffs.length > 0 && diffs[diffs.length-1] === '') { diffs.pop(); }
+  while (diffs.length > 0 && diffs[0] === "") {
+    diffs.shift();
+  }
+  while (diffs.length > 0 && diffs[diffs.length - 1] === "") {
+    diffs.pop();
+  }
   // Build string
-  return diffs.join(' ');
+  return diffs.join(" ");
 }

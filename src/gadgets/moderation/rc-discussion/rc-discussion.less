@@ -126,7 +126,6 @@
       -webkit-line-clamp: @n-lines-mobile;
     }
   }
-
 }
 
 @dark-mode-css-definitions: {
@@ -139,12 +138,15 @@
     --rc-discussion-post-title-bg-color: #4d4d4d;
     --rc-discussion-post-title-fg-color: #ccc;
   }
-}
-html.theme-dark, html.skin-theme-clientpref-night, :root.skin-theme-clientpref-night {
+};
+html.theme-dark,
+html.skin-theme-clientpref-night,
+:root.skin-theme-clientpref-night {
   @dark-mode-css-definitions();
 }
 @media screen and (prefers-color-scheme: dark) {
-  html.skin-theme-clientpref-os, :root.skin-theme-clientpref-os {
+  html.skin-theme-clientpref-os,
+  :root.skin-theme-clientpref-os {
     @dark-mode-css-definitions();
   }
 }

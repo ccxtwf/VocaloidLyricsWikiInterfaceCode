@@ -1,5 +1,6 @@
 /* CSS placed here will be applied to all skins */
-@import (css) url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import (css)
+  url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 
 .bold {
   font-weight: bold;
@@ -13,13 +14,13 @@
   /* Lyrics table */
   --lyrics-table-header: #e4e4e4;
   --lyrics-row-odd-color: #f6f6f6;
-  
+
   /* Album infoboxes */
   --album-embed-container-bg-color: #cfcfcf;
   --album-embed-container-text-color: #000000;
   --album-embed-container-shadow-color: #8e8e8e;
   --album-embed-container-active-tab-color: white;
-  
+
   /* Producer infoboxes */
   --producer-links-container-bg-color: #dbebeac9;
   --producer-table-header-bg-color: #9fc5c2;
@@ -79,7 +80,7 @@ td.lyrics-comb.only-selected.italic {
 #custom-btn-add-new-topic {
   text-align: right;
   margin-bottom: 20px;
-  
+
   & > a {
     padding: 5px 40px;
     background-color: #0275da;
@@ -88,7 +89,9 @@ td.lyrics-comb.only-selected.italic {
     border-radius: 10px;
     box-shadow: 0 2px 5px #12121247;
 
-    &:hover, &:focus, &:active {
+    &:hover,
+    &:focus,
+    &:active {
       background-color: #1181e4;
       text-decoration: none;
       color: #f1ede7;
@@ -100,9 +103,9 @@ td.lyrics-comb.only-selected.italic {
 @media (max-width: 500px) {
   .sitedir-ltr {
     .mw-dismissable-notice-body {
-      margin-left:0;
-      margin-right:0;
-    } 
+      margin-left: 0;
+      margin-right: 0;
+    }
     .mw-dismissable-notice-close {
       float: none;
       display: block;
@@ -112,7 +115,7 @@ td.lyrics-comb.only-selected.italic {
 }
 
 /* Recent Changes log on Mobile */
-@media (max-width:767px) {
+@media (max-width: 767px) {
   details.mw-changeslist-legend {
     float: none;
     display: block;
@@ -120,8 +123,8 @@ td.lyrics-comb.only-selected.italic {
 }
 
 /* Images */
-figure[typeof~='mw:File/Thumb'], 
-figure[typeof~='mw:File/Frame'] {
+figure[typeof~="mw:File/Thumb"],
+figure[typeof~="mw:File/Frame"] {
   background-color: var(--background-color-neutral, #f8f9fa);
   border-color: var(--border-color-base, #eaecf0);
 
@@ -161,7 +164,7 @@ figure[typeof~='mw:File/Frame'] {
 }
 
 /* DiscussionTools */
-dl > dd:has(> span[data-mw-comment-start]), 
+dl > dd:has(> span[data-mw-comment-start]),
 dl > dd:has(> *:first-child:not(dl) span[data-mw-comment-start]) {
   padding-top: 1em;
   margin-top: 2em;

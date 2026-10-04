@@ -17,7 +17,7 @@ gadgets:
         categories: ["Songs with NSFW content"]
         dependencies:
           - mediawiki.api
-          - '@wikimedia/codex'
+          - "@wikimedia/codex"
           - vue
         actions:
           - view
@@ -132,7 +132,7 @@ gadgets:
           - mediawiki.ForeignApi
           - mediawiki.storage
           - vue
-          - '@wikimedia/codex'
+          - "@wikimedia/codex"
         actions:
           - view
     tl-checking-utils:
@@ -181,7 +181,7 @@ gadgets:
         contentModels:
           - wikitext
     lyrics-editor:
-      description: "This gadget adds an \"Edit Lyrics Table\" action button on WikiEditor (AKA Source Editor) that allows easier editing of lyrics tables throughout the VOCALOID Lyrics Wiki."
+      description: 'This gadget adds an "Edit Lyrics Table" action button on WikiEditor (AKA Source Editor) that allows easier editing of lyrics tables throughout the VOCALOID Lyrics Wiki.'
       authors:
         - CoolMikeHatsune22
       code:

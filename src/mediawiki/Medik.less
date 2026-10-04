@@ -1,6 +1,6 @@
 /* All CSS here will be loaded for users of the Medik skin */
 :root {
-  --medik: #29AB87 !important;
+  --medik: #29ab87 !important;
 }
 
 * {
@@ -87,12 +87,16 @@ a:not(.new):visited, a.external:visited {
   padding: 3px 5px !important;
 }
 .dropdown .mw-list-item .dropdown-item {
-  &.active, &:active, &:hover, &:focus {
+  &.active,
+  &:active,
+  &:hover,
+  &:focus {
     background-color: var(--medik) !important;
     color: #fff !important;
   }
 }
-#p-personal, aside {
+#p-personal,
+aside {
   li a:not(.dropdown-item):hover {
     background-color: #f8f9fa;
   }
@@ -121,7 +125,8 @@ a:not(.new):visited, a.external:visited {
 .mw-footer a:not(.new) {
   color: #caa324 !important;
 }
-.mw-footer a:not(.new):hover, .mw-footer a:not(.new):active {
+.mw-footer a:not(.new):hover,
+.mw-footer a:not(.new):active {
   color: #eac54a !important;
 }
 .mw-footer .footer-icons a img {
@@ -159,14 +164,16 @@ a.oo-ui-buttonElement-button:hover, a.oo-ui-buttonElement-button:active {
 }*/
 
 /* Bullet & numbered list margin */
-ol, ul {
+ol,
+ul {
   padding-left: 1.5rem;
 }
 .createredirect-cloner ul {
   padding-left: 0;
 }
 @media (max-width: 500px) {
-  ol, ul {
+  ol,
+  ul {
     padding-left: 0.5rem;
   }
   .createredirect-cloner ul {
@@ -179,21 +186,21 @@ ol, ul {
 
 /* Wikitable */
 .wikitable {
-  background-color: var(--background-color-neutral-subtle,#f8f9fa);
-  color: var(--color-base,#202122);
-  border: 1px solid var(--border-color-base,#a2a9b1);
+  background-color: var(--background-color-neutral-subtle, #f8f9fa);
+  color: var(--color-base, #202122);
+  border: 1px solid var(--border-color-base, #a2a9b1);
 }
 .wikitable > tr > th,
 .wikitable > * > tr > th {
-  background-color: var(--background-color-neutral,#eaecf0);
-  color: var(--color-base,#202122);
+  background-color: var(--background-color-neutral, #eaecf0);
+  color: var(--color-base, #202122);
   text-align: center;
 }
 .wikitable > tr > th,
 .wikitable > tr > td,
 .wikitable > * > tr > th,
 .wikitable > * > tr > td {
-  border: 1px solid var(--border-color-base,#a2a9b1);
+  border: 1px solid var(--border-color-base, #a2a9b1);
   padding: 0.2em 0.4em;
 }
 
@@ -209,7 +216,7 @@ ol, ul {
 
 /* Comment indentation */
 dd {
-  margin-top: .5rem;
+  margin-top: 0.5rem;
   margin-bottom: 0.1em;
   margin-left: 1.6em;
 }
@@ -219,13 +226,14 @@ dd {
   width: 20px;
   height: 25px;
   float: right;
-  content: '';
+  content: "";
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Font_Awesome_5_solid_chevron-down.svg/120px-Font_Awesome_5_solid_chevron-down.svg.png);
-  filter: brightness(0) saturate(100%) invert(43%) sepia(11%) saturate(0%) hue-rotate(188deg) brightness(92%) contrast(87%);
-  opacity: 1.0;
+  filter: brightness(0) saturate(100%) invert(43%) sepia(11%) saturate(0%) hue-rotate(188deg)
+    brightness(92%) contrast(87%);
+  opacity: 1;
   cursor: pointer !important;
 }
 #site-navigation > .mw-portlet:has(.mw-portlet-body.show) .menu-btn {
@@ -235,7 +243,9 @@ dd {
   pointer-events: auto;
   cursor: pointer;
 }
-#site-navigation a.nav-link.disabled, #site-navigation a.nav-link.disabled:hover, #site-navigation a.nav-link.disabled:focus {
+#site-navigation a.nav-link.disabled,
+#site-navigation a.nav-link.disabled:hover,
+#site-navigation a.nav-link.disabled:focus {
   text-decoration: none;
 }
 
@@ -259,16 +269,22 @@ table#mw-allmessagestable {
 .mw-datatable td {
   background-color: var(--background-color-base, #fff);
 }
+.mw-datatable th {
+  background-color: var(--background-color-neutral-subtle, #f1f4fd);
+}
 .mw-datatable tr:hover td {
   background-color: var(--background-color-progressive-subtle, #f1f4fd);
 }
-.mw-datatable td, .mw-datatable th {
+.mw-datatable td,
+.mw-datatable th {
   border: var(--border-width-base, 1px) solid var(--border-color-base, #a2a9b1);
 }
-#mw-allmessagestable .am_default, #mw-allmessagestable body:hover .am_default {
+#mw-allmessagestable .am_default,
+#mw-allmessagestable body:hover .am_default {
   background-color: var(--background-color-content-removed, #ffe49c);
 }
-#mw-allmessagestable .am_actual, #mw-allmessagestable tbody:hover .am_actual {
+#mw-allmessagestable .am_actual,
+#mw-allmessagestable tbody:hover .am_actual {
   background-color: var(--background-color-content-added, #a3d3ff);
 }
 
@@ -277,24 +293,25 @@ table#mw-allmessagestable {
 }
 
 /* Highlighted References */
-ol.references li:target, sup.reference:target {
+ol.references li:target,
+sup.reference:target {
   background-color: var(--background-color-progressive-subtle, #eaf3ff);
 }
 
 /* Syntaxhighlight Copy */
 .mw-highlight-copy--bound {
-	position: relative;
+  position: relative;
 
-	pre {
-		padding-top: 1.5em;
-	}
+  pre {
+    padding-top: 1.5em;
+  }
 
-	button {
-		position: absolute;
-		top: 0.2rem;
-		right: 0.2rem;
-		line-height: 1rem;
-	}
+  button {
+    position: absolute;
+    top: 0.2rem;
+    right: 0.2rem;
+    line-height: 1rem;
+  }
 }
 
 /*

@@ -1,1 +1,6 @@
-(mw.loader.getState('ext.gadget.rtrc') ? mw.loader.load('ext.gadget.rtrc') : mw.loader.load('https://www.mediawiki.org/w/load.php?modules=ext.gadget.rtrc&lang=' + mw.config.get('wgUserLanguage', 'en')));
+mw.loader.getState("ext.gadget.rtrc")
+  ? mw.loader.load("ext.gadget.rtrc")
+  : mw.loader.load(
+      "https://www.mediawiki.org/w/load.php?modules=ext.gadget.rtrc&lang=" +
+        mw.config.get("wgUserLanguage", "en"),
+    );
