@@ -164,10 +164,13 @@ figure[typeof~="mw:File/Frame"] {
 }
 
 /* DiscussionTools */
+dl > dd {
+  padding-block-start: 0.9rem;
+}
 dl > dd:has(> span[data-mw-comment-start]),
 dl > dd:has(> *:first-child:not(dl) span[data-mw-comment-start]) {
-  padding-top: 1em;
-  margin-top: 2em;
+  padding-block-start: 1em;
+  margin-block-start: 2em;
   border-top: solid 1px var(--border-color-base, #a2a9b1);
 }
 
@@ -224,6 +227,10 @@ dl > dd:has(> *:first-child:not(dl) span[data-mw-comment-start]) {
 .profile-externalLinks > .tooltip {
   display: inline-block;
   opacity: 1;
+}
+/* Hide real names */
+.profile-header-attributes > h2 {
+  display: none;
 }
 
 /* Resize syntax-highlighted source code editor */

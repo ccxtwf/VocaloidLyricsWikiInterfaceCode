@@ -335,6 +335,23 @@ gadgets:
           - medik
           - monobook
           - apioutput
+    dark-mode-other-skins-editing:
+      description: "Shared CSS stylesheet for Dark Mode on skins that don't support a built-in dark mode (constrained to wikieditor styling)."
+      authors:
+        - CoolMikeHatsune22
+      code:
+        - dark-mode-other-skins-editing.less
+      resourceLoader:
+        default: true
+        hidden: true
+        type: "styles"
+        skins:
+          - timeless
+          - medik
+          - monobook
+          - apioutput
+        actions:
+          - edit
     dark-mode-medik:
       description: "CSS stylesheet for Dark Mode on Medik."
       authors:

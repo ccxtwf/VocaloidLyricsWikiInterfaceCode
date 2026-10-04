@@ -3,13 +3,6 @@
 @import "./variables.less";
 @import "./components/base-inputs.less";
 
-@import "./editors/default-textbox.less";
-@import "./editors/wikieditor.less";
-@import "./editors/codemirror.less";
-@import "./editors/ace.less";
-@import "./editors/visualeditor.less";
-@import "./editors/template-wizard.less";
-
 @import "./components/advanced-search.less";
 @import "./components/diffs.less";
 @import "./components/discussion-tools.less";
@@ -22,20 +15,10 @@
 @import "./components/scribunto.less";
 @import "./components/syntax-highlight.less";
 @import "./components/toc.less";
-@import "./components/user-profile-v2.less";
 
 html.theme-dark {
   .inject-variables();
   .base-inputs();
-  .uvp2(); // UserProfileV2
-
-  // editors
-  .default-textbox();
-  .wikieditor();
-  .codemirror();
-  .ace();
-  .visual-editor();
-  .template-wizard();
 
   .table-of-contents();
   .syntax-highlighting();

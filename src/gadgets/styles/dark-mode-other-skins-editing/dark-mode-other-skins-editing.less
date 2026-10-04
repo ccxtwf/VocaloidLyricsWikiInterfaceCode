@@ -1,0 +1,17 @@
+@import "../../../utils/less-mixins/invert.less";
+
+@import "./editors/default-textbox.less";
+@import "./editors/wikieditor.less";
+@import "./editors/codemirror.less";
+@import "./editors/ace.less";
+@import "./editors/visualeditor.less";
+@import "./editors/template-wizard.less";
+
+html.theme-dark {
+  .default-textbox();
+  .wikieditor();
+  .codemirror();
+  .ace();
+  .visual-editor();
+  .template-wizard();
+}

@@ -1,32 +1,43 @@
 .visual-editor() {
-  // VisualEditor
+  .ve-ui-mwTemplatePage-description {
+    color: var(--color-disabled);
+  }
   .oo-ui-window-content.oo-ui-dialog-content.oo-ui-processDialog-content.oo-ui-window-content-setup.oo-ui-window-content-ready {
-    color: #bbb !important;
+    color: var(--color-subtle) !important;
+  }
+  .ve-ui-mwParameterPage-doc-required,
+  .ve-ui-mwParameterPage-doc-deprecated,
+  .ve-ui-mwParameterPage-inlineDescription .ve-ui-mwParameterPage-doc-example {
+    color: var(--color-disabled);
   }
   .ve-ui-mwTransclusionOutlineTemplateWidget-sticky {
-    background-color: #121212 !important;
+    background-color: var(--background-color-base) !important;
   }
   .ve-ui-mwTransclusionOutlineParameterSelectWidget
     .oo-ui-labelElement:hover
     .oo-ui-labelElement-label {
-    color: #eee !important;
+    color: var(--color-base) !important;
   }
   .ve-ui-mwTransclusionOutlineTemplateWidget
     .ve-ui-mwTransclusionOutlineParameterWidget.ve-ui-mwTransclusionOutlineParameterWidget-activePage,
   .ve-ui-mwTransclusionOutlineTemplateWidget
     .ve-ui-mwTransclusionOutlineParameterWidget.ve-ui-mwTransclusionOutlineParameterWidget-activePage.oo-ui-optionWidget-highlighted {
-    color: #77a3eb !important;
+    color: var(--color-progressive) !important;
   }
   .ve-ui-mwTransclusionOutlineTemplateWidget
     .ve-ui-mwTransclusionOutlineParameterWidget.oo-ui-optionWidget-highlighted {
-    background-color: #eee;
-    color: #000;
+    background-color: var(--background-color-interactive--hover);
+    color: var(--color-base);
   }
   .ve-ui-expandableContent-toggle {
-    background-color: #444 !important;
+    background-color: var(--background-color-interactive--hover) !important;
   }
   .ve-ui-expandableContent-fade {
-    background: linear-gradient(to right, transparent 0, #444 90%) !important;
+    background: linear-gradient(
+      to right,
+      transparent 0,
+      var(--background-color-interactive--hover) 90%
+    ) !important;
   }
   .ve-ui-mwTransclusionDialog-template-note
     .oo-ui-iconElement-icon.oo-ui-icon-alert.oo-ui-image-warning {

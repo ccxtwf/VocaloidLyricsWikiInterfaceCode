@@ -1,0 +1,21 @@
+.uvp2() {
+  .profile-user-group {
+    background-color: var(--background-color-disabled-subtle);
+    border: solid 1px var(--border-color-disabled);
+  }
+  .profile-avatar-image[src="/images/upv2avatars/default.png"] {
+    .invert();
+  }
+  .profile-avatar-edit-action,
+  .profile-externalLinks {
+    .no-invert();
+  }
+  .profile-avatar-edit-button svg,
+  .profile-externalLinks svg {
+    .invert();
+  }
+  .external-link.tooltip:hover::after {
+    background: #108255;
+    color: #d9ebef;
+  }
+}

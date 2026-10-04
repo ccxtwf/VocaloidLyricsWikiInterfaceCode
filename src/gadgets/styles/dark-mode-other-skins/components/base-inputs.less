@@ -1,49 +1,117 @@
 .base-inputs() {
+  textarea,
+  input {
+    background-color: var(--background-color-base-secondary);
+    color: var(--color-base-secondary);
+    border: solid 1px var(--border-color-base-secondary);
+  }
+
   // OOUI icons
   .oo-ui-iconElement-icon:not(.oo-ui-image-progressive):not(.oo-ui-image-invert),
   .oo-ui-indicatorElement-indicator:not(.oo-ui-image-progressive):not(.oo-ui-image-invert) {
     .invert();
   }
-
-  textarea,
-  input {
-    background-color: #1b1b1b;
-    color: #ccc;
-    border: solid 1px #777;
+  .oo-ui-popupToolGroup.oo-ui-widget-enabled > .oo-ui-popupToolGroup-handle .oo-ui-iconElement-icon,
+  .oo-ui-popupToolGroup.oo-ui-widget-enabled
+    > .oo-ui-popupToolGroup-handle
+    .oo-ui-indicatorElement-indicator {
+    .invert();
+  }
+  .oo-ui-popupToolGroup.oo-ui-widget-enabled
+    > .oo-ui-popupToolGroup-handle:hover
+    .oo-ui-iconElement-icon,
+  .oo-ui-popupToolGroup.oo-ui-widget-enabled
+    > .oo-ui-popupToolGroup-handle:active
+    .oo-ui-iconElement-icon,
+  .oo-ui-popupToolGroup.oo-ui-widget-enabled
+    > .oo-ui-popupToolGroup-handle:hover
+    .oo-ui-indicatorElement-indicator,
+  .oo-ui-popupToolGroup.oo-ui-widget-enabled
+    > .oo-ui-popupToolGroup-handle:active
+    .oo-ui-indicatorElement-indicator {
+    .invert();
   }
 
-  // DateTime Picker
-  .mw-widgets-datetime-dateTimeInputWidget-handle {
-    background-color: var(--background-color-base, #fff);
-    color: var(--color-base, #202122);
-    border-color: var(--border-color-base, #a2a9b1);
-  }
-  .mw-widgets-datetime-dateTimeInputWidget-field {
-    border: 0;
-  }
-  .mw-widgets-datetime-dateTimeInputWidget.oo-ui-widget-enabled
-    .mw-widgets-datetime-dateTimeInputWidget-editField:hover {
-    background-color: var(--background-color-interactive, #eaecf0);
-  }
-  .mw-widgets-datetime-calendarWidget {
-    background-color: var(--background-color-base, #fff);
-    border-color: var(--border-color-base, #a2a9b1);
-  }
+  // OOUI Buttons
   .oo-ui-buttonElement-framed.oo-ui-widget-disabled > .oo-ui-buttonElement-button {
     background-color: #000000;
     color: #494949;
     border-color: #313233;
   }
 
+  // OOUI Comboboxes
+  .oo-ui-menuOptionWidget.oo-ui-optionWidget {
+    background-color: var(--background-color-interactive);
+    color: var(--color-subtle);
+  }
+  .oo-ui-menuOptionWidget.oo-ui-optionWidget-highlighted {
+    background-color: var(--background-color-interactive--hover);
+    color: var(--color-emphasized);
+  }
+  .oo-ui-menuOptionWidget.oo-ui-optionWidget-selected,
+  .oo-ui-menuOptionWidget.oo-ui-optionWidget-selected.oo-ui-menuOptionWidget.oo-ui-optionWidget-highlighted,
+  .oo-ui-menuOptionWidget.oo-ui-optionWidget-pressed.oo-ui-menuOptionWidget.oo-ui-optionWidget-highlighted {
+    background-color: var(--background-color-progressive-subtle);
+    color: var(--color-progressive);
+  }
+  .oo-ui-tagMultiselectWidget.oo-ui-widget-enabled.oo-ui-tagMultiselectWidget-outlined
+    .mw-rcfilters-ui-tagItemWidget-selected.oo-ui-tagItemWidget.oo-ui-widget-enabled {
+    background-color: var(--background-color-progressive-subtle);
+    border-color: var(--border-color-progressive--focus);
+  }
+  .oo-ui-tagMultiselectWidget.oo-ui-widget-enabled.oo-ui-tagMultiselectWidget-outlined
+    .oo-ui-tagItemWidget.oo-ui-widget-enabled.selected {
+    background-color: var(--background-color-progressive-subtle--hover);
+    border-color: var(--border-color-progressive--focus);
+  }
+
+  /* OOUI Popover */
+  .oo-ui-floatableElement-floatable,
+  .oo-ui-clippableElement-clippable {
+    background-color: var(--background-color-interactive);
+    color: var(--color-base);
+  }
+
+  /* Buttons */
+  .cdx-button:enabled,
+  .cdx-button.cdx-button--fake-button--enabled {
+    background-color: var(--background-color-interactive-subtle);
+    color: var(--color-base);
+    border-color: var(--border-color-interactive);
+  }
+
+  // DateTime Picker
+  .mw-widgets-datetime-dateTimeInputWidget-handle {
+    background-color: var(--background-color-base);
+    color: var(--color-base);
+    border-color: var(--border-color-base);
+  }
+  .mw-widgets-datetime-dateTimeInputWidget-field {
+    border: 0;
+  }
+  .mw-widgets-datetime-dateTimeInputWidget.oo-ui-widget-enabled
+    .mw-widgets-datetime-dateTimeInputWidget-editField:hover {
+    background-color: var(--background-color-interactive);
+  }
+  .mw-widgets-datetime-calendarWidget {
+    background-color: var(--background-color-base);
+    border-color: var(--border-color-base);
+  }
+
+  // DataTables
+  .mw-datatable th {
+    background-color: var(--background-color-neutral-subtle);
+  }
+
   // Upload Button
   input::file-selector-button {
-    background-color: #2b2b2b;
-    color: #ccc;
-    border-color: #3a3a3a;
+    background-color: var(--background-color-neutral);
+    color: var(--color-base-secondary);
+    border-color: var(--border-color-subtle);
     transition: background 0.3s ease;
 
     &:hover {
-      background-color: #494949;
+      background-color: var(--border-color-muted);
     }
   }
 
@@ -58,8 +126,8 @@
     .invert();
   }
 
-  .mw-changeslist-legend {
-    background-color: #000;
-    border-color: #444;
+  /* Codex */
+  .cdx-select:enabled {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="%23ccc"><path d="m17.5 4.75-7.5 7.5-7.5-7.5L1 6.25l9 9 9-9z"/></svg>');
   }
 }
