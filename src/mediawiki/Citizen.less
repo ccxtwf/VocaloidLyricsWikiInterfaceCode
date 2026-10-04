@@ -47,6 +47,19 @@
   overflow-x: scroll;
 }
 
+@media screen and (min-width: 1120px) {
+  .citizen-toc-enabled:not(:has(.citizen-toc)) {
+    --width-page: var(--width-layout);
+  }
+  .citizen-toc-enabled:not(:has(.citizen-toc)) .citizen-body-container {
+    grid-template-areas: "content" "footer";
+    grid-template-columns: minmax(0, var(--width-layout));
+  }
+  .citizen-toc-enabled:not(:has(.citizen-toc)) .citizen-page-sidebar {
+    display: none;
+  }
+}
+
 @dark-mode-css-definitions: {
   & {
     --border-color-base: rgba(255, 255, 255, 0.3);
