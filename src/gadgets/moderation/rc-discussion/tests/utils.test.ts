@@ -1,15 +1,10 @@
-/**
- * Run tests on Command Line:
- * npx jest src/gadgets/moderation/rc-discussion/tests/utils.test.ts
- *
- */
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import type {
   IExpectedApiQueryRcResponse,
   IExpectedApiQueryRvResponse,
   IExpectedApiQueryCompareResponse,
-} from "../types.js";
+} from "../types.ts";
 import {
   parseRcFeeds,
   parseRcApiQuery,
@@ -17,17 +12,19 @@ import {
   compareParsedRcs,
   groupDiscussionsByDate,
   parseCompareApiQuery,
-} from "../utils.js";
+} from "../utils.ts";
 
-import { expectedParsedRss1, expectedParsedApiRcs1, expectedCombinedOutput1 } from "./case-1.js";
+import { expectedParsedRss1, expectedParsedApiRcs1, expectedCombinedOutput1 } from "./case-1.ts";
 import {
   expectedParsedRss2,
   expectedParsedApiRcs2,
   expectedCombinedOutput2,
   expectedFinalOutputUncached,
   expectedFinalOutput,
-} from "./case-2.js";
-import { beforeGrouping, expectedGroupingResults } from "./groups.js";
+} from "./case-2.ts";
+import { beforeGrouping, expectedGroupingResults } from "./groups.ts";
+
+import { describe, test, expect } from "vitest";
 
 const structuredClone = (val: unknown) => JSON.parse(JSON.stringify(val));
 

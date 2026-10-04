@@ -1,15 +1,10 @@
-/**
- * Run tests on Command Line:
- * npx jest src/gadgets/editing/lyrics-editor/tests/utils.test.ts
- *
- */
 import {
   getWikipageTables,
   parseLyrics,
   buildLyricsTable,
   rxMatchBolded,
   rxMatchItalicised,
-} from "../utils.js";
+} from "../utils.ts";
 import {
   sampleWikitext1,
   expectedParsedTables1,
@@ -25,7 +20,7 @@ import {
   expectedParsedTables6,
   sampleWikitext7,
   expectedParsedTables7,
-} from "./test-data-pages.js";
+} from "./test-data-pages.ts";
 import {
   table1,
   table2,
@@ -41,14 +36,16 @@ import {
   expectedLyrics5,
   expectedLyrics6,
   expectedLyrics7,
-} from "./test-data-tables.js";
+} from "./test-data-tables.ts";
 import {
   lyricsHeader,
   lyricsData1,
   lyricsData2,
   expectedOutput1,
   expectedOutput2,
-} from "./test-build-lyrics.js";
+} from "./test-build-lyrics.ts";
+
+import { describe, test, expect } from "vitest";
 
 describe("should get all wikipage tables correctly", () => {
   test("case 1", () => {

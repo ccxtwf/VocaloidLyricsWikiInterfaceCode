@@ -14,7 +14,7 @@
     "fmt:check": "oxfmt --check",
     "build": "tsdown",
     "watch": "tsdown --watch",
-    "tests": "jest",
+    "test": "vitest run",
     "presync": "npm run build",
     "sync": "node dev-sync/sync.ts"
   },
