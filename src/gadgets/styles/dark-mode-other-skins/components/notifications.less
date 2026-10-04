@@ -1,0 +1,74 @@
+.notifications() {
+  .mw-notification {
+    border: 1px solid var(--border-color-notice, #54595d);
+    background-color: var(--background-color-base, #fff);
+    color: var(--color-emphasized, #101418);
+  }
+  .mw-notification.mw-notification-type-warn {
+    background-color: var(--background-color-warning-subtle, #fdf2d5);
+    border-color: var(--border-color-warning, #987027);
+  }
+  .mw-notification.mw-notification-type-error {
+    background-color: var(--background-color-error-subtle, #ffe9e5);
+    border-color: var(--border-color-error, #9f3526);
+  }
+  .mw-notification.mw-notification-type-success {
+    background-color: var(--background-color-success-subtle, #dff2eb);
+    border-color: var(--border-color-success, #196551);
+  }
+  .mw-notification-content .oo-ui-iconElement-icon {
+    .no-invert() !important;
+  }
+
+  // Echo Notifications
+  .mw-echo-ui-placeholderItemWidget {
+    background-color: #282828;
+  }
+  .mw-echo-ui-notificationItemWidget {
+    background-color: #282828;
+  }
+  .mw-echo-ui-notificationItemWidget-content-message-header {
+    color: #b6b6b6;
+  }
+  .mw-echo-ui-menuItemWidget > .oo-ui-buttonElement-button > .oo-ui-labelElement-label {
+    color: #ffffff;
+  }
+  .mw-echo-ui-notificationItemWidget:hover {
+    background-color: #323232;
+  }
+  .mw-echo-ui-menuItemWidget .mw-echo-ui-actionMenuPopupWidget-menu:hover {
+    background-color: #323232;
+  }
+  .mw-echo-ui-crossWikiNotificationItemWidget-group,
+  .mw-echo-ui-bundleNotificationItemWidget-group {
+    background-color: #1a1a1a;
+  }
+  .mw-echo-ui-notificationItemWidget-icon.skin-invert {
+    filter: brightness(0) saturate(100%) invert(97%) sepia(0%) saturate(1227%) hue-rotate(193deg)
+      brightness(96%) contrast(69%);
+  }
+  .oo-ui-popupWidget .oo-ui-labelElement-label {
+    color: #ddd;
+  }
+  .mw-echo-ui-notificationsInboxWidget-toolbarWrapper {
+    background-color: transparent;
+  }
+  .mw-echo-ui-pageNotificationsOptionWidget.oo-ui-optionWidget-selected {
+    background-color: #353535;
+    color: #98bfb9;
+  }
+  .mw-echo-ui-pageNotificationsOptionWidget.oo-ui-optionWidget-selected:hover {
+    color: #ccc !important;
+  }
+  .mw-echo-ui-pageNotificationsOptionWidget:hover {
+    background-color: #383838;
+    color: #ccc;
+  }
+  .mw-echo-ui-pageNotificationsOptionWidget-label-count {
+    background-color: #101010;
+    color: #ccc;
+  }
+  .oo-ui-optionWidget-selected .mw-echo-ui-pageNotificationsOptionWidget-label-count {
+    color: #98bfb9;
+  }
+}
