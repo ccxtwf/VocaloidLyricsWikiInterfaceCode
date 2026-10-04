@@ -23,13 +23,16 @@ export default defineConfig(async (): Promise<UserConfig> => {
   return {
     entry: bundleEntry,
 
-    platform: "node",
+    platform: "browser",
     format: "commonjs",
     cjsDefault: true,
     outExtensions: () => ({ js: "", dts: ".d.ts" }),
-    target: "es2022",
+    target: "es2019",
     minify: false,
 
+    define: {
+      DEBUG: "false",
+    },
     plugins: [
       loadEnvironmentPlugin(),
       bannerPlugin(bundleEntry, gadgetsDefinition),
