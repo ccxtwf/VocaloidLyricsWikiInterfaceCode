@@ -164,14 +164,17 @@ figure[typeof~="mw:File/Frame"] {
 }
 
 /* DiscussionTools */
-dl > dd {
-  padding-block-start: 0.9rem;
-}
-dl > dd:has(> span[data-mw-comment-start]),
-dl > dd:has(> *:first-child:not(dl) span[data-mw-comment-start]) {
-  padding-block-start: 1em;
-  margin-block-start: 2em;
-  border-top: solid 1px var(--border-color-base, #a2a9b1);
+.ext-discussiontools-init-ready {
+  dl > dd {
+    padding-block-start: 0.9rem;
+
+    &:has(> span[data-mw-comment-start]),
+    &:has(> *:first-child:not(dl) span[data-mw-comment-start]) {
+      padding-block-start: 1em;
+      margin-block-start: 2em;
+      border-top: solid 1px var(--border-color-base, #a2a9b1);
+    }
+  }
 }
 
 #discord-widget {
