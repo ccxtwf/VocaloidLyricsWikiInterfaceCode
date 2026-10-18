@@ -277,6 +277,16 @@ gadgets:
       disabled: true
 
   styles:
+    special-page-loader:
+      description: "Loads optional style modules on specific pages"
+      authors:
+        - CoolMikeHatsune22
+      code:
+        - special-page-loader.ts
+      resourceLoader:
+        default: true
+        hidden: true
+        namespaces: "-1"
     vlw-notification-templates:
       description: "CSS stylesheet for custom notification templates used throughout the Vocaloid Lyrics Wiki."
       authors:
