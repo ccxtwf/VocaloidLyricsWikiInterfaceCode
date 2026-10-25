@@ -5,9 +5,10 @@
     "lib": ["ES2019", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 
-    "module": "esnext",
+    "module": "commonjs",
     "moduleDetection": "force",
     "allowImportingTsExtensions": true,
+    "esModuleInterop": true,
 
     "allowJs": true,
     "checkJs": false,

@@ -23,7 +23,7 @@
     "noUncheckedSideEffectImports": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "strict": false,
+    "strict": false
   },
   "exclude": ["src/**/*"]
 }

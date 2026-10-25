@@ -1,6 +1,6 @@
 import type { GadgetDefinition as IGadgetDefinition } from "../interfaces/GadgetDefinition.ts";
 import type { ResourceLoaderConditions } from "../interfaces/ResourceLoaderConditions.ts";
-import { getFileType } from "../lib-utils.ts";
+import { getModuleType } from "../lib-utils.ts";
 
 export default class GadgetDefinition implements IGadgetDefinition {
   description?: string;
@@ -26,23 +26,37 @@ export default class GadgetDefinition implements IGadgetDefinition {
   }
 
   /**
-   * Get gadget ID
+   * Get gadget ID.
    */
   getGadgetId() {
     return `${this.section}/${this.name}`;
   }
 
   /**
-   * Get the JS scripts to load for each gadget
+   * Get the JS scripts to load for each gadget.
    */
   getScripts() {
-    return this.code?.filter((code) => getFileType(code) === "script") || [];
+    return this.code?.filter((code) => getModuleType(code) === "script") || [];
   }
 
   /**
-   * Get the CSS stylesheets to load for each gadget
+   * Get the .vue files to load for each gadget.
+   */
+  getVueComponents() {
+    return this.code?.filter((code) => getModuleType(code) === "vue") || [];
+  }
+
+  /**
+   * Get the CSS stylesheets to load for each gadget.
    */
   getStylesheets() {
-    return this.code?.filter((code) => getFileType(code) === "style") || [];
+    return this.code?.filter((code) => getModuleType(code) === "style") || [];
+  }
+
+  /**
+   * Get the files to put in as the bundle input.
+   */
+  getBundleEntrypointFiles() {
+    return this.code?.filter((code) => getModuleType(code) !== "other") || [];
   }
 }

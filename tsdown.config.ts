@@ -4,6 +4,7 @@ import {
   gadgetsDefinitionPlugin,
   serveAndLoadGadgetsPlugin,
   mwGadgetImplementationPlugin,
+  vueTransformer,
 } from "./plugins/index.ts";
 
 import {
@@ -29,16 +30,24 @@ export default defineConfig(async (): Promise<UserConfig> => {
     outExtensions: () => ({ js: "", dts: ".d.ts" }),
     target: "es2019",
     minify: false,
+    loader: {
+      ".vue": "text",
+      ".yaml": "text",
+      ".yml": "text",
+      ".json": "json",
+    },
 
     define: {
       DEBUG: "false",
     },
+
     plugins: [
       loadEnvironmentPlugin(),
       bannerPlugin(bundleEntry, gadgetsDefinition),
       gadgetsDefinitionPlugin(gadgetsDefinition),
       mwGadgetImplementationPlugin(gadgetsToBuild),
       serveAndLoadGadgetsPlugin(gadgetsToBuild, mwInterfaceCodeToBuild),
+      vueTransformer(),
     ],
 
     css: {

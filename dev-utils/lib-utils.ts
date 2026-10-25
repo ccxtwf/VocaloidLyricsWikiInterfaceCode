@@ -4,13 +4,15 @@ import normalizePath from "normalize-path";
 
 const rxFileExtension = /\.[a-zA-Z0-9]+$/;
 
+export type ModuleType = "script" | "style" | "vue" | "other";
+
 /**
- * Determine if a userscript code file is a script, a stylesheet, or other asset.
+ * Determine if a userscript code file is a script, a stylesheet, a Vue component or other asset.
  *
  * @param filename
  * @returns
  */
-export function getFileType(filename: string): "script" | "style" | "other" {
+export function getModuleType(filename: string): ModuleType {
   let extension: RegExpMatchArray | null | string = filename.match(rxFileExtension);
   if (extension !== null) {
     extension = extension[0].toLowerCase();
@@ -18,6 +20,8 @@ export function getFileType(filename: string): "script" | "style" | "other" {
       case ".js":
       case ".ts":
         return "script";
+      case ".vue":
+        return "vue";
       case ".css":
       case ".less":
         return "style";

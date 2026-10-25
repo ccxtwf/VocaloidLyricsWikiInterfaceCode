@@ -220,8 +220,7 @@ export function mapWikicodeSourceFiles(
       const key = `mediawiki/${resolveFileExtension(filepath)}`;
       entries[key] = resolveSrcMediawikiCodePath(filepath);
     };
-    definition.getScripts().forEach(loadFile);
-    definition.getStylesheets().forEach(loadFile);
+    definition.getBundleEntrypointFiles().forEach(loadFile);
   });
 
   gadgetsToBuild.forEach((definition) => {
@@ -230,8 +229,7 @@ export function mapWikicodeSourceFiles(
       const key = `gadgets/${name}/${resolveFileExtension(filepath)}`;
       entries[key] = resolveSrcGadgetsPath(section, name, filepath);
     };
-    definition.getScripts().forEach(loadFile);
-    definition.getStylesheets().forEach(loadFile);
+    definition.getBundleEntrypointFiles().forEach(loadFile);
   });
 
   return entries;
