@@ -2,7 +2,7 @@ import { relative, resolve } from "path";
 import normalizePath from "normalize-path";
 import wrap from "word-wrap";
 import type { GadgetDefinition, GadgetsDefinition } from "../../dev-utils/models/index.ts";
-import { getFileType } from "../../dev-utils/lib-utils.ts";
+import { getModuleType } from "../../dev-utils/lib-utils.ts";
 
 let ghUrl: string;
 let ghBranch: string;
@@ -42,7 +42,7 @@ function generateBannerString({
   id: string;
   gadgetDefinition?: GadgetDefinition | null;
 }): string {
-  const fileType = getFileType(id);
+  const fileType = getModuleType(id);
   let tag = "";
   switch (fileType) {
     case "script":
@@ -107,7 +107,7 @@ export function generateScriptBanner(
   gadgetsDefinition: GadgetsDefinition,
 ) {
   return ({ fileName: bundleOutputFilepath }: { fileName: string }): string => {
-    if (getFileType(bundleOutputFilepath) !== "script") {
+    if (getModuleType(bundleOutputFilepath) !== "script") {
       return "";
     }
     const bundleInputFilepath = bundleEntry[bundleOutputFilepath];
@@ -124,14 +124,14 @@ export function generateScriptBanner(
 
 /**
  * Creates a callable that is injected into a custom Vite plugin that is responsible
- * for adding the auto-generated banners to bundled CSS files.
+ * for adding the auto-generated banners to bundled asset (CSS, Vue) files.
  *
  * @param src
  * @param id
  * @param gadgetsDefinition
  * @returns
  */
-export function generateStylesheetBanner(
+export function generateAssetBanner(
   src: string,
   bundleInputId: string,
   gadgetsDefinition: GadgetsDefinition,
