@@ -1,9 +1,11 @@
 ## About
+
 Inspired by [Miraheze Dev Scripts](https://github.com/lihaohong6/MirahezeDevScripts/tree/master) and [MoegirlPediaInterfaceCodes](https://github.com/MoegirlPediaInterfaceAdmins/MoegirlPediaInterfaceCodes), this is a repository that aims to enable development of wiki userscripts and styles on [Vocaloid Lyrics Wiki](https://vocaloidlyrics.miraheze.org).
 
 One main goal of this repository is to facilitate faster & easier feature development, from the development stage on an IDE to debugging on a MediaWiki instance.
 
 ## License
+
 The code & configuration for setting up the build-time environment (i.e. everything excluding code listed in the `src/` directory) is hereby licensed under [the BSD 3-Clause License](LICENSE.md).
 
 Code listed in the `src/` directory consists of userscripts and stylesheets that are used on the Vocaloid Lyrics Wiki and are licensed under the [Creative Commons Attribution-ShareAlike 4.0 (CC-BY-SA 4.0) license](src/LICENSE.md).
@@ -38,10 +40,12 @@ BOT_USERAGENT=your user agent
 ```
 
 If testing on a local wiki without an SSL certificate, then set the following environment variable:
+
 ```sh
 # Do not reject requests made over insecure HTTP
 ENV_REJECT_UNAUTHORIZED=0
 ```
+
 **Do not** do this on a production environment.
 
 #### Setting up multiple .env files for multiple wiki instances
@@ -63,10 +67,11 @@ Note that only one `.env` file will be loaded at a time. To control which `.env`
 This repository allows you to write your MediaWiki userscripts in TypeScript and LESS, in addition to standard JS and CSS.
 
 Several commands are provided in this repository:
- - `npm run fmt`: Run oxfmt to format all files.
- - `npm run fmt:check`: Run oxfmt to check formatting in all files, without making any changes.
- - `npm run lint`: Run oxlint to check for errors.
- - `npm run lint:fix`: Run oxlint to check for errors, fixing them if applicable.
+
+- `npm run fmt`: Run oxfmt to format all files.
+- `npm run fmt:check`: Run oxfmt to check formatting in all files, without making any changes.
+- `npm run lint`: Run oxlint to check for errors.
+- `npm run lint:fix`: Run oxlint to check for errors, fixing them if applicable.
 
 ### Build
 
@@ -78,7 +83,7 @@ Run `npm run build -- --minify` to minify the code.
 
 To sync the latest state of the project with the code running on the wiki, run `npm run sync`. This will start a bot run (powered by [Mwn](https://github.com/siddharthvp/mwn)), with edit logs saved onto the folder `logs/` on the project directory.
 
-> **Note**: Make sure that the account whose credentials you're using has either been assigned the `interface-admin` user group, or the user rights `editsitecss` and `editsitejs`. When first creating your bot password/OAuth token, make sure that the options "*Edit the MediaWiki namespace and sitewide/user JSON*" and "*Edit sitewide and user CSS/JS*" were checked.
+> **Note**: Make sure that the account whose credentials you're using has either been assigned the `interface-admin` user group, or the user rights `editsitecss` and `editsitejs`. When first creating your bot password/OAuth token, make sure that the options "_Edit the MediaWiki namespace and sitewide/user JSON_" and "_Edit sitewide and user CSS/JS_" were checked.
 
 Transpiling of userscripts written in Typescript into Javascript is configured in `tsdown.config.ts` (`target` option). This repository targets **Javascript ES2019**.
 
@@ -97,6 +102,7 @@ By default, the user must load each constituent script and stylesheet by themsel
 Running `npm run build -- --serve` will get tsdown to create a `load.js` entrypoint file. By loading this entrypoint file on your wiki, you can load every enabled gadget on your project at the same time.
 
 ##### Additional Configuration
+
 ```sh
 # By default gadgets loaded using load.js will be loaded under the module namespace ext.gadget
 # You can avoid module naming conflicts in MediaWiki by setting this to a different namespace,
@@ -121,12 +127,15 @@ To run unit tests (vitest), execute `npm run test`.
 ## Code Definition
 
 ### Interface Code
+
 The source code to the wiki's interface code (i.e. MediaWiki:Common.css, MediaWiki:Common.js, MediaWiki:Vector-2022.css, etc.) is stored in `src/mediawiki`.
 
 ### Gadgets
+
 The source code to the wiki's gadgets is stored in `src/gadgets`. The directory is further divided into several gadget sections.
 
 The file `src/gadgets/gadgets-definition.yaml` defines the gadgets to be built & loaded on a MediaWiki instance. The format of `src/gadgets/gadgets-definition.yaml` is as follows:
+
 ```yaml
 workspace:
   # Set as true if you want to load all the gadgets defined in gadgets-definition.yaml
@@ -142,7 +151,6 @@ gadgets:
   # This informs the name of the gadget section under which the gadget will be registered
   # in MediaWiki:Gadgets-definition, as well as the name of the subdirectory of the gadget.
   GadgetSectionName:
-
     # This tells the repository to look for code files from the directory
     # /gadgets/GadgetSectionName/HelloWorld
     # The name that the gadget will be registered under is also the same as the subdirectory
@@ -152,8 +160,8 @@ gadgets:
         # The filename of each code file corresponds to the page title of the MediaWiki interface code
         # For example, the contents of hello-world.js will be synced with the page
         # MediaWiki:Gadget-hello-world.js when npm run sync is run
-        - hello-world.js    # .ts files are also supported
-        - hello-world.css   # LESS files are also supported
+        - hello-world.js # .ts files are also supported
+        - hello-world.css # LESS files are also supported
 
     # gadgets-definition.yaml also enables userscripts to be loaded conditionally, like userscripts
     # that are defined using Extension:Gadgets
@@ -168,6 +176,7 @@ gadgets:
 ```
 
 The full schema of a gadget object on `gadgets-definition.yaml` is as follows:
+
 ```yaml
 gadgets:
   # The name of the gadget section and the key of the gadget object is the
@@ -176,8 +185,7 @@ gadgets:
   # In other words, the repository will look for code files in the folder
   # gadgets/GadgetSectionName/GadgetName
   GadgetSectionName:
-    GadgetName:     # Can also be in camelCase, kebab-case, or snake_case
-
+    GadgetName: # Can also be in camelCase, kebab-case, or snake_case
       # The following are optional metadata properties
       description: "Some description"
       authors:
@@ -200,8 +208,8 @@ gadgets:
         # code file corresponds to the page title of the MediaWiki interface code
         # For example, the contents of dist/GadgetSectionName/GadgetName/some-filename.js will be
         # saved to MediaWiki:Gadget-some-filename.js
-        - some-filename.ts      # .ts files are resolved to .js files in the build output
-        - some-filename.less    # .less files are resolved to .css files in the build output
+        - some-filename.ts # .ts files are resolved to .js files in the build output
+        - some-filename.less # .less files are resolved to .css files in the build output
       i18n:
         - i18n.json
 
@@ -222,6 +230,12 @@ gadgets:
         # Optional parameter. Set to "styles" for CSS stylesheets, or
         # "general" for scripts
         type:
+
+        # Optional property.
+        # Mark this gadget as packaged. Only the first JavaScript page will be executed in
+        # this mode. Other pages can be imported by using the require() function. This
+        # mode also enables the use of JSON pages, which cannot be included otherwise.
+        package:
 
         # For each of the properties below, you can add them in one of the following ways:
         # In list form:
@@ -271,8 +285,9 @@ gadgets:
 <td>
 Builds a code bundle from source code written in the src/ directory.
 
- - Code is not minified.
- - Disabled gadgets are skipped.
+- Code is not minified.
+- Disabled gadgets are skipped.
+
 </td>
 </tr>
 <tr>
