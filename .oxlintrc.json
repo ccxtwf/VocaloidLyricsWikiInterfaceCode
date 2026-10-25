@@ -1,10 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "ignorePatterns": [
-    "**/*.md",
-    "**/*.json",
-    "src/gadgets/editing/lyrics-editor/hottable.d.ts"
-  ],
+  "ignorePatterns": ["**/*.md", "**/*.json", "src/gadgets/editing/lyrics-editor/hottable.d.ts"],
   "plugins": ["typescript", "unicorn", "oxc"],
   "categories": {
     "correctness": "error"
