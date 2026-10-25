@@ -5,6 +5,7 @@
 export interface ResourceLoaderConditions {
   default?: boolean;
   hidden?: boolean;
+  package?: boolean;
 
   dependencies?: string | string[] | null;
   rights?: string | string[] | null;

@@ -106,6 +106,7 @@ function compileResourceLoaderConditions(resourceLoader: ResourceLoaderCondition
 
   if (resourceLoader.default === true) conditions.push("default");
   if (resourceLoader.hidden === true) conditions.push("hidden");
+  if (resourceLoader.package === true) conditions.push("package");
   if (resourceLoader.type) conditions.push(`type=${resourceLoader.type}`);
   if (resourceLoader.supportsUrlLoad)
     conditions.push(`supportsUrlLoad=${resourceLoader.supportsUrlLoad}`);
