@@ -324,20 +324,3 @@ sup.reference:target {
 .mw-body p + blockquote {
   margin-top: 0.5em;
 }
-
-/*
- * We do this to vary the scroll offset when working with a fixed header
- * Idea:
- * https://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header
- * https://stackoverflow.com/questions/11386807/adding-an-automatic-offset-to-the-scroll-position-for-all-hash-links-calls
- */
-@medik-scroll-offset-desktop: 60px;
-@medik-scroll-offset-mobile: 120px;
-:target {
-  scroll-margin-top: @medik-scroll-offset-desktop;
-}
-@media (max-width: 768px) {
-  :target {
-    scroll-margin-top: @medik-scroll-offset-mobile;
-  }
-}
