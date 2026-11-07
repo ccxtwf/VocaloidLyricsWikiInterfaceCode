@@ -307,6 +307,24 @@ sup.reference:target {
   overflow: initial;
 }
 
+/* Blockquotes */
+.mw-body blockquote {
+  border-left: 4px solid var(--border-color-muted, #dadde3);
+  padding: 8px 32px;
+}
+.mw-body p {
+  margin: 0.5em 0 1em 0;
+}
+.mw-body blockquote > :first-child {
+  margin-top: 0;
+}
+.mw-body blockquote > :last-child {
+  margin-bottom: 0;
+}
+.mw-body p + blockquote {
+  margin-top: 0.5em;
+}
+
 /*
  * We do this to vary the scroll offset when working with a fixed header
  * Idea:
