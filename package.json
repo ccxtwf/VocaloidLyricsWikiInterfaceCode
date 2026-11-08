@@ -24,6 +24,7 @@
     "@types/minimist": "^1.2.5",
     "@types/node": "^24.19.0",
     "@types/normalize-path": "^3.0.2",
+    "dotenv": "^18.0.9",
     "handsontable": "^16.1.1",
     "jsdom": "^30.1.2",
     "less": "^4.4.1",
