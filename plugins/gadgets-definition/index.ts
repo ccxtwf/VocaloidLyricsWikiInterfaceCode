@@ -15,15 +15,8 @@ export default function generateGadgetsDefinitionWikitext(
   return {
     name: "generate-gadgets-definition-wikitext",
 
-    // Build Mode
-    closeBundle() {
-      const startTime = Date.now();
-      this.info("Creating dist/gadgets/gadgets-definition.wikitext...");
-      writeWikitextFile(gadgetsDefinition).then(() =>
-        this.info(
-          `Created dist/gadgets/gadgets-definition.wikitext in ${(Date.now() - startTime) / 1000} s`,
-        ),
-      );
+    async closeBundle() {
+      await writeWikitextFile(this, gadgetsDefinition);
     },
   };
 }

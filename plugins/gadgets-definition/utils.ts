@@ -1,6 +1,7 @@
 import { writeFile } from "fs/promises";
 import normalizePath from "normalize-path";
 import { resolve } from "path";
+import type { PluginContext } from "rolldown";
 import type {
   GadgetDefinition,
   GadgetsDefinition,
@@ -23,9 +24,14 @@ function resolveGadgetsDefinitionWikitextFile(): string {
  *
  * @param gadgetsDefinition
  */
-export async function writeWikitextFile(gadgetsDefinition: GadgetsDefinition): Promise<void> {
+export async function writeWikitextFile(
+  ctx: PluginContext,
+  gadgetsDefinition: GadgetsDefinition,
+): Promise<void> {
+  const startTime = Date.now();
   try {
     const gadgetsDefinitionWikitextFile = resolveGadgetsDefinitionWikitextFile();
+    ctx.info(`Creating ${gadgetsDefinitionWikitextFile}...`);
 
     const { enable_all: enableAll = true, enable = [], disable = [] } = gadgetsDefinition.workspace;
     const hmGadgetNames = new Set(enableAll ? disable : enable);
@@ -47,11 +53,12 @@ export async function writeWikitextFile(gadgetsDefinition: GadgetsDefinition): P
       }
       s.push("");
     }
-
     await writeFile(gadgetsDefinitionWikitextFile, s.join("\n"), { flag: "w+", encoding: "utf8" });
   } catch (err) {
-    console.error("Unable to create the contents of gadgets-definition.wikitext");
-    console.error(err);
+    ctx.info("Unable to create the contents of gadgets-definition.wikitext");
+    ctx.info(err);
+  } finally {
+    ctx.info(`Created gadgets-definition.wikitext in ${(Date.now() - startTime) / 1000} s`);
   }
 }
 

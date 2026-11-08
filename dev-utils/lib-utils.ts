@@ -3,8 +3,13 @@ import { resolve } from "path";
 import normalizePath from "normalize-path";
 
 const rxFileExtension = /\.[a-zA-Z0-9]+$/;
+let outDir = "";
 
 export type ModuleType = "script" | "style" | "vue" | "other";
+
+export function setOutDir(_outDir: string) {
+  outDir = _outDir;
+}
 
 /**
  * Determine if a userscript code file is a script, a stylesheet, a Vue component or other asset.
@@ -133,7 +138,7 @@ export function resolveGadgetsDefinitionManifestPath(): string {
  * @returns
  */
 export function resolveDistPath(relativeFilepath?: string): string {
-  const distFolder = resolve(import.meta.dirname, "../dist");
+  const distFolder = outDir ?? resolve(import.meta.dirname, "../dist");
   if (!existsSync(distFolder)) {
     mkdirSync(distFolder);
   }

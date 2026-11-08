@@ -42,6 +42,9 @@ export default defineConfig(async (): Promise<UserConfig> => {
     },
 
     plugins: [
+      /**
+       * Note that loadEnvironmentPlugin() may also load outDir onto the config
+       */
       loadEnvironmentPlugin(),
       bannerPlugin(bundleEntry, gadgetsDefinition),
       gadgetsDefinitionPlugin(gadgetsDefinition),
