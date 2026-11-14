@@ -33,6 +33,7 @@
     "src/**/*",
     "./node_modules/types-mediawiki/**/*.d.ts",
     "./node_modules/types-mediawiki-api/**/*.d.ts",
-    "./node_modules/@vue/**/*.d.ts"
+    "./node_modules/@vue/**/*.d.ts",
+    "./global.d.ts",
   ]
 }

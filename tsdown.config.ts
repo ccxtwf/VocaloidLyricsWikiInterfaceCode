@@ -5,6 +5,7 @@ import {
   serveAndLoadGadgetsPlugin,
   mwGadgetImplementationPlugin,
   vueTransformer,
+  restrictedNames,
 } from "./plugins/index.ts";
 
 import {
@@ -50,6 +51,9 @@ export default defineConfig(async (): Promise<UserConfig> => {
       gadgetsDefinitionPlugin(gadgetsDefinition),
       mwGadgetImplementationPlugin(gadgetsToBuild),
       serveAndLoadGadgetsPlugin(gadgetsToBuild, mwInterfaceCodeToBuild),
+      restrictedNames({
+        mw_require: "require",
+      }),
       vueTransformer(),
     ],
 
@@ -57,6 +61,13 @@ export default defineConfig(async (): Promise<UserConfig> => {
       splitting: true,
       preprocessorOptions: {
         less: {/* LESS-specific options here */},
+      },
+    },
+
+    /* Experimental */
+    inputOptions: {
+      experimental: {
+        nativeMagicString: true,
       },
     },
 
