@@ -1,4 +1,5 @@
 import type { TsdownPlugin } from "tsdown";
+import { setDictionaryOfRestrictedNames, transformRestrictedNames } from "./utils.ts";
 
 /**
  * A plugin that subtitutes placeholders for certain restricted names (e.g. mw_require -> require)
@@ -6,6 +7,7 @@ import type { TsdownPlugin } from "tsdown";
  * @returns
  */
 export default function restrictedNames(dict: Record<string, string>): TsdownPlugin {
+  setDictionaryOfRestrictedNames(dict);
   return {
     name: "restrictedNames",
     renderChunk(_code, _chunk, _outputOptions, meta) {
@@ -13,10 +15,7 @@ export default function restrictedNames(dict: Record<string, string>): TsdownPlu
       if (!magicString) {
         this.error("MagicString is not enabled!");
       }
-      for (const [from, to] of Object.entries(dict)) {
-        magicString!.replaceAll(from, to);
-      }
-      return magicString;
+      return transformRestrictedNames(magicString!);
     },
   };
 }

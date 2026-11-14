@@ -1,7 +1,8 @@
 import type { TsdownPlugin } from "tsdown";
-import type { PluginContext } from "rolldown";
+import type { PluginContext, RolldownMagicString } from "rolldown";
 import { compileVueComponent } from "./utils.ts";
 import normalizePath from "normalize-path";
+import { transformRestrictedNames } from "../restricted_names/utils.ts";
 
 const filterIdForVueFiles = {
   id: /\.vue$/,
@@ -25,8 +26,18 @@ export default function vueTransformer(): TsdownPlugin {
     },
     transform: {
       filter: filterIdForVueFiles,
-      async handler(this: PluginContext, src: string, id: string) {
-        const res = await compileVueComponent(this, src, id);
+      async handler(
+        this: PluginContext,
+        src: string,
+        id: string,
+        { magicString }: { magicString?: RolldownMagicString },
+      ) {
+        //TODO: Implement vue parsing using MagicString
+        let res = await compileVueComponent(
+          this,
+          magicString ? transformRestrictedNames(magicString).toString() : src,
+          id,
+        );
         // Force emit as "asset" so Rolldown doesn't re-process as JS or CSS
         this.emitFile({
           type: "asset",
