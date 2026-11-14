@@ -1,0 +1,218 @@
+/*
+* Gadget-nsfw-modal
+*
+* CSS Variables:
+*   --nsfw-modal-msg-container-bg-color
+*   --nsfw-modal-msg-container-border-color
+*   --nsfw-modal-msg-heading-text-color
+*   --nsfw-modal-msg-subheading-text-color
+*   --nsfw-modal-msg-more-actions-text-color
+*   --nsfw-modal-msg-confirm-button-color
+*   --nsfw-modal-msg-confirm-button-border-color
+*   --nsfw-modal-msg-confirm-button-text-color
+*   --nsfw-modal-msg-confirm-button-color-hover
+*   --nsfw-modal-msg-confirm-button-border-color-hover
+*   --nsfw-modal-msg-back-button-color
+*   --nsfw-modal-msg-back-button-border-color
+*   --nsfw-modal-msg-back-button-text-color
+*   --nsfw-modal-msg-back-button-color-hover
+*   --nsfw-modal-msg-back-button-border-color-hover
+*/
+#cw-modal {
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  animation: modal-in 0.3s ease-out;
+
+  #cw-modal-box-wrapper {
+    width: 900px;
+    height: 60vh;
+    box-sizing: border-box;
+    max-height: 70%;
+    overflow-x: auto;
+    overflow-y: auto;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    margin-top: -30vh;
+    margin-left: -450px;
+    vertical-align: middle;
+  }
+
+  #cw-modal-box {
+    background-color: var(--nsfw-modal-msg-container-bg-color, #dedede);
+    padding: 50px;
+    border: 1px solid var(--nsfw-modal-msg-container-border-color, #888);
+    width: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    & > div {
+      vertical-align: middle;
+      text-align: center;
+      width: 100%;
+    }
+  }
+
+  #cw-heading {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--nsfw-modal-msg-heading-text-color, #000);
+  }
+  #cw-subheading {
+    font-size: 1rem;
+    margin-top: 50px;
+    color: var(--nsfw-modal-msg-subheading-text-color, inherit);
+  }
+  #cw-action-buttons {
+    margin-top: 30px;
+
+    #cw-confirm {
+      background-color: var(--nsfw-modal-msg-confirm-button-color, #ffad17);
+      color: var(--nsfw-modal-msg-confirm-button-text-color, #121212);
+      font-weight: bold;
+      border: solid 2px var(--nsfw-modal-msg-confirm-button-border-color, #b20000);
+      &:hover,
+      &:active {
+        background-color: var(--nsfw-modal-msg-confirm-button-color-hover, #ffc75e);
+        border-color: var(--nsfw-modal-msg-confirm-button-border-color-hover, #a00e0e);
+      }
+    }
+
+    #cw-back {
+      background-color: var(--nsfw-modal-msg-back-button-color, #000);
+      color: var(--nsfw-modal-msg-back-button-text-color, #ddd);
+      border: solid 2px var(--nsfw-modal-msg-back-button-border-color, #242424);
+      &:hover,
+      &:active {
+        background-color: var(--nsfw-modal-msg-back-button-color-hover, #2f2f2f);
+        border-color: var(--nsfw-modal-msg-back-button-border-color-hover, #242424);
+      }
+    }
+  }
+  .cw-action-button {
+    padding: 5px 10px;
+    border-radius: 20px;
+    width: 250px;
+    height: 40px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: 20px;
+  }
+
+  #cw-more-actions {
+    margin-top: 30px;
+    font-size: 0.85rem;
+    color: var(--nsfw-modal-msg-more-actions-text-color, #7a7a7a);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    label {
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  #cw-suppress-nsfw-notifs {
+    margin-right: 6px;
+    height: 1.1rem;
+  }
+
+  @media (max-width: 1000px) {
+    #cw-modal-box-wrapper {
+      width: 700px;
+      margin-left: -350px;
+    }
+  }
+
+  @media (max-width: 800px) {
+    #cw-modal-box-wrapper {
+      width: 500px;
+      margin-left: -250px;
+      height: initial;
+    }
+
+    .cw-action-button {
+      margin-bottom: 10px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    #cw-modal-box-wrapper {
+      top: 15%;
+      left: 10%;
+      width: 80%;
+      margin-top: 0;
+      margin-left: 0;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      overflow-y: scroll;
+    }
+
+    #cw-modal-box {
+      padding: 40px 15px;
+    }
+
+    .cw-action-button {
+      margin-left: 0;
+      width: 220px;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+@dark-mode-css-definitions: {
+  & {
+    --nsfw-modal-msg-container-bg-color: #000;
+    --nsfw-modal-msg-heading-text-color: #ddd;
+    --nsfw-modal-msg-subheading-text-color: #bbb;
+    --nsfw-modal-msg-more-actions-text-color: #bbb;
+    --nsfw-modal-msg-back-button-border-color: #787878;
+    --nsfw-modal-msg-back-button-border-color-hover: #353535;
+  }
+};
+html.theme-dark,
+html.skin-theme-clientpref-night,
+:root.skin-theme-clientpref-night {
+  @dark-mode-css-definitions();
+}
+@media screen and (prefers-color-scheme: dark) {
+  html.skin-theme-clientpref-os,
+  :root.skin-theme-clientpref-os {
+    @dark-mode-css-definitions();
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #cw-modal {
+    animation: none;
+  }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.98);
+  }
+  to {
+    opacity: 0.6;
+    transform: translateY(0) scale(1);
+  }
+}
