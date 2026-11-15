@@ -14,7 +14,7 @@
  *   - can I create a plugin that duplicates these functions instead?
  */
 import fs from "node:fs";
-import { resolve, relative } from "node:path";
+import { relative } from "node:path";
 import normalizePath from "normalize-path";
 import type { TsdownPlugin } from "tsdown";
 
@@ -23,9 +23,7 @@ const MARKER = "?dup=";
 /**
  * A Rolldown plugin that duplicates modules shared across various bundle entrypoints.
  */
-export default function duplicatePerEntry(modules: string[]): TsdownPlugin {
-  const targets = new Set(modules.map((m) => normalizePath(resolve(m))));
-
+export default function duplicatePerEntry(filter: RegExp): TsdownPlugin {
   return {
     name: "duplicate-per-entry",
 
@@ -37,7 +35,7 @@ export default function duplicatePerEntry(modules: string[]): TsdownPlugin {
       });
       if (!resolved || resolved.external) return resolved;
 
-      if (targets.has(resolved.id)) {
+      if (filter.test(normalizePath(relative(process.cwd(), resolved.id)))) {
         // Tag with the importer so each entry gets its own copy of the module
         const key = normalizePath(relative(process.cwd(), importer ?? process.cwd()));
         return `${resolved.id}${MARKER}${encodeURIComponent(key)}`;

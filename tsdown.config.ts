@@ -6,6 +6,7 @@ import {
   mwGadgetImplementationPlugin,
   vueTransformer,
   restrictedNames,
+  duplicatePerEntryPlugin,
 } from "./plugins/index.ts";
 
 import {
@@ -51,6 +52,7 @@ export default defineConfig(async (): Promise<UserConfig> => {
       gadgetsDefinitionPlugin(gadgetsDefinition),
       mwGadgetImplementationPlugin(gadgetsToBuild),
       serveAndLoadGadgetsPlugin(gadgetsToBuild, mwInterfaceCodeToBuild),
+      duplicatePerEntryPlugin(/^src\/utils\//),
       restrictedNames({
         mw_require: "require",
       }),
