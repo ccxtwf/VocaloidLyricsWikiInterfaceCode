@@ -7,6 +7,8 @@ const SUPPRESSED_PAGE_IDS_KEY = "vlw-suppress-nsfw";
 const USER_PREFERENCE_KEY = "userjs-vlw-suppress-nsfw";
 const USER_PREFERENCE_EXPIRY_KEY = USER_PREFERENCE_KEY + "-EXPIRY";
 
+const DEBUGGING_ID = "[nsfw-modal]";
+
 const ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 const SUPPRESS_EXPIRY = 30 * ONE_DAY_IN_MILLISECONDS; // 1 month
 let skipIds: string[] = [];
@@ -161,7 +163,7 @@ async function saveUserOptions(): Promise<void> {
       document.body.appendChild(container);
       $app.mount("#" + container.getAttribute("id"));
     } catch (err) {
-      console.error("[nsfw-modal]", err);
+      console.error(DEBUGGING_ID, err);
     }
   }
 
