@@ -337,7 +337,6 @@ gadgets:
       resourceLoader:
         default: true
         hidden: true
-        namespaces: "-1"
     vlw-notification-templates:
       description: "CSS stylesheet for custom notification templates used throughout the Vocaloid Lyrics Wiki."
       authors:
