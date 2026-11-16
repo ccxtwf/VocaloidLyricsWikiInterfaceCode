@@ -79,6 +79,36 @@ gadgets:
           - view
       dependencies:
         - mediawiki.storage
+        - mediawiki.util
+        - vue
+        - pinia
+        - "@wikimedia/codex"
+    vlw-tl-queue-display-redux:
+      description: "Adds a list to the sidebar/footer of the wiki that shows the translations on queue for checking/verification on the wiki."
+      authors:
+        - CoolMikeHatsune22
+      code:
+        - vlw-tl-queue-display-redux.ts
+        - vlw-tl-queue-display-config.ts
+        - vlw-tl-queue-display-store.ts
+        - vlw-tl-queue-display-redux.less
+        - vlw-tl-queue-display.vue
+        - vlw-tl-queue-sections.vue
+        - vlw-tl-queue-section.vue
+        - vlw-tl-queue-item.vue
+        - vlw-tl-queue-more-actions.vue
+      disabled: true
+      resourceLoader:
+        default: true
+        package: true
+        actions:
+          - view
+        dependencies:
+          - mediawiki.storage
+          - mediawiki.util
+          - vue
+          - pinia
+          - "@wikimedia/codex"
     guideline-notification:
       description: "Utility gadget used to display bubble notifications, used to notify the end user regarding various guidelines throughout the Vocaloid Lyrics Wiki."
       authors:
