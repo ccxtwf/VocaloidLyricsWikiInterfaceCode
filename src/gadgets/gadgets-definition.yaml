@@ -26,8 +26,8 @@ gadgets:
       authors:
         - CoolMikeHatsune22
       code:
-        - nsfw-modal.ts
-        - nsfw-modal.vue
+        - nsfw-modal-redux.ts
+        - nsfw-modal-redux.vue
         - nsfw-modal.less
       disabled: true
       resourceLoader:
