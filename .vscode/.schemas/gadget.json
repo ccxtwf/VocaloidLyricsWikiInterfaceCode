@@ -189,6 +189,34 @@
           ],
           "description": "ResourceLoader module type."
         },
+        "peers": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "A list of CSS-only gadgets to be loaded together with your gadget."
+        },
+        "codexIcons": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "List of Codex icons to be loaded onto an icons.json file in the package. Refer to [Wikimedia's Codex guide for a list of all icons](https://doc.wikimedia.org/codex/main/icons/all-icons.html)."
+        },
         "supportsUrlLoad": {
           "anyOf": [
             {

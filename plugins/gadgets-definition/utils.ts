@@ -109,6 +109,8 @@ function compileResourceLoaderConditions(resourceLoader: ResourceLoaderCondition
     skins: resourceLoader.skins,
     namespaces: resourceLoader.namespaces,
     rights: resourceLoader.rights,
+    codexIcons: resourceLoader.codexIcons,
+    peers: resourceLoader.peers,
   };
 
   if (resourceLoader.default === true) conditions.push("default");

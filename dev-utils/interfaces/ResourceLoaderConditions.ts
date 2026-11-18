@@ -14,6 +14,8 @@ export interface ResourceLoaderConditions {
   categories?: string | string[] | null;
   namespaces?: string | string[] | null;
   contentModels?: string | string[] | null;
+  codexIcons?: string | string[] | null;
+  peers?: string | string[] | null;
 
   type?: "styles" | "general" | null;
   supportsUrlLoad?: string;
