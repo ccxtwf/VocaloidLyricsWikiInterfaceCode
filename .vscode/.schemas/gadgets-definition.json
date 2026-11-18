@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "workspace": {
+      "type": "object",
+      "properties": {
+        "enable_all": {
+          "type": "boolean",
+          "default": "false",
+          "description": "Set to true to compile all gadgets (except for those marked as disabled)."
+        },
+        "enable": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "examples": [
+            "gadget-section/gadget-name"
+          ],
+          "description": "Set a list of gadgets to include in the bundle output."
+        },
+        "disable": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "examples": [
+            "gadget-section/gadget-name"
+          ],
+          "description": "Set a list of gadgets to exclude from the bundle output."
+        }
+      }
+    },
+    "gadgets": {
+      "type": "object",
+      "description": "Gadgets to be compiled.",
+      "additionalProperties": {
+        "type": "object",
+        "description": "Gadget section names to be put on MediaWiki:Gadgets-definition.",
+        "properties": {},
+        "additionalProperties": {
+          "type": "object",
+          "description": "Gadget names to be put on each section.",
+          "$ref": "./gadget.json"
+        }
+      }
+    }
+  },
+  "required": [
+    "workspace",
+    "gadgets"
+  ]
+}

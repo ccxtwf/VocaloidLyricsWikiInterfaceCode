@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "description": {
+      "type": "string",
+      "description": "Informational. Text describing what the gadget does or who/where it is attributed to."
+    },
+    "authors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Informational. Lists the authors."
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^https:\/\/"
+      },
+      "description": "Informational. Lists the links the gadget is attributed to/sourced from."
+    },
+    "version": {
+      "type": "string",
+      "description": "Informational."
+    },
+    "code": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Lists the script, stylesheet, Vue component, and JSON files to be loaded as one gadget."
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "If set to true, compile this gadget as part of the bundle output, regardless of workspace settings."
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "If set to true, do not compile this gadget as part of the bundle output."
+    },
+    "resourceLoader": {
+      "type": "object",
+      "description": "Sets various conditions for ResourceLoader. [See Extension:Gadgets for more information.](https://www.mediawiki.org/wiki/Extension:Gadgets)",
+      "properties": {
+        "default": {
+          "type": "boolean",
+          "description": "Sets the gadget to be on by default."
+        },
+        "hidden": {
+          "type": "boolean",
+          "description": "Sets the gadget to be hidden on Special:Preferences"
+        },
+        "package": {
+          "type": "boolean",
+          "description": "Sets the components of the gadget to be compiled as various files in one package. Required to be set to true if using .vue or .json files."
+        },
+        "dependencies": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "examples": [
+            "mediawiki.util",
+            "ext.gadget.foo"
+          ],
+          "description": "Sets other ResourceLoader modules to be loaded as dependencies that will be loaded before this gadget is loaded."
+        },
+        "rights": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "examples": [
+            "edit"
+          ],
+          "description": "User rights that are required to load the module."
+        },
+        "skins": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "examples": [
+            "vector-2022"
+          ],
+          "description": "Skins on which the module may be loaded."
+        },
+        "actions": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "examples": [
+            "view",
+            "edit",
+            "history",
+            "delete"
+          ],
+          "description": "Page actions on which the module may be loaded."
+        },
+        "categories": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "examples": [
+            "Pages requiring maintenance"
+          ],
+          "description": "Categories on which the module may be loaded."
+        },
+        "namespaces": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            },
+            {
+              "type": "string",
+              "format": "[0-9, ]+"
+            }
+          ],
+          "description": "Numeric namespace IDs for which the module may be loaded."
+        },
+        "contentModels": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "examples": [
+            "wikitext"
+          ],
+          "description": "Page content models on which the module may be loaded."
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "styles",
+            "general"
+          ],
+          "description": "ResourceLoader module type."
+        },
+        "supportsUrlLoad": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          ],
+          "description": "Set as true to support loading the module when ?withgadget is set as a query parameter."
+        }
+      }
+    }
+  }
+}

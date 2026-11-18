@@ -1,0 +1,5 @@
+{
+  "yaml.schemas": {
+    "./.vscode/.schemas/gadgets-definition.json": "src/gadgets/gadgets-definition.yaml"
+  }
+}
