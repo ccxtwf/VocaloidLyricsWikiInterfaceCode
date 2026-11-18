@@ -194,14 +194,6 @@ gadgets:
         - https://some/link/to/the/userscripts/homepage
       version: "1.0.0"
 
-      # The "requires" property is optional
-      # This property tells the repository to load the gadgets only after
-      # the userscripts listed under it have been registered first
-      # Only applicable when loading the scripts from load.js
-      requires:
-        - Dependency1
-        - Dependency2
-
       # The files to be loaded
       code:
         # It is important to set unique names for each of the code files, since the name of each
@@ -210,8 +202,6 @@ gadgets:
         # saved to MediaWiki:Gadget-some-filename.js
         - some-filename.ts # .ts files are resolved to .js files in the build output
         - some-filename.less # .less files are resolved to .css files in the build output
-      i18n:
-        - i18n.json
 
       # You can disable the gadget using this property
       # disabled: true

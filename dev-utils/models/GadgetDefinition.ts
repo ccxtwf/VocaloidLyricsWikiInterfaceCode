@@ -9,7 +9,6 @@ export default class GadgetDefinition implements IGadgetDefinition {
   version?: string;
   requires?: string[];
   code?: string[];
-  i18n?: string[];
   section: string;
   name: string;
   enabled?: boolean;

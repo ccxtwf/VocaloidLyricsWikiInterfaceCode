@@ -24,6 +24,7 @@ export interface GadgetDefinition {
   /**
    * Specify this parameter if the module needs other modules on this project to be registered first.
    * The required module just needs to have `state=registered` on `mw.loader`, not `state=ready`
+   * @deprecated
    */
   requires?: string[];
 
@@ -31,11 +32,6 @@ export interface GadgetDefinition {
    * List of scripts and stylesheets.
    */
   code?: string[];
-
-  /**
-   * List of i18n messages. Currently unused.
-   */
-  i18n?: string[];
 
   /**
    * The gadget section name is automatically set during the build process
