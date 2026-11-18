@@ -41,9 +41,9 @@
       opacity: 1;
     }
 
-    img {
-      width: 20px;
-      height: 20px;
+    .cdx-icon {
+      width: 1.2em !important;
+      height: 1.2em !important;
     }
 
     .label {
@@ -124,6 +124,12 @@
     color: var(--tl-queue-item-subtitle-color, #9d9d9d);
   }
 
+  .cdx-icon {
+    color: inherit;
+    width: 0.85rem !important;
+    height: 0.85rem !important;
+  }
+
   .tl-check-req-producer,
   .tl-check-req-author {
     display: inline;
@@ -134,31 +140,12 @@
     margin-right: 10px;
   }
 
-  .tl-check-req-author::before {
-    content: "";
-    background-image: url(https://upload.wikimedia.org/wikipedia/commons/9/97/Ic_create_48px.svg);
-    filter: brightness(0) saturate(100%) invert(69%) sepia(3%) saturate(4%) hue-rotate(322deg)
-      brightness(91%) contrast(89%);
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    background-size: 12px 12px;
-  }
-
   .tl-check-req-approved {
-    width: 15px;
-    height: 15px;
-    margin-right: 4px;
-    content: url("https://upload.wikimedia.org/wikipedia/commons/1/16/Allowed.svg");
-    display: inline;
+    color: #37cc21;
   }
 
   .tl-check-req-rejected {
-    width: 15px;
-    height: 15px;
-    margin-right: 4px;
-    content: url("https://upload.wikimedia.org/wikipedia/commons/b/bc/Not_allowed.svg");
-    display: inline;
+    color: #f40d0d;
   }
 
   .tl-check-page-link {

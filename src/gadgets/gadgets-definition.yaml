@@ -109,6 +109,13 @@ gadgets:
           - vue
           - pinia
           - "@wikimedia/codex"
+        codexIcons:
+          - cdxIconReload
+          - cdxIconEdit
+          - cdxIconCheck
+          - cdxIconClose
+          - cdxIconHelp
+
     guideline-notification:
       description: "Utility gadget used to display bubble notifications, used to notify the end user regarding various guidelines throughout the Vocaloid Lyrics Wiki."
       authors:

@@ -5,8 +5,8 @@
       :title="$i18n('vlw-tl-queue--reload-prompt-tooltip').text()"
       @click="onClickRefresh"
     >
-      <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Ic_refresh_48px.svg" />
-      <span class="label">
+      <cdx-icon :icon="cdxIconReload"></cdx-icon
+      ><span class="label">
         {{ $i18n("vlw-tl-queue--reload-prompt").text() }}
       </span>
     </a>
@@ -14,9 +14,15 @@
 </template>
 
 <script lang="ts">
+const { CdxIcon } = mw_require("@wikimedia/codex");
+const { cdxIconReload } = mw_require("./icons.json");
+
 export default {
   name: "TlQueueMoreActions",
-  setup() {},
+  setup() {
+    return { cdxIconReload };
+  },
+  components: { CdxIcon },
   methods: {
     onClickRefresh() {
       this.$emit("refresh");
