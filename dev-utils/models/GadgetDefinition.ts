@@ -12,6 +12,7 @@ export default class GadgetDefinition implements IGadgetDefinition {
   i18n?: string[];
   section: string;
   name: string;
+  enabled?: boolean;
   disabled?: boolean;
   resourceLoader?: ResourceLoaderConditions;
 

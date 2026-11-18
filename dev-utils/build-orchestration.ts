@@ -48,7 +48,7 @@ export function checkGadgetExists(
  * Processes the parsed gadgets definition and does the following:
  *  1) It selects which gadgets to include/exclude when serving/building, based
  *     on the "workspace.enable_all", "workspace.enable", and/or "workspace.disable" properties, or
- *     on the "gadgets.<GADGET-NAME>.disabled" property of each gadget
+ *     on the "gadgets.<GADGET-NAME>.enabled/disabled" property of each gadget
  *  2) It excludes the gadgets with unresolved directories
  *  3) It sets the gadget build order so gadgets with no required dependencies are loaded first
  *  4) It excludes gadgets with unknown dependencies

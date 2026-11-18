@@ -48,7 +48,13 @@ export interface GadgetDefinition {
   name: string;
 
   /**
-   * If set to true on the gadgets definition, then Vite will exclude this file
+   * If set to true on the gadgets definition, then tsdown will include this file,
+   * regardless of workspace settings
+   */
+  enabled?: boolean;
+
+  /**
+   * If set to true on the gadgets definition, then tsdown will exclude this file
    * from the list of gadgets that will be served/distributed
    */
   disabled?: boolean;

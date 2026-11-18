@@ -29,14 +29,23 @@ export default class GadgetsDefinition implements IGadgetsDefinition {
     }, {});
   }
 
+  /**
+   * Priority of a gadget's enabled state (highest -> lowest):
+   *  1) `gadgets.<gadget>.enabled = true` -> always enable
+   *  2) `gadgets.<gadget>.disabled = true` -> always disable
+   *  3) `workspace.enable_all = true` and gadget is not disabled on workspace -> enable
+   *  4) `workspace.enable_all = false/unset` and gadget is enabled on workspace -> enable
+   *
+   * @param gadgetDefinition
+   * @returns
+   */
   private isGadgetEnabled(gadgetDefinition: GadgetDefinition): boolean {
+    if (gadgetDefinition.enabled) return true;
+    if (gadgetDefinition.disabled) return false;
     const gadgetId = gadgetDefinition.getGadgetId();
-    return (
-      !gadgetDefinition.disabled &&
-      (this.workspace.enable_all
-        ? (this.workspace.disable ?? []).indexOf(gadgetId) < 0
-        : (this.workspace.enable ?? []).indexOf(gadgetId) > -1)
-    );
+    return this.workspace.enable_all
+      ? (this.workspace.disable ?? []).indexOf(gadgetId) < 0
+      : (this.workspace.enable ?? []).indexOf(gadgetId) > -1;
   }
 
   /**
