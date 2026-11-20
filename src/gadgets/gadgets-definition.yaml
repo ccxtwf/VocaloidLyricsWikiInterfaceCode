@@ -204,6 +204,29 @@ gadgets:
         default: true
         namespaces: "13"
         supportsUrlLoad: "true"
+    tl-checking-adv-toc:
+      description: "Advanced Table of Contents for Translation Checking."
+      authors:
+        - CoolMikeHatsune22
+      code:
+        - tl-checking-adv-toc.ts
+        - tl-checking-adv-toc-store.ts
+        - tl-checking-adv-toc.less
+        - tl-checking-adv-toc.vue
+        - tl-checking-toc-item.vue
+        - tl-checking-toc-item-subtitle.vue
+        - tl-checking-toc-action-btns.vue
+      resourceLoader:
+        default: true
+        package: true
+        namespaces: "13"
+        supportsUrlLoad: "true"
+        actions: ["view"]
+        dependencies:
+          - mediawiki.util
+          - vue
+          - pinia
+          - "@wikimedia/codex"
 
   editing:
     in-page-edit:

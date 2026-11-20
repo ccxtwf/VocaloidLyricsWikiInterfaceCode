@@ -31,6 +31,7 @@ export interface TlCheckingParsedQueueItem {
   tlAuthor: string;
   link: string;
   isThirdParty: boolean;
+  isOfficial: boolean;
   outcome: OutcomeEnum;
   comments: string | null;
 }
@@ -51,13 +52,13 @@ export function parseTlCheckingTocData(data: MwApiParseTocResults, isThirdParty:
         line: string;
       }): TlCheckingParsedQueueItem => {
         const link = mw.util.getUrl(fromTitle) + "#" + anchor;
-        const parts = line.split(/\s*\|\s*/, 3);
+        const parts = line.trim().split(/\s*\|\s*/, 3);
         const [originalTitle, songAuthor, c] = parts.length === 3 ? parts : [line, "-", "-"];
         let tlAuthor = "";
         let outcome: OutcomeEnum = null;
         let comments = null;
         if (c !== "-") {
-          const m = c.match(/^(.*)\s*<span><span>(✅|❌|⏳)<\/span>\s+<b>(.*?)<\/b><\/span>/);
+          const m = c.match(/^(.*?)\s*<span><span>(✅|❌|⏳)<\/span>\s+<b>(.*?)<\/b><\/span>/);
           if (m === null) {
             tlAuthor = c;
           } else {
@@ -82,6 +83,7 @@ export function parseTlCheckingTocData(data: MwApiParseTocResults, isThirdParty:
           tlAuthor,
           link,
           isThirdParty,
+          isOfficial: /^official$/i.test(tlAuthor),
           outcome,
           comments,
         };
