@@ -8,8 +8,8 @@
     "#utils/*": "./src/utils/*"
   },
   "scripts": {
-    "lint": "oxlint",
-    "lint:fix": "oxlint --fix",
+    "lint": "tsc --noEmit && oxlint",
+    "lint:fix": "tsc --noEmit && oxlint --fix",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "build": "tsdown",
