@@ -35,9 +35,10 @@
 </template>
 
 <script lang="ts">
-const { ref } = mw_require("vue");
+import type { AppPiniaStore } from "./types";
+
+const { ref, inject } = mw_require("vue");
 const { CdxField, CdxToggleButton, CdxToggleButtonGroup } = mw_require("@wikimedia/codex");
-const useTlQueueStore = mw_require("./tl-checking-adv-toc-store.js");
 
 const buttons1 = [
   { value: 1, label: mw.msg("tl-adv-toc--first-party") },
@@ -55,7 +56,7 @@ export default {
   name: "TlCheckingTocActionButtons",
   components: { CdxField, CdxToggleButton, CdxToggleButtonGroup },
   setup() {
-    const store = useTlQueueStore();
+    const store: AppPiniaStore = inject("store");
     const areAllItemsExpanded = ref(false);
     return { buttons1, buttons2, store, areAllItemsExpanded };
   },

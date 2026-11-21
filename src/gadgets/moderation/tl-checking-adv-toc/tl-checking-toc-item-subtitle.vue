@@ -35,11 +35,6 @@
 <script lang="ts">
 import type { TlCheckingParsedQueueItem, OutcomeEnum } from "./types.ts";
 
-interface TlTocItemSubtitleProps extends Pick<
-  TlCheckingParsedQueueItem,
-  "tlAuthor" | "outcome" | "comments" | "isThirdParty" | "isOfficial"
-> {}
-
 const { CdxInfoChip } = mw_require("@wikimedia/codex");
 
 export default {
@@ -49,8 +44,12 @@ export default {
     "comments",
     "isThirdParty",
     "isOfficial",
-  ] satisfies (keyof TlTocItemSubtitleProps)[],
-  setup(_props: TlTocItemSubtitleProps) {},
+    /* Unused */
+    "originalTitle",
+    "songAuthor",
+    "link",
+  ] satisfies (keyof TlCheckingParsedQueueItem)[],
+  setup(_props: TlCheckingParsedQueueItem) {},
   components: { CdxInfoChip },
   computed: {
     getTlStatusIcon() {

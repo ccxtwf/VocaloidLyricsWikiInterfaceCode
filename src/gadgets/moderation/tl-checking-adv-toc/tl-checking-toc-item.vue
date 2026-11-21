@@ -5,7 +5,7 @@
   >
     <a
       :href="subitems[0].link"
-      target="_blank"
+      :target="isCrossPage(subitems[0].isThirdParty) ? '_blank' : ''"
       rel="noreferrer nofollow"
     >
       <span class="song-title">{{ originalTitle }}</span>
@@ -31,7 +31,7 @@
       <li v-for="subitem in subitems">
         <a
           :href="subitem.link"
-          target="_blank"
+          :target="isCrossPage(subitem.isThirdParty) ? '_blank' : ''"
           rel="noreferrer nofollow"
         >
           <tl-checking-item-subtitle v-bind="subitem"></tl-checking-item-subtitle>
@@ -42,8 +42,9 @@
 </template>
 
 <script lang="ts">
-import type { TlCheckingTocItemGroup } from "./types.ts";
+import type { TlCheckingTocItemGroup, OnPageEnum } from "./types.ts";
 
+const { inject } = mw_require("vue");
 const { CdxInfoChip } = mw_require("@wikimedia/codex");
 const TlCheckingItemSubtitle = mw_require("./tl-checking-toc-item-subtitle.vue");
 
@@ -51,6 +52,14 @@ export default {
   name: "TlCheckingAdvTocItem",
   components: { CdxInfoChip, TlCheckingItemSubtitle },
   props: ["originalTitle", "songAuthor", "subitems"] satisfies (keyof TlCheckingTocItemGroup)[],
-  setup(_props: TlCheckingTocItemGroup) {},
+  setup(_props: TlCheckingTocItemGroup) {
+    const onPage: OnPageEnum = inject("onPage");
+    return { onPage };
+  },
+  methods: {
+    isCrossPage(isThirdParty: boolean) {
+      return Boolean(this.onPage) !== isThirdParty;
+    },
+  },
 };
 </script>

@@ -1,12 +1,12 @@
 import type { defineStore } from "pinia";
-import type { UseAppPiniaStoreType } from "./types.ts";
+import type { UseAppPiniaStoreType, SourceModeEnum, StatusModeEnum } from "./types.ts";
 
 const Pinia = mw_require("pinia");
 import type { IAppStore, TlCheckingParsedQueueItem, TlCheckingTocItemGroup } from "./types.ts";
 
 function qualifyTlItemBySource(
   { isThirdParty, isOfficial }: TlCheckingParsedQueueItem,
-  sourceMode: number,
+  sourceMode: SourceModeEnum,
 ) {
   if (sourceMode < 1) {
     return true; // show all items
@@ -14,7 +14,7 @@ function qualifyTlItemBySource(
   return sourceMode < 3 ? (isThirdParty ? 2 : 1) === sourceMode : isOfficial;
 }
 
-function qualifyTlItemByStatus({ outcome }: TlCheckingParsedQueueItem, statusMode: number) {
+function qualifyTlItemByStatus({ outcome }: TlCheckingParsedQueueItem, statusMode: StatusModeEnum) {
   switch (statusMode) {
     case 1:
       return Boolean(outcome); // checked

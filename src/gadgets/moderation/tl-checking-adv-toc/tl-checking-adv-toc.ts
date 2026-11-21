@@ -6,6 +6,7 @@ let $store: AppPiniaStore;
 const Vue = mw_require("vue");
 const Pinia = mw_require("pinia");
 const pinia = Pinia.createPinia();
+const currentPage = mw.config.get("wgPageName");
 
 const ALLOWED_PAGES = [
   "Help_talk:Translation_Checking",
@@ -79,8 +80,12 @@ mw.messages.set(messages);
       vueAppContainer.classList.add("tl-checking-toc-container");
       document.getElementById(TOC_SELECTOR)!.querySelector("ul")!.remove();
       document.getElementById(TOC_SELECTOR)!.appendChild(vueAppContainer);
-      Vue.createMwApp(TlCheckingAdvToc).use(pinia).mount(vueAppContainer);
+      const $app = Vue.createMwApp(TlCheckingAdvToc).use(pinia);
       $store = mw_require("./tl-checking-adv-toc-store.js")();
+      $app
+        .provide("store", $store)
+        .provide("onPage", ALLOWED_PAGES.indexOf(currentPage) as 0 | 1)
+        .mount(vueAppContainer);
     } catch (err) {
       console.error(DEBUGGING_ID, "Failed to create Vue app");
       console.error(DEBUGGING_ID, err);
@@ -107,7 +112,7 @@ mw.messages.set(messages);
     }
   }
 
-  if (ALLOWED_PAGES.indexOf(mw.config.get("wgPageName")) < 0) {
+  if (ALLOWED_PAGES.indexOf(currentPage) < 0) {
     return;
   }
   init();

@@ -32,15 +32,15 @@
 import { AppPiniaStore } from "./types.ts";
 const { CdxProgressBar } = mw_require("@wikimedia/codex");
 
+const { inject } = mw_require("vue");
 const TocActionButtons = mw_require("./tl-checking-toc-action-btns.vue");
 const TlCheckingItem = mw_require("./tl-checking-toc-item.vue");
-const useTlQueueStore = mw_require("./tl-checking-adv-toc-store.js");
 
 export default {
   name: "TlCheckingAdvToc",
   components: { CdxProgressBar, TocActionButtons, TlCheckingItem },
   setup() {
-    const store: AppPiniaStore = useTlQueueStore();
+    const store: AppPiniaStore = inject("store");
     return { store };
   },
   methods: {
