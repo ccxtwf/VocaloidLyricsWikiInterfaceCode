@@ -34,11 +34,11 @@
     "oxfmt": "^0.71.0",
     "oxlint": "^1.86.0",
     "tsdown": "^0.23.0",
-    "types-mediawiki": "^2.0.0",
-    "types-mediawiki-api": "^2.0.0",
+    "types-mediawiki": "^2.1.0",
+    "types-mediawiki-api": "^2.1.0",
     "typescript": "^6.0.3",
     "vitest": "^5.0.3",
-    "vue": "^3.5.13",
+    "vue": "^3.5.46",
     "word-wrap": "^1.2.5",
     "yaml": "^2.8.3"
   }
