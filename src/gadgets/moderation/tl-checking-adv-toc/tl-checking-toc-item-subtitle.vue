@@ -38,6 +38,7 @@ import type { TlCheckingParsedQueueItem, OutcomeEnum } from "./types.ts";
 const { CdxInfoChip } = mw_require("@wikimedia/codex");
 
 export default {
+  name: "TlCheckingAdvTocSubtitle",
   props: [
     "tlAuthor",
     "outcome",
