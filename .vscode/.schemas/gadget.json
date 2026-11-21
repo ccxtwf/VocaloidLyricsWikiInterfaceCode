@@ -28,7 +28,8 @@
     "code": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "pattern": "\\.(js|ts|less|css|vue|json)$"
       },
       "description": "Lists the script, stylesheet, Vue component, and JSON files to be loaded as one gadget."
     },
