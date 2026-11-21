@@ -43,4 +43,4 @@ const useTlQueueStore: UseAppPiniaStoreType = (Pinia.defineStore as typeof defin
   },
 );
 
-module.exports = useTlQueueStore;
+export default useTlQueueStore;

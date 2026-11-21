@@ -55,6 +55,7 @@ export default defineConfig(async (): Promise<UserConfig> => {
       duplicatePerEntryPlugin(/^src\/utils\//),
       restrictedNames({
         mw_require: "require",
+        "export default": "module.exports =",
       }),
       vueTransformer(),
     ],

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   TL_CHECKING_PAGE_NAME: "Help talk:Translation Checking",
   TL_CHECKING_PAGE_NAME_THIRD: "Help talk:Translation Checking/Third-Party",
   SERVER_RESPONSE_CACHE_EXPIRATION: 15 * 60, // 15 minutes
