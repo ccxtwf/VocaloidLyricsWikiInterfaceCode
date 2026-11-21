@@ -38,6 +38,7 @@ export default function duplicatePerEntry(filter: RegExp): TsdownPlugin {
       if (filter.test(normalizePath(relative(process.cwd(), resolved.id)))) {
         // Tag with the importer so each entry gets its own copy of the module
         const key = normalizePath(relative(process.cwd(), importer ?? process.cwd()));
+        this.addWatchFile(resolved.id); // Add to list of watched files
         return `${resolved.id}${MARKER}${encodeURIComponent(key)}`;
       }
       return resolved.id;
