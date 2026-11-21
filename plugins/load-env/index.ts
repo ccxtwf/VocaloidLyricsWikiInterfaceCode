@@ -16,7 +16,7 @@ export default function loadEnv(): TsdownPlugin {
       const envVars: Record<string, string> = {};
       const envProfile = process.env.NODE_PROJECT_PROFILE;
       console.log(`Loading profile: '${envProfile || "default"}'`);
-      dotenv.config({ path: envProfile, processEnv: envVars });
+      dotenv.config({ path: envProfile ? `./.env.${envProfile}` : "./.env", processEnv: envVars });
 
       const {
         TSDOWN_GADGET_NAMESPACE: gadgetNamespace = "ext.gadget",
