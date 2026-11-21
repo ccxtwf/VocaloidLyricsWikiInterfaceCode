@@ -56,7 +56,7 @@ export default {
   name: "TlCheckingTocActionButtons",
   components: { CdxField, CdxToggleButton, CdxToggleButtonGroup },
   setup() {
-    const store: AppPiniaStore = inject("store");
+    const store: AppPiniaStore = inject("store")!;
     const areAllItemsExpanded = ref(false);
     return { buttons1, buttons2, store, areAllItemsExpanded };
   },

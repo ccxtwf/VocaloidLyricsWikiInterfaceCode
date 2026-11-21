@@ -53,7 +53,7 @@ export default {
   components: { CdxInfoChip, TlCheckingItemSubtitle },
   props: ["originalTitle", "songAuthor", "subitems"] satisfies (keyof TlCheckingTocItemGroup)[],
   setup(_props: TlCheckingTocItemGroup) {
-    const onPage: OnPageEnum = inject("onPage");
+    const onPage: OnPageEnum = inject("onPage")!;
     return { onPage };
   },
   methods: {

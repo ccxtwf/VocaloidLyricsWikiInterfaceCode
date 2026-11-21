@@ -40,7 +40,7 @@ export default {
   name: "TlCheckingAdvToc",
   components: { CdxProgressBar, TocActionButtons, TlCheckingItem },
   setup() {
-    const store: AppPiniaStore = inject("store");
+    const store: AppPiniaStore = inject("store")!;
     return { store };
   },
   methods: {
