@@ -2,6 +2,7 @@ import { parse, compileScript, compileStyleAsync } from "vue/compiler-sfc";
 import { transform } from "oxc-transform";
 import type { PluginContext } from "rolldown";
 import { basename, extname } from "path";
+import { transformRestrictedNames } from "../restricted_names/utils.ts";
 
 function getFileName(filepath: string, withExtension: boolean = true): string {
   return basename(filepath, withExtension ? undefined : extname(filepath));
@@ -71,9 +72,6 @@ export async function compileVueComponent(
     ctx.warn(`Unable to parse script for file: ${filename}`);
     ctx.warn(error);
   }
-  // Convert `export default` to `module.exports` via simple search & replace
-  compiledScript.code =
-    "\n" + compiledScript.code.replaceAll(/export\s+default/g, "module.exports =");
 
   const parsedStyles = await Promise.all(
     parsed.descriptor.styles.map((style) =>
@@ -92,7 +90,10 @@ export async function compileVueComponent(
     );
   }
   const templateBlock = wrap("template", parsedTemplate?.content);
-  const scriptBlock = wrap("script", compiledScript.code);
+  const scriptBlock = wrap(
+    "script",
+    transformRestrictedNames("\n" + compiledScript.code, { "export {};": "" }),
+  );
   const genStyleBlocks = parsedStyles.map(({ code }) => wrap("style", code));
   const generatedCode = `${templateBlock}\n\n${scriptBlock}${genStyleBlocks.length ? "\n\n" : ""}${genStyleBlocks.join("\n")}`;
 
