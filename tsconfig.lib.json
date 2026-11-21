@@ -18,8 +18,8 @@
     "rootDir": "./src",
     "outDir": "./dist",
 
-    "typeRoots": ["./node_modules/@types"],
-    "types": ["node", "jquery", "oojs", "oojs-ui"],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "types": ["node", "jquery", "oojs", "oojs-ui", "mw_require"],
 
     /* Linting */
     "noUnusedLocals": true,
