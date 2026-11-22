@@ -1,19 +1,16 @@
 {
   "compilerOptions": {
-    "target": "es2022",
     "useDefineForClassFields": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "target": "es2022",
+    "module": "esnext",
 
     "allowJs": true,
     "checkJs": false,
     "noEmit": false,
     "noEmitOnError": false,
-
-    "outDir": "build",
 
     /* Linting */
     "noUnusedLocals": true,
@@ -22,5 +19,6 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "strict": false
-  }
+  },
+  "include": ["src/**/*", "global.d.ts"]
 }

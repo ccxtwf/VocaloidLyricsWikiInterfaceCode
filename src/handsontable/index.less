@@ -1,47 +1,57 @@
 /* Handsontable */
 /* CSS Variables */
 
-.ht-light-mode() {
-}
-.ht-dark-mode() {
-  --ht-background-color: var(--color-base-100);
-  --ht-header-background-color: #000;
-  --ht-row-header-odd-background-color: #000;
-  --ht-row-header-even-background-color: #000;
-  --ht-cell-horizontal-border-color: #6e6f72;
-  --ht-cell-vertical-border-color: #454647;
-  --ht-border-color: #6e6f72;
-}
+/* Set real values used on the Vocaloid Lyrics Wiki here */
+@vlw-lyrics-row-odd-color-light-mode: #fff;
+@vlw-lyrics-row-even-color-light-mode: #f6f6f6;
+@vlw-lyrics-text-color-light-mode: #212529;
+@vlw-lyrics-row-odd-color-dark-mode: #101010;
+@vlw-lyrics-row-even-color-dark-mode: #2b2b2b;
+@vlw-lyrics-text-color-dark-mode: #cecece;
+
+/* Mixins */
 .ht-lyrics-light-mode() {
-  --ht-background-color: #fff;
-  --ht-row-cell-odd-background-color: #f6f6f6;
+  color-scheme: light;
+  --lyrics-table-header-color: #e8e8e8;
+  --ht-background-color: @vlw-lyrics-row-even-color-light-mode;
+  --ht-foreground-color: @vlw-lyrics-text-color-light-mode;
+  --ht-row-cell-odd-background-color: @vlw-lyrics-row-odd-color-light-mode;
+  --ht-cell-horizontal-border-color: darken(@vlw-lyrics-row-odd-color-light-mode, 20%);
+  --ht-cell-vertical-border-color: darken(@vlw-lyrics-row-odd-color-light-mode, 10%);
+  --ht-header-foreground-color: @vlw-lyrics-text-color-light-mode;
+  --ht-header-row-foreground-color: @vlw-lyrics-text-color-light-mode;
+  // --ht-border-color: darken(@vlw-lyrics-row-odd-color-light-mode, 20%);
 }
 .ht-lyrics-dark-mode() {
-  --ht-background-color: #101010;
-  --ht-row-cell-odd-background-color: #2b2b2b;
+  color-scheme: dark;
+  --lyrics-table-header-color: #000;
+  --ht-background-color: @vlw-lyrics-row-even-color-dark-mode;
+  --ht-foreground-color: @vlw-lyrics-text-color-dark-mode;
+  --ht-row-cell-odd-background-color: @vlw-lyrics-row-odd-color-dark-mode;
+  --ht-cell-horizontal-border-color: lighten(@vlw-lyrics-row-odd-color-dark-mode, 20%);
+  --ht-cell-vertical-border-color: lighten(@vlw-lyrics-row-odd-color-dark-mode, 10%);
+  --ht-header-foreground-color: @vlw-lyrics-text-color-dark-mode;
+  --ht-header-row-foreground-color: @vlw-lyrics-text-color-dark-mode;
+  // --ht-border-color: lighten(@vlw-lyrics-row-odd-color-dark-mode, 20%);
 }
 
-.ht-theme-light,
-.ht-theme-auto {
-  .ht-light-mode();
-}
-#lyrics {
+/* Apply mix-ins */
+.lyrics-editor {
+  .ht-root-wrapper {
+    --ht-header-background-color: var(--lyrics-table-header-color);
+    --ht-row-header-odd-background-color: var(--lyrics-table-header-color);
+    --ht-row-header-even-background-color: var(--lyrics-table-header-color);
+  }
   .ht-theme-light,
   .ht-theme-auto {
     .ht-lyrics-light-mode();
   }
-}
-.ht-theme-dark {
-  .ht-dark-mode();
-}
-#lyrics .ht-theme-dark {
-  .ht-lyrics-dark-mode();
+  .ht-theme-dark {
+    .ht-lyrics-dark-mode();
+  }
 }
 @media (prefers-color-scheme: dark) {
-  .ht-theme-auto {
-    .ht-dark-mode();
-  }
-  #lyrics .ht-theme-auto {
+  .lyrics-editor .ht-theme-auto {
     .ht-lyrics-dark-mode();
   }
 }
@@ -57,10 +67,25 @@
   z-index: 1 !important;
 }
 
+/* Mobile screens */
+@media screen and (max-width: 500px) {
+  .handsontable span.colHeader,
+  .handsontable span.rowHeader {
+    --ht-font-size: 10px;
+  }
+}
+
 /* Medium size screens */
 @media screen and (min-width: 500px) and (max-width: 768px) {
   .handsontable span.colHeader,
   .handsontable span.rowHeader {
     --ht-font-size: 12px;
+  }
+}
+
+/* Indicate that the last row will spill over */
+.lyrics-editor {
+  .ht_master .htCore > tbody > tr:last-of-type td::before {
+    content: "...";
   }
 }

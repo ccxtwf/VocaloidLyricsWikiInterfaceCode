@@ -5,14 +5,15 @@ export default defineConfig(() => {
   return {
     build: {
       lib: {
-        entry: './src/handsontable/index.ts',
-        formats: ['iife'],
-        name: 'Handsontable',
-        fileName: () => 'handsontable.js',
-        cssFileName: 'handsontable',
+        entry: "./src/handsontable/index.ts",
+        formats: ["iife"],
+        name: "Handsontable",
+        fileName: () => "handsontable.js",
+        cssFileName: "handsontable",
       },
       rolldownOptions: {
         output: {
+          minify: true,
           assetFileNames: (assetInfo) => {
             // Handle CSS files
             if (assetInfo.name && assetInfo.name.endsWith(".css")) {
@@ -20,8 +21,11 @@ export default defineConfig(() => {
             }
             return "assets/[name][extname]";
           },
-        }
-      }
-    }
+        },
+      },
+    },
+    define: {
+      DEBUG: "false",
+    },
   };
 });
