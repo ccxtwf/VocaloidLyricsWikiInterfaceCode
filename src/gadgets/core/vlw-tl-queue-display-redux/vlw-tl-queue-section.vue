@@ -24,11 +24,11 @@
 <script lang="ts">
 import type { AppPiniaStore, TlQueueSectionProps } from "./types.ts";
 
+const { inject } = mw_require("vue");
 const { SHOW_NUMBER_OF_ITEMS_AT_START, SHOW_MAX_NUMBER_OF_ITEMS } = mw_require(
   "./vlw-tl-queue-display-config.js",
 );
 const TlQueueItem = mw_require("./vlw-tl-queue-item.vue");
-const useTlQueueStore = mw_require("./vlw-tl-queue-display-store.js");
 
 export default {
   name: "TlQueueSection",
@@ -39,7 +39,7 @@ export default {
     "store",
   ] satisfies (keyof TlQueueSectionProps)[],
   setup(_props: TlQueueSectionProps) {
-    const globalStore: AppPiniaStore = useTlQueueStore();
+    const globalStore: AppPiniaStore = inject("store")!;
     return { globalStore };
   },
   components: { TlQueueItem },

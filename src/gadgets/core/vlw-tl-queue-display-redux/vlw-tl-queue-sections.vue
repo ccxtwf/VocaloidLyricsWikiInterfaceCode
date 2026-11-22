@@ -43,7 +43,7 @@
 <script lang="ts">
 import type { AppPiniaStore, TlQueueSectionsProps } from "./types.ts";
 
-const useTlQueueStore = mw_require("./vlw-tl-queue-display-store.js");
+const { inject } = mw_require("vue");
 const { CdxProgressIndicator } = mw_require("@wikimedia/codex");
 const TlQueueSection = mw_require("./vlw-tl-queue-section.vue");
 
@@ -56,7 +56,7 @@ export default {
     "exI",
   ] satisfies (keyof TlQueueSectionsProps)[],
   setup(_props: TlQueueSectionsProps) {
-    const globalStore: AppPiniaStore = useTlQueueStore();
+    const globalStore: AppPiniaStore = inject("store")!;
     return { globalStore };
   },
   components: {

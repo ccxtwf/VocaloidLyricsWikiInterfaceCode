@@ -48,24 +48,9 @@ interface NsfwModalProps {
 const { CdxCheckbox } = mw_require("@wikimedia/codex");
 
 export default {
-  name: "DialogBasic",
-  props: {
-    store: {
-      type: Object,
-      required: true,
-    },
-    onClickedConfirm: {
-      type: Function,
-      required: true,
-    },
-    onClickedBack: {
-      type: Function,
-      required: true,
-    },
-  },
+  name: "NsfwModal",
+  props: ["store", "onClickedConfirm", "onClickedBack"] satisfies (keyof NsfwModalProps)[],
   components: { CdxCheckbox },
-  setup({ store, onClickedConfirm, onClickedBack }: NsfwModalProps) {
-    return { store, onClickedConfirm, onClickedBack };
-  },
+  setup(_props: NsfwModalProps) {},
 };
 </script>

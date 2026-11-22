@@ -23,8 +23,8 @@ const containerId = "vlw-tl-queue-container";
 const DEBUGGING_ID = "vlw-tl-queue-display";
 
 let $container: JQuery<HTMLElement>;
-let $app: App | undefined;
-let $store: AppPiniaStore | undefined;
+let $app: App;
+let $store: AppPiniaStore;
 
 const messages = {
   "vlw-tl-queue--heading": "Translation Checking",
@@ -239,10 +239,10 @@ function loadApp(): void {
     onRefresh() {
       populate(true);
     },
-  })
-    .use(pinia)
-    .mount("#" + containerId);
+  }).use(pinia);
+  $app.mount("#" + containerId);
   $store = mw_require("./vlw-tl-queue-display-store.js")();
+  $app.provide("store", $store);
 }
 
 async function populate(noCacheMode: boolean): Promise<void> {
