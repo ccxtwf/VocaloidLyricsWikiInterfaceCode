@@ -47,6 +47,8 @@ mw.messages.set(messages);
         page,
         prop: "tocdata",
         format: "json",
+        maxage: 0, // never cache
+        smaxage: 0,
       })
       .promise();
     if (!f.parse || !f.parse.tocdata || !f.parse.tocdata.sections) {
