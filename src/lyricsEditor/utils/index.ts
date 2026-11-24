@@ -599,3 +599,54 @@ export function truncateLyrics(lyrics: ILyricsRow[]): ILyricsRow[] {
   }
   return lyrics.slice(0, truncateLyricsAtIndex + 1);
 }
+
+/**
+ * Convert Lyrics data stored in Handsontable instances into more scrutable entities.
+ *
+ * @param headers
+ * @param data
+ * @returns
+ */
+export function mapHandsontableLyricsData<T extends ILyricsRow = ILyricsRow>(
+  headers: string[],
+  data: unknown[][],
+  constructor?: new (...args: any[]) => T,
+): T[] {
+  const i = headers.findIndex((h) => h.includes(LyricsTableHeader.ENGLISH));
+  return data.map((row) => {
+    let [customStyle, original, ...c] = row;
+    let romanized: string | undefined;
+    let english: string | undefined;
+    let offset: number = 0;
+    switch (i) {
+      case -1:
+        // English column not found
+        if (c.length) {
+          romanized = (c[0] as string) || "";
+          offset = 1;
+        }
+        break;
+      case 1:
+        // Found English at second column
+        english = (c[0] as string) || "";
+        offset = 1;
+        break;
+      default:
+        // Ideally, the English column would be at the third column
+        // No guarantee is made
+        romanized = (c[0] as string) || "";
+        english = (c[1] as string) || "";
+        offset = 2;
+        break;
+    }
+
+    const o = {
+      customStyle: (customStyle as string) || "",
+      original: (original as string) || "",
+      romanized,
+      english,
+      additionalColumns: c.slice(offset).map((e) => (e as string) || ""),
+    };
+    return constructor ? new constructor(o) : (o as T);
+  });
+}
