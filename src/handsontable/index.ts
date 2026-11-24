@@ -4,8 +4,6 @@ import { getLyricsEditContextMenu as getContextMenu } from "./contextMenus/lyric
 import { getRenderer } from "handsontable/renderers";
 import { getTheme } from "handsontable/themes";
 
-import "./index.less";
-
 export default {
   Handsontable,
   getContextMenu,
