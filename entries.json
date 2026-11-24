@@ -1,0 +1,19 @@
+[
+  {
+    "alias": "lyricsEditor",
+    "filepath": "./src/lyricsEditor/index.ts",
+    "globalName": "LyricsEditor",
+    "deps": {
+      "alwaysBundle": [
+        "handsontable",
+        "handsontable/cellTypes",
+        "handsontable/plugins",
+        "handsontable/renderers",
+        "handsontable/themes",
+        "handsontable/i18n",
+        "handsontable/base",
+        "sanitize-html"
+      ]
+    }
+  }
+]

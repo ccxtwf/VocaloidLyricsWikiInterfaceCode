@@ -1,67 +1,21 @@
-import { defineConfig, type UserConfig } from "tsdown";
+import { defineConfig, type UserConfig, mergeConfig } from "tsdown";
 
-interface BundleEntry {
-  alias: string;
-  filepath: string;
-  globalName: string;
-  deps?: {
-    neverBundle?: string[];
-    alwaysBundle?: string[];
-    onlyBundle?: string[];
-    onlyImport?: string[];
-  };
-}
-const bundleEntries: BundleEntry[] = [
-  {
-    alias: "handsontable",
-    filepath: "./src/handsontable/index.ts",
-    globalName: "Handsontable",
-    deps: {
-      alwaysBundle: [
-        "handsontable",
-        "handsontable/cellTypes",
-        "handsontable/plugins",
-        "handsontable/renderers",
-        "handsontable/themes",
-        "handsontable/i18n",
-        "handsontable/base",
-        "sanitize-html",
-      ],
-    },
-  },
-  {
-    alias: "lyricsUtils",
-    filepath: "./src/lyricsUtils/index.ts",
-    globalName: "LyricsEditorUtils",
-  },
-];
+import tsdownBaseConfig from "./tsdown.base.config.ts";
+import entries from "./entries.json" with { type: "json" };
 
-export default defineConfig(
-  bundleEntries.map(({ alias, filepath, globalName, deps = {} }) => ({
-    entry: { [alias]: filepath },
-    format: "iife",
-    globalName,
-    deps: { ...deps, onlyBundle: false, resolveDepSubpath: true },
-    platform: "browser",
-    outExtensions: () => ({ js: "", dts: ".d.ts" }),
-    outputOptions: {
-      entryFileNames: "[name].js",
-    },
-    target: "es2019",
-    minify: true,
+const config: UserConfig[] = entries.reduce((a, { alias, filepath, globalName, deps = {} }) => {
+  [false, true].forEach((minify) => {
+    a.push(
+      mergeConfig(tsdownBaseConfig, {
+        entry: { [`${alias}${minify ? ".min" : ""}`]: filepath },
+        format: "iife",
+        globalName,
+        deps: { ...deps, onlyBundle: false, resolveDepSubpath: true },
+        minify,
+      }),
+    );
+  });
+  return a;
+}, [] as UserConfig[]);
 
-    define: {
-      DEBUG: "false",
-    },
-
-    css: {
-      splitting: true,
-      preprocessorOptions: {
-        less: {/* LESS-specific options here */},
-      },
-    },
-
-    /* tsconfig */
-    tsconfig: "./tsconfig.json",
-  })) satisfies UserConfig[],
-);
+export default defineConfig(config);
