@@ -12,6 +12,9 @@ const config: UserConfig[] = entries.reduce((a, { alias, filepath, globalName, d
         globalName,
         deps: { ...deps, onlyBundle: false, resolveDepSubpath: true },
         minify,
+        css: {
+          minify,
+        },
       }),
     );
   });
