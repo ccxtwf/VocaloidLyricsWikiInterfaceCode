@@ -1,12 +1,5 @@
 import "./registration";
-import Handsontable from "handsontable/base";
-import { getLyricsEditContextMenu as getContextMenu } from "./contextMenus/lyricsEdit";
-import { getRenderer } from "handsontable/renderers";
-import { getTheme } from "handsontable/themes";
-
-export default {
-  Handsontable,
-  getContextMenu,
-  getRenderer,
-  getTheme,
-};
+export { default as Handsontable } from "handsontable/base";
+export { getLyricsEditContextMenu as getContextMenu } from "./contextMenus/lyricsEdit";
+export { getRenderer } from "handsontable/renderers";
+export { getTheme } from "handsontable/themes";
