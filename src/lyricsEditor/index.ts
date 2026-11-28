@@ -1,8 +1,23 @@
 import * as handsontable from "./handsontable";
-import * as utils from "./utils";
+import { extractLyricsTablesFromWikipageSrc, parseLyrics } from "./utils/parseLyrics";
+import {
+  determineColumnHeaders,
+  addColumnsAtIndexToTheLeftToToggle,
+  addColumnsAtIndexToTheRightToToggle,
+  removeColumnsAtIndexFromToggle,
+} from "./utils/lyricsUtils";
+import { buildNewLyricsSegment } from "./utils/buildNewLyrics";
 import "./index.less";
 
 export default {
   handsontable,
-  utils,
+  utils: {
+    extractLyricsTablesFromWikipageSrc,
+    parseLyrics,
+    buildNewLyricsSegment,
+    determineColumnHeaders,
+    addColumnsAtIndexToTheLeftToToggle,
+    addColumnsAtIndexToTheRightToToggle,
+    removeColumnsAtIndexFromToggle,
+  },
 };
